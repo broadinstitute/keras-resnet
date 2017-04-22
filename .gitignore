@@ -15,6 +15,7 @@
 .eggs/
 .env
 .hypothesis/
+.idea/
 .installed.cfg
 .ipynb_checkpoints
 .Python
