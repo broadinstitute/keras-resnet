@@ -2,6 +2,7 @@ import keras
 import keras.datasets
 import keras.layers
 import keras.layers.convolutional
+import keras.backend
 import keras.layers.merge
 import keras.layers.normalization
 import keras.models
@@ -17,22 +18,25 @@ else:
     ROW_AXIS = 2
     COL_AXIS = 3
 
-kernel_regularizer = keras.regularizers.l2(1.e-4)
-
 parameters = {
     "kernel_initializer": "he_normal",
-    "kernel_regularizer": kernel_regularizer,
+    "kernel_regularizer": keras.regularizers.l2(1.e-4),
     "padding": "same"
 }
 
 
-def _bn_relu_conv(**kwargs):
+def convolution(**kwargs):
     kwargs = kwargs.copy()
 
     kwargs.update(parameters)
 
     def f(x):
-        y = keras.layers.BatchNormalization(axis=CHANNEL_AXIS)(x)
+        if keras.backend.image_data_format() == "channels_first":
+            axis = 1
+        else:
+            axis = 3
+
+        y = keras.layers.BatchNormalization(axis=axis)(x)
         y = keras.layers.Activation("relu")(y)
         y = keras.layers.Conv2D(**kwargs)(y)
 
@@ -41,50 +45,60 @@ def _bn_relu_conv(**kwargs):
     return f
 
 
-def basic(filters, strides=(1, 1), top=False):
+def basic(filters, strides=(1, 1), first=False):
     def f(x):
-        if top:
-            y = keras.layers.Conv2D(filters=filters, kernel_size=(3, 3), strides=strides, **parameters)(x)
+        if keras.backend.image_data_format() == "channels_first":
+            axis = 1
         else:
-            y = keras.layers.BatchNormalization(axis=CHANNEL_AXIS)(x)
-            y = keras.layers.Activation("relu")(y)
-            y = keras.layers.Conv2D(filters=filters, kernel_size=(3, 3), strides=strides, **parameters)(y)
+            axis = 3
 
-        y = keras.layers.BatchNormalization(axis=CHANNEL_AXIS)(x)
+        if first:
+            y = keras.layers.Conv2D(filters, (3, 3), strides=strides, **parameters)(x)
+        else:
+            y = keras.layers.BatchNormalization(axis=axis)(x)
+            y = keras.layers.Activation("relu")(y)
+            y = keras.layers.Conv2D(filters, (3, 3), strides=strides, **parameters)(y)
+
+        y = keras.layers.BatchNormalization(axis=axis)(y)
         y = keras.layers.Activation("relu")(y)
-        y = keras.layers.Conv2D(filters=filters, kernel_size=(3, 3), **parameters)(y)
+        y = keras.layers.Conv2D(filters, (3, 3), **parameters)(y)
 
         return shortcut(x, y)
 
     return f
 
 
-def bottleneck(filters, strides=(1, 1), top=False):
+def bottleneck(filters, strides=(1, 1), first=False):
     def f(x):
-        if top:
-            y = keras.layers.Conv2D(filters=filters, kernel_size=(1, 1), strides=strides, **parameters)(x)
+        if keras.backend.image_data_format() == "channels_first":
+            axis = 1
         else:
-            y = keras.layers.BatchNormalization(axis=CHANNEL_AXIS)(x)
+            axis = 3
+
+        if first:
+            y = keras.layers.Conv2D(filters, (1, 1), strides=strides, **parameters)(x)
+        else:
+            y = keras.layers.BatchNormalization(axis=axis)(x)
             y = keras.layers.Activation("relu")(y)
-            y = keras.layers.Conv2D(filters=filters, kernel_size=(3, 3), strides=strides, **parameters)(y)
+            y = keras.layers.Conv2D(filters, (3, 3), strides=strides, **parameters)(y)
 
-        y = keras.layers.normalization.BatchNormalization(axis=CHANNEL_AXIS)(y)
+        y = keras.layers.normalization.BatchNormalization(axis=axis)(y)
         y = keras.layers.Activation("relu")(y)
-        y = keras.layers.Conv2D(filters=filters, kernel_size=(3, 3), **parameters)(y)
+        y = keras.layers.Conv2D(filters, (3, 3), **parameters)(y)
 
-        y = _bn_relu_conv(filters=filters * 4, kernel_size=(1, 1))(y)
+        y = convolution(filters=filters * 4, kernel_size=(1, 1))(y)
 
         return shortcut(x, y)
 
     return f
 
 
-def residual(block, filters, repetitions, top=False):
+def residual(block, filters, repetitions, first=False):
     def f(x):
         for index in range(repetitions):
-            strides = (2, 2) if index == 0 and not top else (1, 1)
+            strides = (2, 2) if index == 0 and not first else (1, 1)
 
-            x = block(filters, strides, (top and index == 0))(x)
+            x = block(filters, strides, (first and index == 0))(x)
 
         return x
 
@@ -92,21 +106,20 @@ def residual(block, filters, repetitions, top=False):
 
 
 def shortcut(a, b):
-    input_shape = keras.backend.int_shape(a)
+    a_shape = keras.backend.int_shape(a)
+    b_shape = keras.backend.int_shape(b)
 
-    residual_shape = keras.backend.int_shape(b)
+    x = int(round(a_shape[ROW_AXIS] / b_shape[ROW_AXIS]))
+    y = int(round(a_shape[COL_AXIS] / b_shape[COL_AXIS]))
 
-    stride_width = int(round(input_shape[ROW_AXIS] / residual_shape[ROW_AXIS]))
+    if x > 1 or y > 1 or not a_shape[CHANNEL_AXIS] == b_shape[CHANNEL_AXIS]:
+        shortcut_parameters = {
+            "kernel_initializer": "he_normal",
+            "kernel_regularizer": keras.regularizers.l2(0.0001),
+            "strides": (x, y)
+        }
 
-    stride_height = int(round(input_shape[COL_AXIS] / residual_shape[COL_AXIS]))
-
-    equal_channels = input_shape[CHANNEL_AXIS] == residual_shape[CHANNEL_AXIS]
-
-    if stride_width > 1 or stride_height > 1 or not equal_channels:
-        kernel_regularizer = keras.regularizers.l2(0.0001)
-
-        a = keras.layers.Conv2D(filters=residual_shape[CHANNEL_AXIS], kernel_size=(1, 1), strides=(stride_width, stride_height), kernel_initializer="he_normal",
-                                kernel_regularizer=kernel_regularizer)(a)
+        a = keras.layers.Conv2D(b_shape[CHANNEL_AXIS], (1, 1), **shortcut_parameters)(a)
 
     return keras.layers.add([a, b])
 
@@ -119,7 +132,12 @@ class ResNet(keras.models.Model):
             if not block:
                 raise ValueError("Invalid {}".format(block))
 
-        y = keras.layers.Conv2D(filters=64, kernel_size=(7, 7), strides=(2, 2), **parameters)(x)
+        if keras.backend.image_data_format() == "channels_first":
+            axis = 1
+        else:
+            axis = 3
+
+        y = keras.layers.Conv2D(64, (7, 7), strides=(2, 2), **parameters)(x)
         y = keras.layers.BatchNormalization()(y)
         y = keras.layers.Activation("relu")(y)
 
@@ -128,11 +146,11 @@ class ResNet(keras.models.Model):
         filters = 64
 
         for index, repetition in enumerate(repetitions):
-            y = residual(block, filters=filters, repetitions=repetition, top=(index == 0))(y)
+            y = residual(block, filters=filters, repetitions=repetition, first=(index == 0))(y)
 
             filters *= 2
 
-        y = keras.layers.BatchNormalization(axis=CHANNEL_AXIS)(y)
+        y = keras.layers.BatchNormalization(axis=axis)(y)
         y = keras.layers.Activation("relu")(y)
 
         block_shape = keras.backend.int_shape(y)
