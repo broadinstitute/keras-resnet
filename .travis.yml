@@ -1,3 +1,4 @@
+before_install: pip install tensorflow
 cache: pip
 dist: trusty
 install: pip install --editable .
