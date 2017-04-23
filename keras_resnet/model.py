@@ -68,24 +68,34 @@ class ResNet(keras.models.Model):
 
 class ResNet18(ResNet):
     def __init__(self, x, classes):
-        super(ResNet18, self).__init__(x, classes, keras_resnet.block.basic, [2, 2, 2, 2])
+        block = keras_resnet.block.basic
+
+        super(ResNet18, self).__init__(x, classes, block, [2, 2, 2, 2])
 
 
 class ResNet34(ResNet):
     def __init__(self, x, classes):
-        super(ResNet34, self).__init__(x, classes, keras_resnet.block.basic, [3, 4, 6, 3])
+        block = keras_resnet.block.basic
+
+        super(ResNet34, self).__init__(x, classes, block, [3, 4, 6, 3])
 
 
 class ResNet50(ResNet):
     def __init__(self, x, classes):
-        super(ResNet50, self).__init__(x, classes, keras_resnet.block.bottleneck, [3, 4, 6, 3])
+        block = keras_resnet.block.bottleneck
+
+        super(ResNet50, self).__init__(x, classes, block, [3, 4, 6, 3])
 
 
 class ResNet101(ResNet):
     def __init__(self, x, classes):
-        super(ResNet101, self).__init__(x, classes, keras_resnet.block.bottleneck, [3, 4, 23, 3])
+        block = keras_resnet.block.bottleneck
+
+        super(ResNet101, self).__init__(x, classes, block, [3, 4, 23, 3])
 
 
 class ResNet152(ResNet):
     def __init__(self, x, classes):
-        super(ResNet152, self).__init__(x, classes, keras_resnet.block.bottleneck, [3, 8, 36, 3])
+        block = keras_resnet.block.bottleneck
+
+        super(ResNet152, self).__init__(x, classes, block, [3, 8, 36, 3])
