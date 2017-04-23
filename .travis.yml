@@ -1,3 +1,4 @@
+dist: trusty
 install: pip install --editable .
 language: python
 script: pytest
