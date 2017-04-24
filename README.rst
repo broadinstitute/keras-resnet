@@ -1,8 +1,8 @@
 keras-resnet
 ============
 
-.. image:: https://travis-ci.org/0x00b1/keras-resnet.svg?branch=master
-    :target: https://travis-ci.org/0x00b1/keras-resnet
+.. image:: https://travis-ci.org/broadinstitute/keras-resnet.svg?branch=master
+    :target: https://travis-ci.org/broadinstitute/keras-resnet
 
 
 
