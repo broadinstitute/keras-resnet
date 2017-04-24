@@ -20,9 +20,9 @@ A tantalizing preview of keras-resnet simplicity:
 
     >>> model.compile("adam", "categorical_crossentropy", ["accuracy"])
 
-    >> (x, y), (_, _) = keras.datasets.cifar10.load_data()
+    >>> (x, y), (_, _) = keras.datasets.cifar10.load_data()
 
-    >> y = keras.utils.np_utils.to_categorical(y)
+    >>> y = keras.utils.np_utils.to_categorical(y)
 
     >>> model.fit(x, y)
 
