@@ -72,9 +72,7 @@ def basic(filters, strides=(1, 1), first=False):
     A basic block.
 
     :param filters: the output’s feature space
-
     :param strides: the convolution’s stride
-
     :param first: whether this is the first instance inside a residual block
 
     Usage::
@@ -110,9 +108,7 @@ def bottleneck(filters, strides=(1, 1), first=False):
     A bottleneck block.
 
     :param filters: the output’s feature space
-
     :param strides: the convolution’s stride
-
     :param first: whether this is the first instance inside a residual block
 
     Usage::
@@ -150,11 +146,8 @@ def residual(block, filters, repetitions, first=False):
     A residual block.
 
     :param block: a convolutional block
-
     :param filters: the output’s feature space
-
     :param repetitions: number of repetitions in the residual block
-
     :param first: whether this is the first instance inside a residual block
 
     Usage::
