@@ -20,6 +20,6 @@ setuptools.setup(
             "tests"
         ]
     ),
-    url="https://github.com/0x00b1/keras-resnet",
+    url="https://github.com/broadinstitute/keras-resnet",
     version="0.0.1"
 )
