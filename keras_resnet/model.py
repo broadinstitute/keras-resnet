@@ -99,3 +99,10 @@ class ResNet152(ResNet):
         block = keras_resnet.block.bottleneck
 
         super(ResNet152, self).__init__(x, classes, block, [3, 8, 36, 3])
+
+
+class ResNet200(ResNet):
+    def __init__(self, x, classes):
+        block = keras_resnet.block.bottleneck
+
+        super(ResNet200, self).__init__(x, classes, block, [3, 24, 36, 3])
