@@ -8,6 +8,22 @@ keras-resnet
 
 keras-resnet is **the** Keras package for deep residual networks. It's both fast *and* flexible.
 
+A tantalizing preview of keras-resnet simplicity:
+
+.. code-block:: python
+
+    >> (x, y), (_, _) = keras.datasets.cifar10.load_data()
+    
+    >> y = keras.utils.np_utils.to_categorical(y)
+
+    >>> shape, classes = (32, 32, 3), 10
+        
+    >>> model = keras_resnet.ResNet50(keras.layers.Input(shape), classes)
+    
+    >>> model.compile("adam", "categorical_crossentropy", ["accuracy"])
+    
+    >>> model.fit(x, y)
+
 Installation
 ------------
 
