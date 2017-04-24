@@ -61,3 +61,14 @@ class TestResNet152:
         parameters = [keras.backend.count_params(weight) for weight in weights]
 
         assert sum(parameters) == 157847050
+
+
+class TestResNet200:
+    def test_constructor(self, x, classes):
+        model = keras_resnet.model.ResNet200(x, classes)
+
+        weights = model.trainable_weights
+
+        parameters = [keras.backend.count_params(weight) for weight in weights]
+
+        assert sum(parameters) == 170728970
