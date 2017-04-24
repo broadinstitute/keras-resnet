@@ -1,3 +1,14 @@
+# -*- coding: utf-8 -*-
+
+"""
+
+keras_resnet.model
+~~~~~~~~~~~~~~~~~~
+
+This module implements a number of popular residual networks.
+
+"""
+
 import keras_resnet.block
 import keras
 import keras.datasets
@@ -27,6 +38,24 @@ parameters = {
 
 
 class ResNet(keras.models.Model):
+    """
+    A custom :class:`ResNet <ResNet>` object.
+
+    :param x: input tensor (e.g. an instance of `keras.layers.Input`)
+    :param classes: number of classes
+    :param block: a residual block (e.g. an instance of `keras_resnet.basic`)
+    :param repetitions: the network’s residual architecture
+
+    Usage::
+        >>> import keras_resnet
+        >>> shape, classes = (32, 32, 3), 10
+        >>> x = keras.layers.Input(shape)
+        >>> block = keras_resnet.basic
+        >>> repetitions = [2, 2, 2, 2]
+        >>> model = keras_resnet.ResNet(x, classes, block, repetitions)
+        >>> model.compile("adam", "categorical_crossentropy", ["accuracy"])
+    """
+
     def __init__(self, x, classes, block, repetitions):
         if isinstance(block, six.string_types):
             block = globals().get(block)
@@ -67,6 +96,19 @@ class ResNet(keras.models.Model):
 
 
 class ResNet18(ResNet):
+    """
+    A :class:`ResNet18 <ResNet18>` object.
+
+    :param x: input tensor (e.g. an instance of `keras.layers.Input`)
+    :param classes: number of classes
+
+    Usage::
+        >>> import keras_resnet
+        >>> shape, classes = (32, 32, 3), 10
+        >>> x = keras.layers.Input(shape)
+        >>> model = keras_resnet.ResNet18(x, classes)
+        >>> model.compile("adam", "categorical_crossentropy", ["accuracy"])
+    """
     def __init__(self, x, classes):
         block = keras_resnet.block.basic
 
@@ -74,6 +116,19 @@ class ResNet18(ResNet):
 
 
 class ResNet34(ResNet):
+    """
+    A :class:`ResNet34 <ResNet34>` object.
+
+    :param x: input tensor (e.g. an instance of `keras.layers.Input`)
+    :param classes: number of classes
+
+    Usage::
+        >>> import keras_resnet
+        >>> shape, classes = (32, 32, 3), 10
+        >>> x = keras.layers.Input(shape)
+        >>> model = keras_resnet.ResNet34(x, classes)
+        >>> model.compile("adam", "categorical_crossentropy", ["accuracy"])
+    """
     def __init__(self, x, classes):
         block = keras_resnet.block.basic
 
@@ -81,6 +136,19 @@ class ResNet34(ResNet):
 
 
 class ResNet50(ResNet):
+    """
+    A :class:`ResNet50 <ResNet50>` object.
+
+    :param x: input tensor (e.g. an instance of `keras.layers.Input`)
+    :param classes: number of classes
+
+    Usage::
+        >>> import keras_resnet
+        >>> shape, classes = (32, 32, 3), 10
+        >>> x = keras.layers.Input(shape)
+        >>> model = keras_resnet.ResNet50(x, classes)
+        >>> model.compile("adam", "categorical_crossentropy", ["accuracy"])
+    """
     def __init__(self, x, classes):
         block = keras_resnet.block.bottleneck
 
@@ -88,6 +156,19 @@ class ResNet50(ResNet):
 
 
 class ResNet101(ResNet):
+    """
+    A :class:`ResNet101 <ResNet101>` object.
+
+    :param x: input tensor (e.g. an instance of `keras.layers.Input`)
+    :param classes: number of classes
+
+    Usage::
+        >>> import keras_resnet
+        >>> shape, classes = (32, 32, 3), 10
+        >>> x = keras.layers.Input(shape)
+        >>> model = keras_resnet.ResNet101(x, classes)
+        >>> model.compile("adam", "categorical_crossentropy", ["accuracy"])
+    """
     def __init__(self, x, classes):
         block = keras_resnet.block.bottleneck
 
@@ -95,6 +176,19 @@ class ResNet101(ResNet):
 
 
 class ResNet152(ResNet):
+    """
+    A :class:`ResNet152 <ResNet152>` object.
+
+    :param x: input tensor (e.g. an instance of `keras.layers.Input`)
+    :param classes: number of classes
+
+    Usage::
+        >>> import keras_resnet
+        >>> shape, classes = (32, 32, 3), 10
+        >>> x = keras.layers.Input(shape)
+        >>> model = keras_resnet.ResNet152(x, classes)
+        >>> model.compile("adam", "categorical_crossentropy", ["accuracy"])
+    """
     def __init__(self, x, classes):
         block = keras_resnet.block.bottleneck
 
@@ -102,6 +196,19 @@ class ResNet152(ResNet):
 
 
 class ResNet200(ResNet):
+    """
+    A :class:`ResNet200 <ResNet200>` object.
+
+    :param x: input tensor (e.g. an instance of `keras.layers.Input`)
+    :param classes: number of classes
+
+    Usage::
+        >>> import keras_resnet
+        >>> shape, classes = (32, 32, 3), 10
+        >>> x = keras.layers.Input(shape)
+        >>> model = keras_resnet.ResNet200(x, classes)
+        >>> model.compile("adam", "categorical_crossentropy", ["accuracy"])
+    """
     def __init__(self, x, classes):
         block = keras_resnet.block.bottleneck
 

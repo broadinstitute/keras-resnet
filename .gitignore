@@ -31,6 +31,7 @@ celerybeat-schedule
 coverage.xml
 develop-eggs/
 dist/
+docs/_build
 docs/_build/
 downloads/
 eggs/

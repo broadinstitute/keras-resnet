@@ -1,3 +1,14 @@
+# -*- coding: utf-8 -*-
+
+"""
+
+keras_resnet.block
+~~~~~~~~~~~~~~~~~~
+
+This module implements a number of popular residual blocks.
+
+"""
+
 import keras
 import keras.datasets
 import keras.layers
@@ -25,6 +36,17 @@ parameters = {
 
 
 def convolution(**kwargs):
+    """
+
+    A convolution block.
+
+    :param kwargs: arguments passed to `keras.layers.Conv2D`
+
+    Usage::
+      >>> import keras_resnet.block
+      >>> keras_resnet.block.convolution(filters=64, kernel_size=(1, 1))
+
+    """
     kwargs = kwargs.copy()
 
     kwargs.update(parameters)
@@ -45,6 +67,21 @@ def convolution(**kwargs):
 
 
 def basic(filters, strides=(1, 1), first=False):
+    """
+
+    A basic block.
+
+    :param filters: the output’s feature space
+
+    :param strides: the convolution’s stride
+
+    :param first: whether this is the first instance inside a residual block
+
+    Usage::
+      >>> import keras_resnet.block
+      >>> keras_resnet.block.basic(64)
+
+    """
     def f(x):
         if keras.backend.image_data_format() == "channels_first":
             axis = 1
@@ -68,6 +105,21 @@ def basic(filters, strides=(1, 1), first=False):
 
 
 def bottleneck(filters, strides=(1, 1), first=False):
+    """
+
+    A bottleneck block.
+
+    :param filters: the output’s feature space
+
+    :param strides: the convolution’s stride
+
+    :param first: whether this is the first instance inside a residual block
+
+    Usage::
+      >>> import keras_resnet.block
+      >>> keras_resnet.block.bottleneck(64)
+
+    """
     def f(x):
         if keras.backend.image_data_format() == "channels_first":
             axis = 1
@@ -93,6 +145,24 @@ def bottleneck(filters, strides=(1, 1), first=False):
 
 
 def residual(block, filters, repetitions, first=False):
+    """
+
+    A residual block.
+
+    :param block: a convolutional block
+
+    :param filters: the output’s feature space
+
+    :param repetitions: number of repetitions in the residual block
+
+    :param first: whether this is the first instance inside a residual block
+
+    Usage::
+      >>> import keras_resnet.block
+      >>> block = keras_resnet.block.bottleneck(64)
+      >>> keras_resnet.block.residual(block, 64, [2, 2, 2, 2])
+
+    """
     def f(x):
         for index in range(repetitions):
             strides = (2, 2) if index == 0 and not first else (1, 1)
