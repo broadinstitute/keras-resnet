@@ -16,7 +16,7 @@ A tantalizing preview of keras-resnet simplicity:
 
     >>> x = keras.layers.Input(shape)
 
-    >>> model = keras_resnet.models.ResNet50(x, classes)
+    >>> model = keras_resnet.ResNet50(x, classes)
 
     >>> model.compile("adam", "categorical_crossentropy", ["accuracy"])
 
