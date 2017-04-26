@@ -14,8 +14,6 @@ Layers
 
 .. autofunction:: keras_resnet.bottleneck
 
-.. autofunction:: keras_resnet.residual
-
 .. autofunction:: keras_resnet.shortcut
 
 Models

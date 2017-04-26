@@ -2,11 +2,10 @@ from .block import (
     basic,
     bottleneck,
     convolution,
-    residual,
     shortcut
 )
 
-from .model import (
+from .models import (
     ResNet,
     ResNet18,
     ResNet34,
