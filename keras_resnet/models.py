@@ -49,8 +49,7 @@ class ResNet(keras.models.Model):
         else:
             axis = 1
 
-        x = keras.layers.ZeroPadding2D((3, 3))(inputs)
-        x = keras.layers.Conv2D(64, (7, 7), strides=(2, 2), **parameters)(x)
+        x = keras.layers.Conv2D(64, (7, 7), strides=(2, 2), **parameters)(inputs)
         x = keras.layers.BatchNormalization(axis=axis)(x)
         x = keras.layers.Activation("relu")(x)
         x = keras.layers.MaxPooling2D((3, 3), strides=(2, 2))(x)
