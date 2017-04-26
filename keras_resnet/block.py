@@ -12,15 +12,6 @@ This module implements a number of popular residual blocks.
 import keras.layers
 import keras.regularizers
 
-if keras.backend.image_dim_ordering() == "tf":
-    ROW_AXIS = 1
-    COL_AXIS = 2
-    CHANNEL_AXIS = 3
-else:
-    CHANNEL_AXIS = 1
-    ROW_AXIS = 2
-    COL_AXIS = 3
-
 
 def basic(filters, strides=(1, 1), first=False):
     """
@@ -37,10 +28,10 @@ def basic(filters, strides=(1, 1), first=False):
 
     """
     def f(x):
-        if keras.backend.image_data_format() == "channels_first":
-            axis = 1
-        else:
+        if keras.backend.image_data_format() == "channels_last":
             axis = 3
+        else:
+            axis = 1
 
         if first:
             y = keras.layers.Conv2D(filters, (3, 3), strides=strides, padding="same")(x)
@@ -73,10 +64,10 @@ def bottleneck(filters, strides=(1, 1), first=False):
 
     """
     def f(x):
-        if keras.backend.image_data_format() == "channels_first":
-            axis = 1
-        else:
+        if keras.backend.image_data_format() == "channels_last":
             axis = 3
+        else:
+            axis = 1
 
         if first:
             y = keras.layers.Conv2D(filters, (1, 1), strides=strides, padding="same")(x)
@@ -102,10 +93,17 @@ def shortcut(a, b):
     a_shape = keras.backend.int_shape(a)
     b_shape = keras.backend.int_shape(b)
 
-    x = int(round(a_shape[ROW_AXIS] / b_shape[ROW_AXIS]))
-    y = int(round(a_shape[COL_AXIS] / b_shape[COL_AXIS]))
+    if keras.backend.image_data_format() == "channels_last":
+        x = int(round(a_shape[1] / b_shape[1]))
+        y = int(round(a_shape[2] / b_shape[2]))
 
-    if x > 1 or y > 1 or not a_shape[CHANNEL_AXIS] == b_shape[CHANNEL_AXIS]:
-        a = keras.layers.Conv2D(b_shape[CHANNEL_AXIS], (1, 1), strides=(x, y))(a)
+        if x > 1 or y > 1 or not a_shape[3] == b_shape[3]:
+            a = keras.layers.Conv2D(b_shape[3], (1, 1), strides=(x, y))(a)
+    else:
+        x = int(round(a_shape[2] / b_shape[2]))
+        y = int(round(a_shape[3] / b_shape[3]))
+
+        if x > 1 or y > 1 or not a_shape[3] == b_shape[3]:
+            a = keras.layers.Conv2D(b_shape[3], (1, 1), strides=(x, y))(a)
 
     return keras.layers.add([a, b])
