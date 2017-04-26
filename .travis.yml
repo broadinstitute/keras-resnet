@@ -10,6 +10,8 @@ deploy:
   provider: pypi
   user: '0x00b1'
 dist: trusty
+env:
+  - KERAS_BACKEND=tensorflow
 install: pip install --editable .
 language: python
 script: pytest
