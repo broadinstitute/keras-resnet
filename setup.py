@@ -3,6 +3,12 @@ import setuptools
 setuptools.setup(
     author="Allen Goodman",
     author_email="allen.goodman@icloud.com",
+    extras_require={
+        "test": [
+            "click",
+            "pytest"
+        ]
+    },
     install_requires=[
         "keras"
     ],
