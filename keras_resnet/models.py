@@ -44,16 +44,16 @@ class ResNet(keras.models.Model):
     """
 
     def __init__(self, inputs, blocks, block):
-        if keras.backend.image_data_format() == "channels_first":
-            axis = 1
-        else:
+        if keras.backend.image_data_format() == "channels_last":
             axis = 3
+        else:
+            axis = 1
 
-        outputs = keras.layers.Conv2D(64, (7, 7), strides=(2, 2), **parameters)(inputs)
-        outputs = keras.layers.BatchNormalization()(outputs)
-        outputs = keras.layers.Activation("relu")(outputs)
-
-        outputs = keras.layers.MaxPooling2D(pool_size=(3, 3), strides=(2, 2), padding="same")(outputs)
+        x = keras.layers.ZeroPadding2D((3, 3))(inputs)
+        x = keras.layers.Conv2D(64, (7, 7), strides=(2, 2), **parameters)(x)
+        x = keras.layers.BatchNormalization(axis=axis)(x)
+        x = keras.layers.Activation("relu")(x)
+        x = keras.layers.MaxPooling2D((3, 3), strides=(2, 2))(x)
 
         features = 64
 
@@ -64,23 +64,23 @@ class ResNet(keras.models.Model):
                 else:
                     strides = (1, 1)
 
-                outputs = block(features, strides, j == 0 and k == 0)(outputs)
+                x = block(features, strides, j == 0 and k == 0)(x)
 
             features *= 2
 
-        outputs = keras.layers.BatchNormalization(axis=axis)(outputs)
-        outputs = keras.layers.Activation("relu")(outputs)
+        x = keras.layers.BatchNormalization(axis=axis)(x)
+        x = keras.layers.Activation("relu")(x)
 
-        shape = keras.backend.int_shape(outputs)
+        shape = keras.backend.int_shape(x)
 
-        if keras.backend.image_data_format() == "channels_first":
-            pool_size = (shape[2], shape[3])
-        else:
+        if keras.backend.image_data_format() == "channels_last":
             pool_size = (shape[1], shape[2])
+        else:
+            pool_size = (shape[2], shape[3])
 
-        outputs = keras.layers.AveragePooling2D(pool_size=pool_size, strides=(1, 1))(outputs)
+        x = keras.layers.AveragePooling2D(pool_size, strides=(1, 1))(x)
 
-        super(ResNet, self).__init__(inputs, outputs)
+        super(ResNet, self).__init__(inputs, x)
 
 
 class ResNet18(ResNet):
