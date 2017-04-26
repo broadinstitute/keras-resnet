@@ -8,8 +8,6 @@
 Layers
 ------
 
-.. autofunction:: keras_resnet.convolution
-
 .. autofunction:: keras_resnet.basic
 
 .. autofunction:: keras_resnet.bottleneck

@@ -1,7 +1,6 @@
 from .block import (
     basic,
     bottleneck,
-    convolution,
     shortcut
 )
 

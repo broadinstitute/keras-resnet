@@ -21,43 +21,6 @@ else:
     ROW_AXIS = 2
     COL_AXIS = 3
 
-parameters = {
-    "kernel_initializer": "he_normal",
-    "kernel_regularizer": keras.regularizers.l2(1.e-4),
-    "padding": "same"
-}
-
-
-def convolution(**kwargs):
-    """
-
-    A convolution block.
-
-    :param kwargs: arguments passed to `keras.layers.Conv2D`
-
-    Usage::
-      >>> import keras_resnet.block
-      >>> keras_resnet.block.convolution(filters=64, kernel_size=(1, 1))
-
-    """
-    kwargs = kwargs.copy()
-
-    kwargs.update(parameters)
-
-    def f(x):
-        if keras.backend.image_data_format() == "channels_first":
-            axis = 1
-        else:
-            axis = 3
-
-        y = keras.layers.BatchNormalization(axis=axis)(x)
-        y = keras.layers.Activation("relu")(y)
-        y = keras.layers.Conv2D(**kwargs)(y)
-
-        return y
-
-    return f
-
 
 def basic(filters, strides=(1, 1), first=False):
     """
@@ -80,15 +43,15 @@ def basic(filters, strides=(1, 1), first=False):
             axis = 3
 
         if first:
-            y = keras.layers.Conv2D(filters, (3, 3), strides=strides, **parameters)(x)
+            y = keras.layers.Conv2D(filters, (3, 3), strides=strides, padding="same")(x)
         else:
             y = keras.layers.BatchNormalization(axis=axis)(x)
             y = keras.layers.Activation("relu")(y)
-            y = keras.layers.Conv2D(filters, (3, 3), strides=strides, **parameters)(y)
+            y = keras.layers.Conv2D(filters, (3, 3), strides=strides, padding="same")(y)
 
         y = keras.layers.BatchNormalization(axis=axis)(y)
         y = keras.layers.Activation("relu")(y)
-        y = keras.layers.Conv2D(filters, (3, 3), **parameters)(y)
+        y = keras.layers.Conv2D(filters, (3, 3), padding="same")(y)
 
         return shortcut(x, y)
 
@@ -116,17 +79,19 @@ def bottleneck(filters, strides=(1, 1), first=False):
             axis = 3
 
         if first:
-            y = keras.layers.Conv2D(filters, (1, 1), strides=strides, **parameters)(x)
+            y = keras.layers.Conv2D(filters, (1, 1), strides=strides, padding="same")(x)
         else:
             y = keras.layers.BatchNormalization(axis=axis)(x)
             y = keras.layers.Activation("relu")(y)
-            y = keras.layers.Conv2D(filters, (3, 3), strides=strides, **parameters)(y)
+            y = keras.layers.Conv2D(filters, (3, 3), strides=strides, padding="same")(y)
 
         y = keras.layers.BatchNormalization(axis=axis)(y)
         y = keras.layers.Activation("relu")(y)
-        y = keras.layers.Conv2D(filters, (3, 3), **parameters)(y)
+        y = keras.layers.Conv2D(filters, (3, 3), padding="same")(y)
 
-        y = convolution(filters=filters * 4, kernel_size=(1, 1))(y)
+        y = keras.layers.BatchNormalization(axis=axis)(y)
+        y = keras.layers.Activation("relu")(y)
+        y = keras.layers.Conv2D(filters * 4, (1, 1))(y)
 
         return shortcut(x, y)
 
@@ -141,12 +106,6 @@ def shortcut(a, b):
     y = int(round(a_shape[COL_AXIS] / b_shape[COL_AXIS]))
 
     if x > 1 or y > 1 or not a_shape[CHANNEL_AXIS] == b_shape[CHANNEL_AXIS]:
-        shortcut_parameters = {
-            "kernel_initializer": "he_normal",
-            "kernel_regularizer": keras.regularizers.l2(0.0001),
-            "strides": (x, y)
-        }
-
-        a = keras.layers.Conv2D(b_shape[CHANNEL_AXIS], (1, 1), **shortcut_parameters)(a)
+        a = keras.layers.Conv2D(b_shape[CHANNEL_AXIS], (1, 1), strides=(x, y))(a)
 
     return keras.layers.add([a, b])
