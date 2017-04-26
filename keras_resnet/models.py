@@ -16,13 +16,6 @@ import keras.models
 import keras.regularizers
 
 
-parameters = {
-    "kernel_initializer": "he_normal",
-    "kernel_regularizer": keras.regularizers.l2(1.e-4),
-    "padding": "same"
-}
-
-
 class ResNet(keras.models.Model):
     """
 
@@ -49,7 +42,7 @@ class ResNet(keras.models.Model):
         else:
             axis = 1
 
-        x = keras.layers.Conv2D(64, (7, 7), strides=(2, 2), **parameters)(inputs)
+        x = keras.layers.Conv2D(64, (7, 7), strides=(2, 2), padding="same")(inputs)
         x = keras.layers.BatchNormalization(axis=axis)(x)
         x = keras.layers.Activation("relu")(x)
         x = keras.layers.MaxPooling2D((3, 3), strides=(2, 2))(x)
