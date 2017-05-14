@@ -12,6 +12,10 @@ This module implements a number of popular residual blocks.
 import keras.layers
 import keras.regularizers
 
+parameters = {
+    "kernel_initializer": "he_normal"
+}
+
 
 def basic(filters, strides=(1, 1), first=False):
     """
@@ -34,15 +38,15 @@ def basic(filters, strides=(1, 1), first=False):
             axis = 1
 
         if first:
-            y = keras.layers.Conv2D(filters, (3, 3), strides=strides, padding="same")(x)
+            y = keras.layers.Conv2D(filters, (3, 3), strides=strides, padding="same", **parameters)(x)
         else:
             y = keras.layers.BatchNormalization(axis=axis)(x)
             y = keras.layers.Activation("relu")(y)
-            y = keras.layers.Conv2D(filters, (3, 3), strides=strides, padding="same")(y)
+            y = keras.layers.Conv2D(filters, (3, 3), strides=strides, padding="same", **parameters)(y)
 
         y = keras.layers.BatchNormalization(axis=axis)(y)
         y = keras.layers.Activation("relu")(y)
-        y = keras.layers.Conv2D(filters, (3, 3), padding="same")(y)
+        y = keras.layers.Conv2D(filters, (3, 3), padding="same", **parameters)(y)
 
         return shortcut(x, y)
 
@@ -70,19 +74,19 @@ def bottleneck(filters, strides=(1, 1), first=False):
             axis = 1
 
         if first:
-            y = keras.layers.Conv2D(filters, (1, 1), strides=strides, padding="same")(x)
+            y = keras.layers.Conv2D(filters, (1, 1), strides=strides, padding="same", **parameters)(x)
         else:
             y = keras.layers.BatchNormalization(axis=axis)(x)
             y = keras.layers.Activation("relu")(y)
-            y = keras.layers.Conv2D(filters, (3, 3), strides=strides, padding="same")(y)
+            y = keras.layers.Conv2D(filters, (3, 3), strides=strides, padding="same", **parameters)(y)
 
         y = keras.layers.BatchNormalization(axis=axis)(y)
         y = keras.layers.Activation("relu")(y)
-        y = keras.layers.Conv2D(filters, (3, 3), padding="same")(y)
+        y = keras.layers.Conv2D(filters, (3, 3), padding="same", **parameters)(y)
 
         y = keras.layers.BatchNormalization(axis=axis)(y)
         y = keras.layers.Activation("relu")(y)
-        y = keras.layers.Conv2D(filters * 4, (1, 1))(y)
+        y = keras.layers.Conv2D(filters * 4, (1, 1), **parameters)(y)
 
         return shortcut(x, y)
 
@@ -98,12 +102,12 @@ def shortcut(a, b):
         y = int(round(a_shape[2] / b_shape[2]))
 
         if x > 1 or y > 1 or not a_shape[3] == b_shape[3]:
-            a = keras.layers.Conv2D(b_shape[3], (1, 1), strides=(x, y), padding="same")(a)
+            a = keras.layers.Conv2D(b_shape[3], (1, 1), strides=(x, y), padding="same", **parameters)(a)
     else:
         x = int(round(a_shape[2] / b_shape[2]))
         y = int(round(a_shape[3] / b_shape[3]))
 
         if x > 1 or y > 1 or not a_shape[3] == b_shape[3]:
-            a = keras.layers.Conv2D(b_shape[3], (1, 1), strides=(x, y), padding="same")(a)
+            a = keras.layers.Conv2D(b_shape[3], (1, 1), strides=(x, y), padding="same", **parameters)(a)
 
     return keras.layers.add([a, b])
