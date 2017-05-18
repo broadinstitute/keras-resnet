@@ -112,7 +112,7 @@ def shortcut(a, b):
         x = int(round(a_shape[2] / b_shape[2]))
         y = int(round(a_shape[3] / b_shape[3]))
 
-        if x > 1 or y > 1 or not a_shape[3] == b_shape[3]:
-            a = keras.layers.Conv2D(b_shape[3], (1, 1), strides=(x, y), padding="same", **parameters)(a)
+        if x > 1 or y > 1 or not a_shape[1] == b_shape[1]:
+            a = keras.layers.Conv2D(b_shape[1], (1, 1), strides=(x, y), padding="same", **parameters)(a)
 
     return keras.layers.add([a, b])
