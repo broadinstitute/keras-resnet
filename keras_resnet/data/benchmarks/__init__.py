@@ -49,12 +49,12 @@ models = {
         ]
     )
 )
-def __main__(benchmark, name):
+def __main__(benchmark, device, name):
     configuration = tensorflow.ConfigProto()
 
     configuration.gpu_options.allow_growth = True
 
-    configuration.gpu_options.visible_device_list = "2"
+    configuration.gpu_options.visible_device_list = device
 
     session = tensorflow.Session(config=configuration)
 
