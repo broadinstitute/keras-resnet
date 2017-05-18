@@ -5,16 +5,6 @@ import keras_resnet.models
 import numpy
 import tensorflow
 
-configuration = tensorflow.ConfigProto()
-
-configuration.gpu_options.allow_growth = True
-
-configuration.gpu_options.visible_device_list = "2"
-
-session = tensorflow.Session(config=configuration)
-
-keras.backend.set_session(session)
-
 benchmarks = {
     "CIFAR-10": keras.datasets.cifar10,
     "CIFAR-100": keras.datasets.cifar100,
@@ -44,6 +34,7 @@ models = {
         ]
     )
 )
+@click.option("--device", default=0)
 @click.option(
     "--name",
     default="ResNet-50",
@@ -59,6 +50,16 @@ models = {
     )
 )
 def __main__(benchmark, name):
+    configuration = tensorflow.ConfigProto()
+
+    configuration.gpu_options.allow_growth = True
+
+    configuration.gpu_options.visible_device_list = "2"
+
+    session = tensorflow.Session(config=configuration)
+
+    keras.backend.set_session(session)
+
     (training_x, training_y), _ = benchmarks[benchmark].load_data()
 
     training_x = training_x.astype(numpy.float16)
@@ -79,7 +80,7 @@ def __main__(benchmark, name):
 
     model = keras.models.Model(x.input, y)
 
-    optimizer = keras.optimizers.Adam()
+    optimizer = keras.optimizers.SGD(lr=0.1, momentum=0.9, nesterov=True)
 
     loss = "categorical_crossentropy"
 
@@ -100,7 +101,7 @@ def __main__(benchmark, name):
     def schedule(epoch):
         if epoch < 80:
             return 0.1
-        elif 80 <= epoch < 120:
+        if 80 <= epoch < 120:
             return 0.01
         else:
             return 0.001
