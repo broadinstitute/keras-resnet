@@ -54,7 +54,7 @@ def __main__(benchmark, device, name):
 
     configuration.gpu_options.allow_growth = True
 
-    configuration.gpu_options.visible_device_list = device
+    configuration.gpu_options.visible_device_list = str(device)
 
     session = tensorflow.Session(config=configuration)
 
