@@ -42,10 +42,12 @@ def basic(filters, strides=(1, 1), first=False):
         else:
             y = keras.layers.BatchNormalization(axis=axis)(x)
             y = keras.layers.Activation("relu")(y)
+
             y = keras.layers.Conv2D(filters, (3, 3), strides=strides, padding="same", **parameters)(y)
 
         y = keras.layers.BatchNormalization(axis=axis)(y)
         y = keras.layers.Activation("relu")(y)
+
         y = keras.layers.Conv2D(filters, (3, 3), padding="same", **parameters)(y)
 
         return shortcut(x, y)
@@ -78,14 +80,17 @@ def bottleneck(filters, strides=(1, 1), first=False):
         else:
             y = keras.layers.BatchNormalization(axis=axis)(x)
             y = keras.layers.Activation("relu")(y)
+
             y = keras.layers.Conv2D(filters, (3, 3), strides=strides, padding="same", **parameters)(y)
 
         y = keras.layers.BatchNormalization(axis=axis)(y)
         y = keras.layers.Activation("relu")(y)
+
         y = keras.layers.Conv2D(filters, (3, 3), padding="same", **parameters)(y)
 
         y = keras.layers.BatchNormalization(axis=axis)(y)
         y = keras.layers.Activation("relu")(y)
+
         y = keras.layers.Conv2D(filters * 4, (1, 1), **parameters)(y)
 
         return shortcut(x, y)
