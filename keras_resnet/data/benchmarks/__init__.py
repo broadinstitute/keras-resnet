@@ -9,7 +9,7 @@ configuration = tensorflow.ConfigProto()
 
 configuration.gpu_options.allow_growth = True
 
-configuration.gpu_options.visible_device_list = "0"
+configuration.gpu_options.visible_device_list = "2"
 
 session = tensorflow.Session(config=configuration)
 
@@ -97,14 +97,25 @@ def __main__(benchmark, name):
 
     csv_logger = keras.callbacks.CSVLogger(pathname)
 
+    def schedule(epoch):
+        if epoch < 80:
+            return 0.1
+        elif 80 <= epoch < 120:
+            return 0.01
+        else:
+            return 0.001
+
+    learning_rate_scheduler = keras.callbacks.LearningRateScheduler(schedule)
+
     callbacks = [
         csv_logger,
+        learning_rate_scheduler,
         model_checkpoint
     ]
 
     model.fit(
         callbacks=callbacks,
-        epochs=1,
+        epochs=200,
         validation_split=0.5,
         x=training_x,
         y=training_y
