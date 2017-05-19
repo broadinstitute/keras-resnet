@@ -4,6 +4,6 @@ import pytest
 
 @pytest.fixture(scope="module")
 def x():
-    shape = (32, 32, 3)
+    shape = (224, 224, 3)
 
     return keras.layers.Input(shape)
