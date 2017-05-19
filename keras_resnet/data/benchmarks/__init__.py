@@ -117,7 +117,7 @@ def __main__(benchmark, device, name):
     model.fit(
         callbacks=callbacks,
         epochs=200,
-        validation_split=0.5,
+        validation_split=0.9,
         x=training_x,
         y=training_y
     )
