@@ -115,6 +115,7 @@ def __main__(benchmark, device, name):
     ]
 
     model.fit(
+        batch_size=256,
         callbacks=callbacks,
         epochs=200,
         validation_split=0.1,
