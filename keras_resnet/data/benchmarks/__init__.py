@@ -1,18 +1,19 @@
 import click
 import keras
 import keras.applications.resnet50
-import keras_resnet.models
 import numpy
 import tensorflow
 
-benchmarks = {
+import keras_resnet.models
+
+_benchmarks = {
     "CIFAR-10": keras.datasets.cifar10,
     "CIFAR-100": keras.datasets.cifar100,
     "MNIST": keras.datasets.mnist
 }
 
 
-models = {
+_models = {
     "ResNet-18": keras_resnet.models.ResNet18,
     "ResNet-34": keras_resnet.models.ResNet34,
     "ResNet-50": keras_resnet.models.ResNet50,
@@ -60,7 +61,7 @@ def __main__(benchmark, device, name):
 
     keras.backend.set_session(session)
 
-    (training_x, training_y), _ = benchmarks[benchmark].load_data()
+    (training_x, training_y), _ = _benchmarks[benchmark].load_data()
 
     training_x = training_x.astype(numpy.float16)
 
@@ -72,7 +73,7 @@ def __main__(benchmark, device, name):
 
     x = keras.layers.Input(shape)
 
-    x = models[name](x)
+    x = _models[name](x)
 
     y = keras.layers.Flatten()(x.output)
 
@@ -80,7 +81,7 @@ def __main__(benchmark, device, name):
 
     model = keras.models.Model(x.input, y)
 
-    optimizer = keras.optimizers.SGD(lr=0.1, momentum=0.9, nesterov=True)
+    optimizer = keras.optimizers.Adam()
 
     loss = "categorical_crossentropy"
 
@@ -98,19 +99,8 @@ def __main__(benchmark, device, name):
 
     csv_logger = keras.callbacks.CSVLogger(pathname)
 
-    def schedule(epoch):
-        if epoch < 80:
-            return 0.1
-        if 80 <= epoch < 120:
-            return 0.01
-        else:
-            return 0.001
-
-    learning_rate_scheduler = keras.callbacks.LearningRateScheduler(schedule)
-
     callbacks = [
         csv_logger,
-        learning_rate_scheduler,
         model_checkpoint
     ]
 
