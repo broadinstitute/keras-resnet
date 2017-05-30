@@ -16,15 +16,19 @@ A tantalizing preview of keras-resnet simplicity:
 
     >>> x = keras.layers.Input(shape)
 
-    >>> model = keras_resnet.ResNet50(x, classes)
+    >>> y = keras_resnet.ResNet50(x)
+    
+    >>> y = keras.layers.Dense(classes)(y)
+    
+    >>> model = keras.models.Model(x, y)
 
     >>> model.compile("adam", "categorical_crossentropy", ["accuracy"])
 
-    >>> (x, y), (_, _) = keras.datasets.cifar10.load_data()
+    >>> (training_x, training_y), (_, _) = keras.datasets.cifar10.load_data()
 
-    >>> y = keras.utils.np_utils.to_categorical(y)
+    >>> training_y = keras.utils.np_utils.to_categorical(training_y)
 
-    >>> model.fit(x, y)
+    >>> model.fit(training_x, training_y)
 
 Installation
 ------------
