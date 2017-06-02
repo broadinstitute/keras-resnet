@@ -1,7 +1,9 @@
 import click
 import keras
 import keras.applications.resnet50
+import keras.preprocessing.image
 import numpy
+import sklearn.model_selection
 import tensorflow
 
 import keras_resnet.models
@@ -65,9 +67,36 @@ def __main__(benchmark, device, name):
 
     training_x = training_x.astype(numpy.float16)
 
-    training_x = keras.applications.resnet50.preprocess_input(training_x)
-
     training_y = keras.utils.np_utils.to_categorical(training_y)
+
+    training_x, validation_x, training_y, validation_y = sklearn.model_selection.train_test_split(training_x, training_y)
+
+    generator = keras.preprocessing.image.ImageDataGenerator(
+        featurewise_center=True,
+        featurewise_std_normalization=True,
+        horizontal_flip=True
+    )
+
+    generator.fit(training_x)
+
+    generator = generator.flow(
+        x=training_x,
+        y=training_y,
+        batch_size=256
+    )
+
+    validation_data = keras.preprocessing.image.ImageDataGenerator(
+        featurewise_center=True,
+        featurewise_std_normalization=True
+    )
+
+    validation_data.fit(validation_x)
+
+    validation_data = validation_data.flow(
+        x=validation_x,
+        y=validation_y,
+        batch_size=256
+    )
 
     shape, classes = training_x.shape[1:], training_y.shape[-1]
 
@@ -104,13 +133,13 @@ def __main__(benchmark, device, name):
         model_checkpoint
     ]
 
-    model.fit(
-        batch_size=256,
+    model.fit_generator(
         callbacks=callbacks,
         epochs=200,
-        validation_split=0.1,
-        x=training_x,
-        y=training_y
+        generator=generator,
+        steps_per_epoch=training_x.shape[0] // 256,
+        validation_data=validation_data,
+        validation_steps=validation_x.shape[0] // 256
     )
 
 if __name__ == "__main__":
