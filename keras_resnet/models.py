@@ -42,10 +42,12 @@ class ResNet(keras.models.Model):
         else:
             axis = 1
 
-        x = keras.layers.Conv2D(64, (7, 7), strides=(2, 2), padding="same")(inputs)
+        x = keras.layers.Conv2D(64, (7, 7), strides=(2, 2), padding="same")(
+            inputs)
         x = keras.layers.BatchNormalization(axis=axis)(x)
         x = keras.layers.Activation("relu")(x)
-        x = keras.layers.MaxPooling2D((3, 3), strides=(2, 2), padding="same")(x)
+        x = keras.layers.MaxPooling2D((3, 3), strides=(2, 2), padding="same")(
+            x)
 
         features = 64
 
@@ -94,6 +96,7 @@ class ResNet18(ResNet):
         >>> model.compile("adam", "categorical_crossentropy", ["accuracy"])
 
     """
+
     def __init__(self, inputs):
         block = keras_resnet.block.basic
 
@@ -115,6 +118,7 @@ class ResNet34(ResNet):
         >>> model.compile("adam", "categorical_crossentropy", ["accuracy"])
 
     """
+
     def __init__(self, inputs):
         block = keras_resnet.block.basic
 
@@ -136,6 +140,7 @@ class ResNet50(ResNet):
         >>> model.compile("adam", "categorical_crossentropy", ["accuracy"])
 
     """
+
     def __init__(self, inputs):
         block = keras_resnet.block.bottleneck
 
@@ -157,6 +162,7 @@ class ResNet101(ResNet):
         >>> model.compile("adam", "categorical_crossentropy", ["accuracy"])
 
     """
+
     def __init__(self, inputs):
         block = keras_resnet.block.bottleneck
 
@@ -178,6 +184,7 @@ class ResNet152(ResNet):
         >>> model.compile("adam", "categorical_crossentropy", ["accuracy"])
 
     """
+
     def __init__(self, inputs):
         block = keras_resnet.block.bottleneck
 
@@ -199,6 +206,7 @@ class ResNet200(ResNet):
         >>> model.compile("adam", "categorical_crossentropy", ["accuracy"])
 
     """
+
     def __init__(self, inputs):
         block = keras_resnet.block.bottleneck
 
