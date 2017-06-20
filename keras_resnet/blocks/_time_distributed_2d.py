@@ -106,8 +106,8 @@ def time_distributed_bottleneck_2d(filters, strides=(1, 1), first=False):
 
 
 def _shortcut(a, b):
-    a_shape = keras.backend.int_shape(a)
-    b_shape = keras.backend.int_shape(b)
+    a_shape = keras.backend.int_shape(a)[1:]
+    b_shape = keras.backend.int_shape(b)[1:]
 
     if keras.backend.image_data_format() == "channels_last":
         x = int(round(a_shape[1] // b_shape[1]))
