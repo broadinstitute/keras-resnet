@@ -41,12 +41,12 @@ def basic_3d(filters, strides=(1, 1), first=False):
         else:
             axis = 1
 
-        y = keras.layers.Conv3D(filters, (3, 3), strides=strides, padding="same", **parameters)(x)
+        y = keras.layers.Conv3D(filters, (3, 3, 3), strides=strides, padding="same", **parameters)(x)
 
         y = keras.layers.BatchNormalization(axis=axis)(y)
         y = keras.layers.Activation("relu")(y)
 
-        y = keras.layers.Conv3D(filters, (3, 3), padding="same", **parameters)(y)
+        y = keras.layers.Conv3D(filters, (3, 3, 3), padding="same", **parameters)(y)
 
         y = keras.layers.BatchNormalization(axis=axis)(y)
         y = _shortcut(x, y)
@@ -82,19 +82,19 @@ def bottleneck_3d(filters, strides=(1, 1), first=False):
             axis = 1
 
         if first:
-            y = keras.layers.Conv3D(filters, (1, 1), strides=strides, padding="same", **parameters)(x)
+            y = keras.layers.Conv3D(filters, (1, 1, 1), strides=strides, padding="same", **parameters)(x)
         else:
-            y = keras.layers.Conv3D(filters, (3, 3), strides=strides, padding="same", **parameters)(x)
+            y = keras.layers.Conv3D(filters, (3, 3, 3), strides=strides, padding="same", **parameters)(x)
 
         y = keras.layers.BatchNormalization(axis=axis)(y)
         y = keras.layers.Activation("relu")(y)
 
-        y = keras.layers.Conv3D(filters, (3, 3), padding="same", **parameters)(y)
+        y = keras.layers.Conv3D(filters, (3, 3, 3), padding="same", **parameters)(y)
 
         y = keras.layers.BatchNormalization(axis=axis)(y)
         y = keras.layers.Activation("relu")(y)
 
-        y = keras.layers.Conv3D(filters * 4, (1, 1), **parameters)(y)
+        y = keras.layers.Conv3D(filters * 4, (1, 1, 1), **parameters)(y)
 
         y = keras.layers.BatchNormalization(axis=axis)(y)
         y = _shortcut(x, y)
@@ -114,7 +114,7 @@ def _shortcut(a, b):
         y = int(round(a_shape[2] // b_shape[2]))
 
         if x > 1 or y > 1 or not a_shape[3] == b_shape[3]:
-            a = keras.layers.Conv3D(b_shape[3], (1, 1), strides=(x, y), padding="same", **parameters)(a)
+            a = keras.layers.Conv3D(b_shape[3], (1, 1, 1), strides=(x, y), padding="same", **parameters)(a)
 
             a = keras.layers.BatchNormalization(axis=3)(a)
     else:
@@ -122,7 +122,7 @@ def _shortcut(a, b):
         y = int(round(a_shape[3] // b_shape[3]))
 
         if x > 1 or y > 1 or not a_shape[1] == b_shape[1]:
-            a = keras.layers.Conv3D(b_shape[1], (1, 1), strides=(x, y), padding="same", **parameters)(a)
+            a = keras.layers.Conv3D(b_shape[1], (1, 1, 1), strides=(x, y), padding="same", **parameters)(a)
 
             a = keras.layers.BatchNormalization(axis=1)(a)
 
