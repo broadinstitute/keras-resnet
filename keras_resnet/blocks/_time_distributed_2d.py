@@ -2,10 +2,10 @@
 
 """
 
-keras_resnet.block.temporal
-~~~~~~~~~~~~~~~~~~~~~~~~~~~
+keras_resnet.blocks._time_distributed_2d
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-This module implements a number of popular time distributed residual blocks.
+This module implements a number of popular time distributed two-dimensional residual blocks.
 
 """
 
@@ -17,18 +17,22 @@ parameters = {
 }
 
 
-def basic(filters, strides=(1, 1), first=False):
+def time_distributed_basic_2d(filters, strides=(1, 1), first=False):
     """
 
-    A time distributed basic block.
+    A time distributed two-dimensional basic block.
 
     :param filters: the output’s feature space
-    :param strides: the convolution’s stride
-    :param first: whether this is the first instance inside a residual block
 
-    Usage::
-      >>> import keras_resnet.block.temporal
-      >>> keras_resnet.block.temporal.basic(64)
+    :param strides: the convolution’s stride
+
+    :param first: whether this is the first instance inside a residual blocks
+
+    Usage:
+
+        >>> import keras_resnet.blocks
+
+        >>> keras_resnet.blocks.time_distributed_basic_2d(64)
 
     """
     def f(x):
@@ -53,18 +57,22 @@ def basic(filters, strides=(1, 1), first=False):
     return f
 
 
-def bottleneck(filters, strides=(1, 1), first=False):
+def time_distributed_bottleneck_2d(filters, strides=(1, 1), first=False):
     """
 
-    A time distributed bottleneck block.
+    A time distributed bottleneck two-dimensional block.
 
     :param filters: the output’s feature space
-    :param strides: the convolution’s stride
-    :param first: whether this is the first instance inside a residual block
 
-    Usage::
-      >>> import keras_resnet.block.temporal
-      >>> keras_resnet.block.temporal.bottleneck(64)
+    :param strides: the convolution’s stride
+
+    :param first: whether this is the first instance inside a residual blocks
+
+    Usage:
+
+        >>> import keras_resnet.blocks
+
+        >>> keras_resnet.blocks.time_distributed_bottleneck_2d(64)
 
     """
     def f(x):

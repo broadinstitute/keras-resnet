@@ -12,11 +12,13 @@ A tantalizing preview of keras-resnet simplicity:
 
 .. code-block:: python
 
+    >>> import keras_resnet.models
+
     >>> shape, classes = (32, 32, 3), 10
 
     >>> x = keras.layers.Input(shape)
 
-    >>> y = keras_resnet.ResNet50(x)
+    >>> y = keras_resnet.models.ResNet50(x)
     
     >>> y = keras.layers.Flatten()(y.output)
     

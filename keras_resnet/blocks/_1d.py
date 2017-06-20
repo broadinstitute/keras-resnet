@@ -2,10 +2,10 @@
 
 """
 
-keras_resnet.block
-~~~~~~~~~~~~~~~~~~
+keras_resnet.blocks._1d
+~~~~~~~~~~~~~~~~~~~~~~~
 
-This module implements a number of popular residual blocks.
+This module implements a number of popular one-dimensional residual blocks.
 
 """
 
@@ -17,18 +17,22 @@ parameters = {
 }
 
 
-def basic(filters, strides=(1, 1), first=False):
+def basic_1d(filters, strides=(1, 1), first=False):
     """
 
-    A basic block.
+    A one-dimensional basic block.
 
     :param filters: the output’s feature space
+
     :param strides: the convolution’s stride
+
     :param first: whether this is the first instance inside a residual block
 
-    Usage::
-      >>> import keras_resnet.block
-      >>> keras_resnet.block.basic(64)
+    Usage:
+
+        >>> import keras_resnet.blocks
+
+        >>> keras_resnet.blocks.basic_1d(64)
 
     """
     def f(x):
@@ -37,12 +41,12 @@ def basic(filters, strides=(1, 1), first=False):
         else:
             axis = 1
 
-        y = keras.layers.Conv2D(filters, (3, 3), strides=strides, padding="same", **parameters)(x)
+        y = keras.layers.Conv1D(filters, (3, 3), strides=strides, padding="same", **parameters)(x)
 
         y = keras.layers.BatchNormalization(axis=axis)(y)
         y = keras.layers.Activation("relu")(y)
 
-        y = keras.layers.Conv2D(filters, (3, 3), padding="same", **parameters)(y)
+        y = keras.layers.Conv1D(filters, (3, 3), padding="same", **parameters)(y)
 
         y = keras.layers.BatchNormalization(axis=axis)(y)
         y = _shortcut(x, y)
@@ -53,18 +57,22 @@ def basic(filters, strides=(1, 1), first=False):
     return f
 
 
-def bottleneck(filters, strides=(1, 1), first=False):
+def bottleneck_1d(filters, strides=(1, 1), first=False):
     """
 
-    A bottleneck block.
+    A one-dimensional bottleneck block.
 
     :param filters: the output’s feature space
+
     :param strides: the convolution’s stride
+
     :param first: whether this is the first instance inside a residual block
 
-    Usage::
-      >>> import keras_resnet.block
-      >>> keras_resnet.block.bottleneck(64)
+    Usage:
+
+        >>> import keras_resnet.blocks
+
+        >>> keras_resnet.blocks.bottleneck_1d(64)
 
     """
     def f(x):
@@ -74,19 +82,19 @@ def bottleneck(filters, strides=(1, 1), first=False):
             axis = 1
 
         if first:
-            y = keras.layers.Conv2D(filters, (1, 1), strides=strides, padding="same", **parameters)(x)
+            y = keras.layers.Conv1D(filters, (1, 1), strides=strides, padding="same", **parameters)(x)
         else:
-            y = keras.layers.Conv2D(filters, (3, 3), strides=strides, padding="same", **parameters)(x)
+            y = keras.layers.Conv1D(filters, (3, 3), strides=strides, padding="same", **parameters)(x)
 
         y = keras.layers.BatchNormalization(axis=axis)(y)
         y = keras.layers.Activation("relu")(y)
 
-        y = keras.layers.Conv2D(filters, (3, 3), padding="same", **parameters)(y)
+        y = keras.layers.Conv1D(filters, (3, 3), padding="same", **parameters)(y)
 
         y = keras.layers.BatchNormalization(axis=axis)(y)
         y = keras.layers.Activation("relu")(y)
 
-        y = keras.layers.Conv2D(filters * 4, (1, 1), **parameters)(y)
+        y = keras.layers.Conv1D(filters * 4, (1, 1), **parameters)(y)
 
         y = keras.layers.BatchNormalization(axis=axis)(y)
         y = _shortcut(x, y)

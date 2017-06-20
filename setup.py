@@ -4,8 +4,10 @@ setuptools.setup(
     author="Allen Goodman",
     author_email="allen.goodman@icloud.com",
     extras_require={
+        "benchmark": [
+            "click"
+        ],
         "test": [
-            "click",
             "pytest"
         ]
     },
