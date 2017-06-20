@@ -19,8 +19,7 @@ setuptools.setup(
     package_data={
         "keras-resnet": [
             "data/checkpoints/*/*.hdf5",
-            "data/logs/*/*.csv",
-            "data/notebooks/*/*.ipynb"
+            "data/logs/*/*.csv"
         ]
     },
     packages=setuptools.find_packages(

@@ -1,12 +1,14 @@
+import os.path
+
 import click
 import keras
-import keras.applications.resnet50
 import keras.preprocessing.image
 import numpy
+import pkg_resources
 import sklearn.model_selection
 import tensorflow
 
-import keras_resnet.models
+import keras_resnet.classifiers
 
 _benchmarks = {
     "CIFAR-10": keras.datasets.cifar10,
@@ -15,13 +17,13 @@ _benchmarks = {
 }
 
 
-_models = {
-    "ResNet-18": keras_resnet.models.ResNet18,
-    "ResNet-34": keras_resnet.models.ResNet34,
-    "ResNet-50": keras_resnet.models.ResNet50,
-    "ResNet-101": keras_resnet.models.ResNet101,
-    "ResNet-152": keras_resnet.models.ResNet152,
-    "ResNet-200": keras_resnet.models.ResNet200
+_names = {
+    "ResNet-18": keras_resnet.classifiers.ResNet18,
+    "ResNet-34": keras_resnet.classifiers.ResNet34,
+    "ResNet-50": keras_resnet.classifiers.ResNet50,
+    "ResNet-101": keras_resnet.classifiers.ResNet101,
+    "ResNet-152": keras_resnet.classifiers.ResNet152,
+    "ResNet-200": keras_resnet.classifiers.ResNet200
 }
 
 
@@ -33,6 +35,7 @@ _models = {
         [
             "CIFAR-10",
             "CIFAR-100",
+            "ImageNet",
             "MNIST"
         ]
     )
@@ -102,29 +105,19 @@ def __main__(benchmark, device, name):
 
     x = keras.layers.Input(shape)
 
-    x = _models[name](x)
+    model = _names[name](x, classes)
 
-    y = keras.layers.Flatten()(x.output)
+    model.compile("adam", "categorical_crossentropy", ["accuracy"])
 
-    y = keras.layers.Dense(classes, activation="softmax")(y)
+    pathname = os.path.join("data", "checkpoints", benchmark, "{}.hdf5".format(name))
 
-    model = keras.models.Model(x.input, y)
-
-    optimizer = keras.optimizers.Adam()
-
-    loss = "categorical_crossentropy"
-
-    metrics = [
-        "accuracy"
-    ]
-
-    model.compile(optimizer, loss, metrics)
-
-    pathname = "{}.hdf5".format(name)
+    pathname = pkg_resources.resource_filename("keras_resnet.data", pathname)
 
     model_checkpoint = keras.callbacks.ModelCheckpoint(pathname)
 
-    pathname = "{}.csv".format(name)
+    pathname = os.path.join("data", "logs", benchmark, "{}.csv".format(name))
+
+    pathname = pkg_resources.resource_filename("keras_resnet", pathname)
 
     csv_logger = keras.callbacks.CSVLogger(pathname)
 
