@@ -1,4 +1,4 @@
-keras-resnet
+Keras-ResNet
 ============
 
 .. image:: https://travis-ci.org/broadinstitute/keras-resnet.svg?branch=master
@@ -6,9 +6,9 @@ keras-resnet
 
 
 
-keras-resnet is **the** Keras package for deep residual networks. It's fast *and* flexible.
+Keras-ResNet is **the** Keras package for deep residual networks. It's fast *and* flexible.
 
-A tantalizing preview of keras-resnet simplicity:
+A tantalizing preview of Keras-ResNet simplicity:
 
 .. code-block:: python
 
