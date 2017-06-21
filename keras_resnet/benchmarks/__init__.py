@@ -75,8 +75,6 @@ def __main__(benchmark, device, name):
     training_x, validation_x, training_y, validation_y = sklearn.model_selection.train_test_split(training_x, training_y)
 
     generator = keras.preprocessing.image.ImageDataGenerator(
-        featurewise_center=True,
-        featurewise_std_normalization=True,
         horizontal_flip=True
     )
 
@@ -88,10 +86,7 @@ def __main__(benchmark, device, name):
         batch_size=256
     )
 
-    validation_data = keras.preprocessing.image.ImageDataGenerator(
-        featurewise_center=True,
-        featurewise_std_normalization=True
-    )
+    validation_data = keras.preprocessing.image.ImageDataGenerator()
 
     validation_data.fit(validation_x)
 
@@ -111,7 +106,7 @@ def __main__(benchmark, device, name):
 
     pathname = os.path.join("data", "checkpoints", benchmark, "{}.hdf5".format(name))
 
-    pathname = pkg_resources.resource_filename("keras_resnet.data", pathname)
+    pathname = pkg_resources.resource_filename("keras_resnet", pathname)
 
     model_checkpoint = keras.callbacks.ModelCheckpoint(pathname)
 

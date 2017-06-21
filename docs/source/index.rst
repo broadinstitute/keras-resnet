@@ -3,30 +3,37 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
+.. toctree::
+    :maxdepth: 2
+
+    statistical_classification
+    ensemble_learning
+    feature_extraction
+    transfer_learning
+    autoencoder
+
 .. module:: keras_resnet
 
-Layers
+Blocks
 ------
 
-.. autofunction:: keras_resnet.basic
+.. autofunction:: keras_resnet.blocks.basic_2d
 
-.. autofunction:: keras_resnet.bottleneck
-
-.. autofunction:: keras_resnet.shortcut
+.. autofunction:: keras_resnet.blocks.bottleneck_2d
 
 Models
 ------
 
-.. autoclass:: keras_resnet.ResNet
+.. autoclass:: keras_resnet.models.ResNet
 
-.. autoclass:: keras_resnet.ResNet18
+.. autoclass:: keras_resnet.models.ResNet18
 
-.. autoclass:: keras_resnet.ResNet34
+.. autoclass:: keras_resnet.models.ResNet34
 
-.. autoclass:: keras_resnet.ResNet50
+.. autoclass:: keras_resnet.models.ResNet50
 
-.. autoclass:: keras_resnet.ResNet101
+.. autoclass:: keras_resnet.models.ResNet101
 
-.. autoclass:: keras_resnet.ResNet152
+.. autoclass:: keras_resnet.models.ResNet152
 
-.. autoclass:: keras_resnet.ResNet200
+.. autoclass:: keras_resnet.models.ResNet200
