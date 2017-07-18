@@ -110,16 +110,16 @@ def _shortcut(a, b):
     b_shape = keras.backend.int_shape(b)
 
     if keras.backend.image_data_format() == "channels_last":
-        x = int(round(a_shape[1] // b_shape[1]))
-        y = int(round(a_shape[2] // b_shape[2]))
+        x = int(round(a_shape[1] / b_shape[1]))
+        y = int(round(a_shape[2] / b_shape[2]))
 
         if x > 1 or y > 1 or not a_shape[3] == b_shape[3]:
             a = keras.layers.Conv3D(b_shape[3], (1, 1, 1), strides=(x, y), padding="same", **parameters)(a)
 
             a = keras.layers.BatchNormalization(axis=3)(a)
     else:
-        x = int(round(a_shape[2] // b_shape[2]))
-        y = int(round(a_shape[3] // b_shape[3]))
+        x = int(round(a_shape[2] / b_shape[2]))
+        y = int(round(a_shape[3] / b_shape[3]))
 
         if x > 1 or y > 1 or not a_shape[1] == b_shape[1]:
             a = keras.layers.Conv3D(b_shape[1], (1, 1, 1), strides=(x, y), padding="same", **parameters)(a)
