@@ -17,16 +17,22 @@ parameters = {
 }
 
 
-def basic_1d(filters, strides=(1, 1), first=False):
+def basic_1d(filters, stage=0, block=0, kernel_size=3, numerical_name=False, stride=None):
     """
 
     A one-dimensional basic block.
 
     :param filters: the output’s feature space
 
-    :param strides: the convolution’s stride
+    :param stage: int representing the stage of this block (starting from 0)
 
-    :param first: whether this is the first instance inside a residual block
+    :param block: int representing this block (starting from 0)
+
+    :param kernel_size: size of the kernel
+
+    :param numerical_name: if true, uses numbers to represent blocks instead of chars (ResNet{101, 152, 200})
+
+    :param stride: int representing the stride used in the shortcut and the first conv layer, default derives stride from block id
 
     Usage:
 
@@ -35,38 +41,52 @@ def basic_1d(filters, strides=(1, 1), first=False):
         >>> keras_resnet.blocks.basic_1d(64)
 
     """
+    if stride is None:
+        stride = 1 if block != 0 or stage == 0 else 2
+
+    axis       = 3 if keras.backend.image_data_format() == "channels_last" else 1
+    block_char = "b{}".format(block) if block > 0 and numerical_name else chr(ord('a') + block)
+    stage_char = str(stage + 2)
+
     def f(x):
-        if keras.backend.image_data_format() == "channels_last":
-            axis = 3
+
+        y = keras.layers.Conv1D(filters, kernel_size, strides=stride, padding="same", name="res{}{}_branch2a".format(stage_char, block_char), **parameters)(x)
+        y = keras.layers.BatchNormalization(axis=axis, name="bn{}{}_branch2a".format(stage_char, block_char))(y)
+        y = keras.layers.Activation("relu", name="res{}{}_branch2a_relu".format(stage_char, block_char))(y)
+
+        y = keras.layers.Conv1D(filters, kernel_size, padding="same", name="res{}{}_branch2b".format(stage_char, block_char), **parameters)(y)
+        y = keras.layers.BatchNormalization(axis=axis, name="bn{}{}_branch2b".format(stage_char, block_char))(y)
+
+        if block == 0:
+            shortcut = keras.layers.Conv1D(filters, (1, 1), strides=stride, padding="same", name="res{}{}_branch1".format(stage_char, block_char), **parameters)(x)
+            shortcut = keras.layers.BatchNormalization(axis=axis, name="bn{}{}_branch1".format(stage_char, block_char))(shortcut)
         else:
-            axis = 1
+            shortcut = x
 
-        y = keras.layers.Conv1D(filters, (3, 3), strides=strides, padding="same", **parameters)(x)
-
-        y = keras.layers.BatchNormalization(axis=axis)(y)
-        y = keras.layers.Activation("relu")(y)
-
-        y = keras.layers.Conv1D(filters, (3, 3), padding="same", **parameters)(y)
-
-        y = keras.layers.BatchNormalization(axis=axis)(y)
-        y = _shortcut(x, y)
-        y = keras.layers.Activation("relu")(y)
+        y = keras.layers.Add(name="res{}{}".format(stage_char, block_char))([y, shortcut])
+        y = keras.layers.Activation("relu", name="res{}{}_relu".format(stage_char, block_char))(y)
 
         return y
 
     return f
 
 
-def bottleneck_1d(filters, strides=(1, 1), first=False):
+def bottleneck_1d(filters, stage=0, block=0, kernel_size=3, numerical_name=False, stride=None):
     """
 
     A one-dimensional bottleneck block.
 
     :param filters: the output’s feature space
 
-    :param strides: the convolution’s stride
+    :param stage: int representing the stage of this block (starting from 0)
 
-    :param first: whether this is the first instance inside a residual block
+    :param block: int representing this block (starting from 0)
+
+    :param kernel_size: size of the kernel
+
+    :param numerical_name: if true, uses numbers to represent blocks instead of chars (ResNet{101, 152, 200})
+
+    :param stride: int representing the stride used in the shortcut and the first conv layer, default derives stride from block id
 
     Usage:
 
@@ -75,55 +95,36 @@ def bottleneck_1d(filters, strides=(1, 1), first=False):
         >>> keras_resnet.blocks.bottleneck_1d(64)
 
     """
+    if stride is None:
+        stride = 1 if block != 0 or stage == 0 else 2
+
+    axis       = 3 if keras.backend.image_data_format() == "channels_last" else 1
+    block_char = "b{}".format(block) if block > 0 and numerical_name else chr(ord('a') + block)
+    stage_char = str(stage + 2)
+
     def f(x):
-        if keras.backend.image_data_format() == "channels_last":
-            axis = 3
+
+        y = keras.layers.Conv1D(filters, (1, 1), strides=stride, padding="same", name="res{}{}_branch2a".format(stage_char, block_char), **parameters)(x)
+        y = keras.layers.BatchNormalization(axis=axis, name="bn{}{}_branch2a".format(stage_char, block_char))(y)
+        y = keras.layers.Activation("relu", name="res{}{}_branch2a_relu".format(stage_char, block_char))(y)
+
+        y = keras.layers.Conv1D(filters, kernel_size, padding="same", name="res{}{}_branch2b".format(stage_char, block_char), **parameters)(y)
+        y = keras.layers.BatchNormalization(axis=axis, name="bn{}{}_branch2b".format(stage_char, block_char))(y)
+        y = keras.layers.Activation("relu", name="res{}{}_branch2b_relu".format(stage_char, block_char))(y)
+
+        y = keras.layers.Conv1D(filters * 4, (1, 1), padding="same", name="res{}{}_branch2c".format(stage_char, block_char), **parameters)(y)
+        y = keras.layers.BatchNormalization(axis=axis, name="bn{}{}_branch2c".format(stage_char, block_char))(y)
+
+        if block == 0:
+            shortcut = keras.layers.Conv1D(filters * 4, (1, 1), strides=stride, name="res{}{}_branch1".format(stage_char, block_char), **parameters)(x)
+            shortcut = keras.layers.BatchNormalization(axis=axis, name="bn{}{}_branch1".format(stage_char, block_char))(shortcut)
         else:
-            axis = 1
+            shortcut = x
 
-        if first:
-            y = keras.layers.Conv1D(filters, (1, 1), strides=strides, padding="same", **parameters)(x)
-        else:
-            y = keras.layers.Conv1D(filters, (3, 3), strides=strides, padding="same", **parameters)(x)
-
-        y = keras.layers.BatchNormalization(axis=axis)(y)
-        y = keras.layers.Activation("relu")(y)
-
-        y = keras.layers.Conv1D(filters, (3, 3), padding="same", **parameters)(y)
-
-        y = keras.layers.BatchNormalization(axis=axis)(y)
-        y = keras.layers.Activation("relu")(y)
-
-        y = keras.layers.Conv1D(filters * 4, (1, 1), **parameters)(y)
-
-        y = keras.layers.BatchNormalization(axis=axis)(y)
-        y = _shortcut(x, y)
-        y = keras.layers.Activation("relu")(y)
+        y = keras.layers.Add(name="res{}{}".format(stage_char, block_char))([y, shortcut])
+        y = keras.layers.Activation("relu", name="res{}{}_relu".format(stage_char, block_char))(y)
 
         return y
 
     return f
 
-
-def _shortcut(a, b):
-    a_shape = keras.backend.int_shape(a)
-    b_shape = keras.backend.int_shape(b)
-
-    if keras.backend.image_data_format() == "channels_last":
-        x = int(round(a_shape[1] / b_shape[1]))
-        y = int(round(a_shape[2] / b_shape[2]))
-
-        if x > 1 or y > 1 or not a_shape[3] == b_shape[3]:
-            a = keras.layers.Conv2D(b_shape[3], (1, 1), strides=(x, y), padding="same", **parameters)(a)
-
-            a = keras.layers.BatchNormalization(axis=3)(a)
-    else:
-        x = int(round(a_shape[2] / b_shape[2]))
-        y = int(round(a_shape[3] / b_shape[3]))
-
-        if x > 1 or y > 1 or not a_shape[1] == b_shape[1]:
-            a = keras.layers.Conv2D(b_shape[1], (1, 1), strides=(x, y), padding="same", **parameters)(a)
-
-            a = keras.layers.BatchNormalization(axis=1)(a)
-
-    return keras.layers.add([a, b])
