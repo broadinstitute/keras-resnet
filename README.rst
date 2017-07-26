@@ -18,13 +18,7 @@ A tantalizing preview of Keras-ResNet simplicity:
 
     >>> x = keras.layers.Input(shape)
 
-    >>> y = keras_resnet.models.ResNet50(x)
-    
-    >>> y = keras.layers.Flatten()(y.output)
-    
-    >>> y = keras.layers.Dense(classes, activation="softmax")(y)
-        
-    >>> model = keras.models.Model(x, y)
+    >>> model = keras_resnet.models.ResNet50(x, classes=classes)
 
     >>> model.compile("adam", "categorical_crossentropy", ["accuracy"])
 

@@ -24,9 +24,11 @@ class ResNet(keras.models.Model):
 
     :param inputs: input tensor (e.g. an instance of `keras.layers.Input`)
 
-    :param blocks: the network’s residual architecture
+    :param blocks: list of blocks to use
 
-    :param block: a residual blocks (e.g. an instance of `keras_resnet.basic`)
+    :param include_top: if true, includes classification layers
+
+    :param classes: number of classes to classify (include_top must be true)
 
     Usage:
 
@@ -41,53 +43,36 @@ class ResNet(keras.models.Model):
 
         >>> block = keras_resnet.blocks.basic_2d
 
-        >>> y = keras_resnet.models.ResNet(x, classes, blocks, block)
-
-        >>> y = keras.layers.Flatten()(y.output)
-
-        >>> y = keras.layers.Dense(classes, activation="softmax")(y)
-
-        >>> model = keras.models.Model(x, y)
+        >>> model = keras_resnet.models.ResNet(x, classes, blocks, block, classes=classes)
 
         >>> model.compile("adam", "categorical_crossentropy", ["accuracy"])
 
     """
 
-    def __init__(self, inputs, blocks, block):
+    def __init__(self, inputs, blocks, block, include_top=True, classes=1000):
         if keras.backend.image_data_format() == "channels_last":
             axis = 3
         else:
             axis = 1
 
-        x = keras.layers.Conv2D(64, (7, 7), strides=(2, 2), padding="same")(inputs)
-        x = keras.layers.BatchNormalization(axis=axis)(x)
-        x = keras.layers.Activation("relu")(x)
-        x = keras.layers.MaxPooling2D((3, 3), strides=(2, 2), padding="same")(x)
+        x = keras.layers.Conv2D(64, (7, 7), strides=(2, 2), padding="same", name="conv1")(inputs)
+        x = keras.layers.BatchNormalization(axis=axis, name="bn_conv1")(x)
+        x = keras.layers.Activation("relu", name="conv1_relu")(x)
+        x = keras.layers.MaxPooling2D((3, 3), strides=(2, 2), padding="same", name="pool1")(x)
 
         features = 64
 
-        for j, iterations in enumerate(blocks):
-            for k in range(iterations):
-                if k == 0 and not j == 0:
-                    strides = (2, 2)
-                else:
-                    strides = (1, 1)
-
-                x = block(features, strides, j == 0 and k == 0)(x)
+        for stage_id, iterations in enumerate(blocks):
+            for block_id in range(iterations):
+                x = block(features, stage_id, block_id, numerical_name=(blocks[stage_id] > 6))(x)
 
             features *= 2
 
-        x = keras.layers.BatchNormalization(axis=axis)(x)
-        x = keras.layers.Activation("relu")(x)
+        if include_top:
+            assert classes > 0
 
-        shape = keras.backend.int_shape(x)
-
-        if keras.backend.image_data_format() == "channels_last":
-            pool_size = (shape[1], shape[2])
-        else:
-            pool_size = (shape[2], shape[3])
-
-        x = keras.layers.AveragePooling2D(pool_size, strides=(1, 1))(x)
+            x = keras.layers.GlobalAveragePooling2D(name="pool5")(x)
+            x = keras.layers.Dense(classes, activation="softmax", name="fc1000")(x)
 
         super(ResNet, self).__init__(inputs, x)
 
@@ -99,6 +84,12 @@ class ResNet18(ResNet):
 
     :param inputs: input tensor (e.g. an instance of `keras.layers.Input`)
 
+    :param blocks: list of blocks to use
+
+    :param include_top: if true, includes classification layers
+
+    :param classes: number of classes to classify (include_top must be true)
+
     Usage:
 
         >>> import keras_resnet.models
@@ -107,24 +98,16 @@ class ResNet18(ResNet):
 
         >>> x = keras.layers.Input(shape)
 
-        >>> y = keras_resnet.models.ResNet18(x)
-
-        >>> y = keras.layers.Flatten()(y.output)
-
-        >>> y = keras.layers.Dense(classes, activation="softmax")(y)
-
-        >>> model = keras.models.Model(x, y)
+        >>> model = keras_resnet.models.ResNet18(x, classes=classes)
 
         >>> model.compile("adam", "categorical_crossentropy", ["accuracy"])
 
     """
 
-    def __init__(self, inputs):
-        blocks = [2, 2, 2, 2]
-
+    def __init__(self, inputs, blocks=[2, 2, 2, 2], include_top=True, classes=1000):
         block = keras_resnet.blocks.basic_2d
 
-        super(ResNet18, self).__init__(inputs, blocks, block)
+        super(ResNet18, self).__init__(inputs, blocks, block, include_top=include_top, classes=classes)
 
 
 class ResNet34(ResNet):
@@ -134,6 +117,12 @@ class ResNet34(ResNet):
 
     :param inputs: input tensor (e.g. an instance of `keras.layers.Input`)
 
+    :param blocks: list of blocks to use
+
+    :param include_top: if true, includes classification layers
+
+    :param classes: number of classes to classify (include_top must be true)
+
     Usage:
 
         >>> import keras_resnet.models
@@ -142,24 +131,16 @@ class ResNet34(ResNet):
 
         >>> x = keras.layers.Input(shape)
 
-        >>> y = keras_resnet.models.ResNet34(x)
-
-        >>> y = keras.layers.Flatten()(y.output)
-
-        >>> y = keras.layers.Dense(classes, activation="softmax")(y)
-
-        >>> model = keras.models.Model(x, y)
+        >>> model = keras_resnet.models.ResNet34(x, classes=classes)
 
         >>> model.compile("adam", "categorical_crossentropy", ["accuracy"])
 
     """
 
-    def __init__(self, inputs):
-        blocks = [3, 4, 6, 3]
-
+    def __init__(self, inputs, blocks=[3, 4, 6, 3], include_top=True, classes=1000):
         block = keras_resnet.blocks.basic_2d
 
-        super(ResNet34, self).__init__(inputs, blocks, block)
+        super(ResNet34, self).__init__(inputs, blocks, block, include_top=include_top, classes=classes)
 
 
 class ResNet50(ResNet):
@@ -169,6 +150,12 @@ class ResNet50(ResNet):
 
     :param inputs: input tensor (e.g. an instance of `keras.layers.Input`)
 
+    :param blocks: list of blocks to use
+
+    :param include_top: if true, includes classification layers
+
+    :param classes: number of classes to classify (include_top must be true)
+
     Usage:
 
         >>> import keras_resnet.models
@@ -177,24 +164,16 @@ class ResNet50(ResNet):
 
         >>> x = keras.layers.Input(shape)
 
-        >>> y = keras_resnet.models.ResNet50(x)
-
-        >>> y = keras.layers.Flatten()(y.output)
-
-        >>> y = keras.layers.Dense(classes, activation="softmax")(y)
-
-        >>> model = keras.models.Model(x, y)
+        >>> model = keras_resnet.models.ResNet50(x)
 
         >>> model.compile("adam", "categorical_crossentropy", ["accuracy"])
 
     """
 
-    def __init__(self, inputs):
-        blocks = [3, 4, 6, 3]
-
+    def __init__(self, inputs, blocks=[3, 4, 6, 3], include_top=True, classes=1000):
         block = keras_resnet.blocks.bottleneck_2d
 
-        super(ResNet50, self).__init__(inputs, blocks, block)
+        super(ResNet50, self).__init__(inputs, blocks, block, include_top=include_top, classes=classes)
 
 
 class ResNet101(ResNet):
@@ -204,6 +183,12 @@ class ResNet101(ResNet):
 
     :param inputs: input tensor (e.g. an instance of `keras.layers.Input`)
 
+    :param blocks: list of blocks to use
+
+    :param include_top: if true, includes classification layers
+
+    :param classes: number of classes to classify (include_top must be true)
+
     Usage:
 
         >>> import keras_resnet.models
@@ -212,24 +197,16 @@ class ResNet101(ResNet):
 
         >>> x = keras.layers.Input(shape)
 
-        >>> y = keras_resnet.models.ResNet101(x)
-
-        >>> y = keras.layers.Flatten()(y.output)
-
-        >>> y = keras.layers.Dense(classes, activation="softmax")(y)
-
-        >>> model = keras.models.Model(x, y)
+        >>> model = keras_resnet.models.ResNet101(x, classes=classes)
 
         >>> model.compile("adam", "categorical_crossentropy", ["accuracy"])
 
     """
 
-    def __init__(self, inputs):
-        blocks = [3, 4, 23, 3]
-
+    def __init__(self, inputs, blocks=[3, 4, 23, 3], include_top=True, classes=1000):
         block = keras_resnet.blocks.bottleneck_2d
 
-        super(ResNet101, self).__init__(inputs, blocks, block)
+        super(ResNet101, self).__init__(inputs, blocks, block, include_top=include_top, classes=classes)
 
 
 class ResNet152(ResNet):
@@ -239,6 +216,12 @@ class ResNet152(ResNet):
 
     :param inputs: input tensor (e.g. an instance of `keras.layers.Input`)
 
+    :param blocks: list of blocks to use
+
+    :param include_top: if true, includes classification layers
+
+    :param classes: number of classes to classify (include_top must be true)
+
     Usage:
 
         >>> import keras_resnet.models
@@ -247,24 +230,16 @@ class ResNet152(ResNet):
 
         >>> x = keras.layers.Input(shape)
 
-        >>> y = keras_resnet.models.ResNet152(x)
-
-        >>> y = keras.layers.Flatten()(y.output)
-
-        >>> y = keras.layers.Dense(classes, activation="softmax")(y)
-
-        >>> model = keras.models.Model(x, y)
+        >>> model = keras_resnet.models.ResNet152(x, classes=classes)
 
         >>> model.compile("adam", "categorical_crossentropy", ["accuracy"])
 
     """
 
-    def __init__(self, inputs):
-        blocks = [3, 8, 36, 3]
-
+    def __init__(self, inputs, blocks=[3, 8, 36, 3], include_top=True, classes=1000):
         block = keras_resnet.blocks.bottleneck_2d
 
-        super(ResNet152, self).__init__(inputs, blocks, block)
+        super(ResNet152, self).__init__(inputs, blocks, block, include_top=include_top, classes=classes)
 
 
 class ResNet200(ResNet):
@@ -274,6 +249,12 @@ class ResNet200(ResNet):
 
     :param inputs: input tensor (e.g. an instance of `keras.layers.Input`)
 
+    :param blocks: list of blocks to use
+
+    :param include_top: if true, includes classification layers
+
+    :param classes: number of classes to classify (include_top must be true)
+
     Usage:
 
         >>> import keras_resnet.models
@@ -282,21 +263,13 @@ class ResNet200(ResNet):
 
         >>> x = keras.layers.Input(shape)
 
-        >>> y = keras_resnet.models.ResNet200(x)
-
-        >>> y = keras.layers.Flatten()(y.output)
-
-        >>> y = keras.layers.Dense(classes, activation="softmax")(y)
-
-        >>> model = keras.models.Model(x, y)
+        >>> model = keras_resnet.models.ResNet200(x, classes=classes)
 
         >>> model.compile("adam", "categorical_crossentropy", ["accuracy"])
 
     """
 
-    def __init__(self, inputs):
-        blocks = [3, 24, 36, 3]
-
+    def __init__(self, inputs, blocks=[3, 24, 36, 3], include_top=True, classes=1000):
         block = keras_resnet.blocks.bottleneck_2d
 
-        super(ResNet200, self).__init__(inputs, blocks, block)
+        super(ResNet200, self).__init__(inputs, blocks, block, include_top=include_top, classes=classes)
