@@ -104,7 +104,6 @@ Usage:
     >>> model = keras_resnet.models.ResNet18(x, classes=classes)
 
     >>> model.compile("adam", "categorical_crossentropy", ["accuracy"])
-
 """
 def ResNet18(inputs, blocks=None, include_top=True, classes=1000, *args, **kwargs):
     if blocks is None:

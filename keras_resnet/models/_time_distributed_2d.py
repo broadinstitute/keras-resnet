@@ -52,8 +52,6 @@ Usage:
 
     >>> y = keras.layers.TimeDistributed(keras.layers.Dense(classes, activation="softmax"))(y)
 
-    >>> model = keras.models.Model(x, y)
-
     >>> model.compile("adam", "categorical_crossentropy", ["accuracy"])
 
 """
@@ -170,8 +168,6 @@ Constructs a time distributed `keras.models.Model` according to the ResNet50 spe
 :param include_top: if true, includes classification layers
 
 :param classes: number of classes to classify (include_top must be true)
-
-:return model: Time distributed ResNet model with encoding output (if `include_top=False`) or classification output (if `include_top=True`)
 
 Usage:
 
