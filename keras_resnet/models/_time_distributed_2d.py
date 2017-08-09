@@ -19,11 +19,11 @@ import keras_resnet.blocks
 
 class TimeDistributedResNet(keras.models.Model):
     """
-    
+
     A custom :class:`TimeDistributedResNet <TimeDistributedResNet>` object.
 
     :param inputs: input tensor (e.g. an instance of `keras.layers.Input`)
-    
+
     :param blocks: the network’s residual architecture
 
     :param block: a time distributed residual block (e.g. an instance of `keras_resnet.blocks.time_distributed_basic_2d`)
@@ -50,10 +50,10 @@ class TimeDistributedResNet(keras.models.Model):
         >>> model = keras.models.Model(x, y)
 
         >>> model.compile("adam", "categorical_crossentropy", ["accuracy"])
-    
+
     """
 
-    def __init__(self, inputs, blocks, block):
+    def __init__(self, inputs, blocks, block, *args, **kwargs):
         if keras.backend.image_data_format() == "channels_last":
             axis = 3
         else:
@@ -89,12 +89,12 @@ class TimeDistributedResNet(keras.models.Model):
 
         x = keras.layers.TimeDistributed(keras.layers.AveragePooling2D(pool_size, strides=(1, 1)))(x)
 
-        super(TimeDistributedResNet, self).__init__(inputs, x)
+        super(TimeDistributedResNet, self).__init__(inputs, x, *args, **kwargs)
 
 
 class TimeDistributedResNet18(TimeDistributedResNet):
     """
-    
+
     A :class:`TimeDistributedResNet18 <TimeDistributedResNet18>` object.
 
     :param inputs: input tensor (e.g. an instance of `keras.layers.Input`)
@@ -116,20 +116,20 @@ class TimeDistributedResNet18(TimeDistributedResNet):
         >>> model = keras.models.Model(x, y)
 
         >>> model.compile("adam", "categorical_crossentropy", ["accuracy"])
-    
+
     """
 
-    def __init__(self, inputs):
+    def __init__(self, inputs, *args, **kwargs):
         blocks = [2, 2, 2, 2]
 
         block = keras_resnet.blocks.time_distributed_basic_2d
 
-        super(TimeDistributedResNet18, self).__init__(inputs, blocks, block)
+        super(TimeDistributedResNet18, self).__init__(inputs, blocks, block, *args, **kwargs)
 
 
 class TimeDistributedResNet34(TimeDistributedResNet):
     """
-    
+
     A :class:`TimeDistributedResNet34 <TimeDistributedResNet34>` object.
 
     :param inputs: input tensor (e.g. an instance of `keras.layers.Input`)
@@ -151,20 +151,20 @@ class TimeDistributedResNet34(TimeDistributedResNet):
         >>> model = keras.models.Model(x, y)
 
         >>> model.compile("adam", "categorical_crossentropy", ["accuracy"])
-    
+
     """
 
-    def __init__(self, inputs):
+    def __init__(self, inputs, *args, **kwargs):
         blocks = [3, 4, 6, 3]
 
         block = keras_resnet.blocks.time_distributed_basic_2d
 
-        super(TimeDistributedResNet34, self).__init__(inputs, blocks, block)
+        super(TimeDistributedResNet34, self).__init__(inputs, blocks, block, *args, **kwargs)
 
 
 class TimeDistributedResNet50(TimeDistributedResNet):
     """
-    
+
     A :class:`TimeDistributedResNet50 <TimeDistributedResNet50>` object.
 
     :param inputs: input tensor (e.g. an instance of `keras.layers.Input`)
@@ -186,20 +186,20 @@ class TimeDistributedResNet50(TimeDistributedResNet):
         >>> model = keras.models.Model(x, y)
 
         >>> model.compile("adam", "categorical_crossentropy", ["accuracy"])
-    
+
     """
 
-    def __init__(self, inputs):
+    def __init__(self, inputs, *args, **kwargs):
         blocks = [3, 4, 6, 3]
 
         block = keras_resnet.blocks.time_distributed_bottleneck_2d
 
-        super(TimeDistributedResNet50, self).__init__(inputs, blocks, block)
+        super(TimeDistributedResNet50, self).__init__(inputs, blocks, block, *args, **kwargs)
 
 
 class TimeDistributedResNet101(TimeDistributedResNet):
     """
-    
+
     A :class:`TimeDistributedResNet101 <TimeDistributedResNet101>` object.
 
     :param inputs: input tensor (e.g. an instance of `keras.layers.Input`)
@@ -221,20 +221,20 @@ class TimeDistributedResNet101(TimeDistributedResNet):
         >>> model = keras.models.Model(x, y)
 
         >>> model.compile("adam", "categorical_crossentropy", ["accuracy"])
-    
+
     """
 
-    def __init__(self, inputs):
+    def __init__(self, inputs, *args, **kwargs):
         blocks = [3, 4, 23, 3]
 
         block = keras_resnet.blocks.time_distributed_bottleneck_2d
 
-        super(TimeDistributedResNet101, self).__init__(inputs, blocks, block)
+        super(TimeDistributedResNet101, self).__init__(inputs, blocks, block, *args, **kwargs)
 
 
 class TimeDistributedResNet152(TimeDistributedResNet):
     """
-    
+
     A :class:`TimeDistributedResNet152 <TimeDistributedResNet152>` object.
 
     :param inputs: input tensor (e.g. an instance of `keras.layers.Input`)
@@ -256,20 +256,20 @@ class TimeDistributedResNet152(TimeDistributedResNet):
         >>> model = keras.models.Model(x, y)
 
         >>> model.compile("adam", "categorical_crossentropy", ["accuracy"])
-    
+
     """
 
-    def __init__(self, inputs):
+    def __init__(self, inputs, *args, **kwargs):
         blocks = [3, 8, 36, 3]
 
         block = keras_resnet.blocks.time_distributed_bottleneck_2d
 
-        super(TimeDistributedResNet152, self).__init__(inputs, blocks, block)
+        super(TimeDistributedResNet152, self).__init__(inputs, blocks, block, *args, **kwargs)
 
 
 class TimeDistributedResNet200(TimeDistributedResNet):
     """
-    
+
     A :class:`TimeDistributedResNet200 <TimeDistributedResNet200>` object.
 
     :param inputs: input tensor (e.g. an instance of `keras.layers.Input`)
@@ -291,12 +291,12 @@ class TimeDistributedResNet200(TimeDistributedResNet):
         >>> model = keras.models.Model(x, y)
 
         >>> model.compile("adam", "categorical_crossentropy", ["accuracy"])
-    
+
     """
 
-    def __init__(self, inputs):
+    def __init__(self, inputs, *args, **kwargs):
         blocks = [3, 24, 36, 3]
 
         block = keras_resnet.blocks.time_distributed_bottleneck_2d
 
-        super(TimeDistributedResNet200, self).__init__(inputs, blocks, block)
+        super(TimeDistributedResNet200, self).__init__(inputs, blocks, block, *args, **kwargs)

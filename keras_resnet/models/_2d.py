@@ -49,7 +49,7 @@ class ResNet(keras.models.Model):
 
     """
 
-    def __init__(self, inputs, blocks, block, include_top=True, classes=1000):
+    def __init__(self, inputs, blocks, block, include_top=True, classes=1000, *args, **kwargs):
         if keras.backend.image_data_format() == "channels_last":
             axis = 3
         else:
@@ -74,7 +74,7 @@ class ResNet(keras.models.Model):
             x = keras.layers.GlobalAveragePooling2D(name="pool5")(x)
             x = keras.layers.Dense(classes, activation="softmax", name="fc1000")(x)
 
-        super(ResNet, self).__init__(inputs, x)
+        super(ResNet, self).__init__(inputs, x, *args, **kwargs)
 
 
 class ResNet18(ResNet):
@@ -104,13 +104,13 @@ class ResNet18(ResNet):
 
     """
 
-    def __init__(self, inputs, blocks=None, include_top=True, classes=1000):
+    def __init__(self, inputs, blocks=None, include_top=True, classes=1000, *args, **kwargs):
         if blocks is None:
             blocks = [2, 2, 2, 2]
 
         block = keras_resnet.blocks.basic_2d
 
-        super(ResNet18, self).__init__(inputs, blocks, block, include_top=include_top, classes=classes)
+        super(ResNet18, self).__init__(inputs, blocks, block, include_top=include_top, classes=classes, *args, **kwargs)
 
 
 class ResNet34(ResNet):
@@ -140,13 +140,13 @@ class ResNet34(ResNet):
 
     """
 
-    def __init__(self, inputs, blocks=None, include_top=True, classes=1000):
+    def __init__(self, inputs, blocks=None, include_top=True, classes=1000, *args, **kwargs):
         if blocks is None:
             blocks = [3, 4, 6, 3]
 
         block = keras_resnet.blocks.basic_2d
 
-        super(ResNet34, self).__init__(inputs, blocks, block, include_top=include_top, classes=classes)
+        super(ResNet34, self).__init__(inputs, blocks, block, include_top=include_top, classes=classes, *args, **kwargs)
 
 
 class ResNet50(ResNet):
@@ -176,13 +176,13 @@ class ResNet50(ResNet):
 
     """
 
-    def __init__(self, inputs, blocks=None, include_top=True, classes=1000):
+    def __init__(self, inputs, blocks=None, include_top=True, classes=1000, *args, **kwargs):
         if blocks is None:
             blocks = [3, 4, 6, 3]
 
         block = keras_resnet.blocks.bottleneck_2d
 
-        super(ResNet50, self).__init__(inputs, blocks, block, include_top=include_top, classes=classes)
+        super(ResNet50, self).__init__(inputs, blocks, block, include_top=include_top, classes=classes, *args, **kwargs)
 
 
 class ResNet101(ResNet):
@@ -212,13 +212,13 @@ class ResNet101(ResNet):
 
     """
 
-    def __init__(self, inputs, blocks=None, include_top=True, classes=1000):
+    def __init__(self, inputs, blocks=None, include_top=True, classes=1000, *args, **kwargs):
         if blocks is None:
             blocks = [3, 4, 23, 3]
 
         block = keras_resnet.blocks.bottleneck_2d
 
-        super(ResNet101, self).__init__(inputs, blocks, block, include_top=include_top, classes=classes)
+        super(ResNet101, self).__init__(inputs, blocks, block, include_top=include_top, classes=classes, *args, **kwargs)
 
 
 class ResNet152(ResNet):
@@ -248,13 +248,13 @@ class ResNet152(ResNet):
 
     """
 
-    def __init__(self, inputs, blocks=None, include_top=True, classes=1000):
+    def __init__(self, inputs, blocks=None, include_top=True, classes=1000, *args, **kwargs):
         if blocks is None:
             blocks = [3, 8, 36, 3]
 
         block = keras_resnet.blocks.bottleneck_2d
 
-        super(ResNet152, self).__init__(inputs, blocks, block, include_top=include_top, classes=classes)
+        super(ResNet152, self).__init__(inputs, blocks, block, include_top=include_top, classes=classes, *args, **kwargs)
 
 
 class ResNet200(ResNet):
@@ -284,10 +284,10 @@ class ResNet200(ResNet):
 
     """
 
-    def __init__(self, inputs, blocks=None, include_top=True, classes=1000):
+    def __init__(self, inputs, blocks=None, include_top=True, classes=1000, *args, **kwargs):
         if blocks is None:
             blocks = [3, 24, 36, 3]
 
         block = keras_resnet.blocks.bottleneck_2d
 
-        super(ResNet200, self).__init__(inputs, blocks, block, include_top=include_top, classes=classes)
+        super(ResNet200, self).__init__(inputs, blocks, block, include_top=include_top, classes=classes, *args, **kwargs)
