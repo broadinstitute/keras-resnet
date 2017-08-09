@@ -23,7 +23,9 @@ Constructs a `keras.models.Model` object using the given block count.
 
 :param inputs: input tensor (e.g. an instance of `keras.layers.Input`)
 
-:param blocks: list of blocks to use
+:param blocks: the network’s residual architecture
+
+:param block: a residual block (e.g. an instance of `keras_resnet.blocks.basic_2d`)
 
 :param include_top: if true, includes classification layers
 
@@ -83,7 +85,7 @@ Constructs a `keras.models.Model` according to the ResNet18 specifications.
 
 :param inputs: input tensor (e.g. an instance of `keras.layers.Input`)
 
-:param blocks: list of blocks to use
+:param blocks: the network’s residual architecture
 
 :param include_top: if true, includes classification layers
 
@@ -117,7 +119,7 @@ Constructs a `keras.models.Model` according to the ResNet34 specifications.
 
 :param inputs: input tensor (e.g. an instance of `keras.layers.Input`)
 
-:param blocks: list of blocks to use
+:param blocks: the network’s residual architecture
 
 :param include_top: if true, includes classification layers
 
@@ -151,7 +153,7 @@ Constructs a `keras.models.Model` according to the ResNet50 specifications.
 
 :param inputs: input tensor (e.g. an instance of `keras.layers.Input`)
 
-:param blocks: list of blocks to use
+:param blocks: the network’s residual architecture
 
 :param include_top: if true, includes classification layers
 
@@ -185,7 +187,7 @@ Constructs a `keras.models.Model` according to the ResNet101 specifications.
 
 :param inputs: input tensor (e.g. an instance of `keras.layers.Input`)
 
-:param blocks: list of blocks to use
+:param blocks: the network’s residual architecture
 
 :param include_top: if true, includes classification layers
 
@@ -219,7 +221,7 @@ Constructs a `keras.models.Model` according to the ResNet152 specifications.
 
 :param inputs: input tensor (e.g. an instance of `keras.layers.Input`)
 
-:param blocks: list of blocks to use
+:param blocks: the network’s residual architecture
 
 :param include_top: if true, includes classification layers
 
@@ -253,7 +255,7 @@ Constructs a `keras.models.Model` according to the ResNet200 specifications.
 
 :param inputs: input tensor (e.g. an instance of `keras.layers.Input`)
 
-:param blocks: list of blocks to use
+:param blocks: the network’s residual architecture
 
 :param include_top: if true, includes classification layers
 
