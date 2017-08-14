@@ -104,7 +104,10 @@ class ResNet18(ResNet):
 
     """
 
-    def __init__(self, inputs, blocks=[2, 2, 2, 2], include_top=True, classes=1000):
+    def __init__(self, inputs, blocks=None, include_top=True, classes=1000):
+        if blocks is None:
+            blocks = [2, 2, 2, 2]
+
         block = keras_resnet.blocks.basic_2d
 
         super(ResNet18, self).__init__(inputs, blocks, block, include_top=include_top, classes=classes)
@@ -137,7 +140,10 @@ class ResNet34(ResNet):
 
     """
 
-    def __init__(self, inputs, blocks=[3, 4, 6, 3], include_top=True, classes=1000):
+    def __init__(self, inputs, blocks=None, include_top=True, classes=1000):
+        if blocks is None:
+            blocks = [3, 4, 6, 3]
+
         block = keras_resnet.blocks.basic_2d
 
         super(ResNet34, self).__init__(inputs, blocks, block, include_top=include_top, classes=classes)
@@ -170,7 +176,10 @@ class ResNet50(ResNet):
 
     """
 
-    def __init__(self, inputs, blocks=[3, 4, 6, 3], include_top=True, classes=1000):
+    def __init__(self, inputs, blocks=None, include_top=True, classes=1000):
+        if blocks is None:
+            blocks = [3, 4, 6, 3]
+
         block = keras_resnet.blocks.bottleneck_2d
 
         super(ResNet50, self).__init__(inputs, blocks, block, include_top=include_top, classes=classes)
@@ -203,7 +212,10 @@ class ResNet101(ResNet):
 
     """
 
-    def __init__(self, inputs, blocks=[3, 4, 23, 3], include_top=True, classes=1000):
+    def __init__(self, inputs, blocks=None, include_top=True, classes=1000):
+        if blocks is None:
+            blocks = [3, 4, 23, 3]
+
         block = keras_resnet.blocks.bottleneck_2d
 
         super(ResNet101, self).__init__(inputs, blocks, block, include_top=include_top, classes=classes)
@@ -236,7 +248,10 @@ class ResNet152(ResNet):
 
     """
 
-    def __init__(self, inputs, blocks=[3, 8, 36, 3], include_top=True, classes=1000):
+    def __init__(self, inputs, blocks=None, include_top=True, classes=1000):
+        if blocks is None:
+            blocks = [3, 8, 36, 3]
+
         block = keras_resnet.blocks.bottleneck_2d
 
         super(ResNet152, self).__init__(inputs, blocks, block, include_top=include_top, classes=classes)
@@ -269,7 +284,10 @@ class ResNet200(ResNet):
 
     """
 
-    def __init__(self, inputs, blocks=[3, 24, 36, 3], include_top=True, classes=1000):
+    def __init__(self, inputs, blocks=None, include_top=True, classes=1000):
+        if blocks is None:
+            blocks = [3, 24, 36, 3]
+
         block = keras_resnet.blocks.bottleneck_2d
 
         super(ResNet200, self).__init__(inputs, blocks, block, include_top=include_top, classes=classes)
