@@ -53,7 +53,6 @@ def basic_1d(filters, stage=0, block=0, kernel_size=3, numerical_name=False, str
     stage_char = str(stage + 2)
 
     def f(x):
-
         y = keras.layers.Conv1D(filters, kernel_size, strides=stride, padding="same", name="res{}{}_branch2a".format(stage_char, block_char), **parameters)(x)
         y = keras.layers.BatchNormalization(axis=axis, name="bn{}{}_branch2a".format(stage_char, block_char))(y)
         y = keras.layers.Activation("relu", name="res{}{}_branch2a_relu".format(stage_char, block_char))(y)
@@ -111,7 +110,6 @@ def bottleneck_1d(filters, stage=0, block=0, kernel_size=3, numerical_name=False
     stage_char = str(stage + 2)
 
     def f(x):
-
         y = keras.layers.Conv1D(filters, (1, 1), strides=stride, padding="same", name="res{}{}_branch2a".format(stage_char, block_char), **parameters)(x)
         y = keras.layers.BatchNormalization(axis=axis, name="bn{}{}_branch2a".format(stage_char, block_char))(y)
         y = keras.layers.Activation("relu", name="res{}{}_branch2a_relu".format(stage_char, block_char))(y)
