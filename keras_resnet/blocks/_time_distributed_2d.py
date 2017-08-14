@@ -125,4 +125,3 @@ def time_distributed_bottleneck_2d(filters, stage=0, block=0, kernel_size=3, num
         return y
 
     return f
-

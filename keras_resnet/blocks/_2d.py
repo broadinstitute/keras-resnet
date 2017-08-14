@@ -125,4 +125,3 @@ def bottleneck_2d(filters, stage=0, block=0, kernel_size=3, numerical_name=False
         return y
 
     return f
-
