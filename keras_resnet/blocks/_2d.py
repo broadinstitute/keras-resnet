@@ -42,7 +42,10 @@ def basic_2d(filters, stage=0, block=0, kernel_size=3, numerical_name=False, str
 
     """
     if stride is None:
-        stride = 1 if block != 0 or stage == 0 else 2
+        if block != 0 or stage == 0:
+            stride = 1
+        else:
+            stride = 2
 
     if keras.backend.image_data_format() == "channels_last":
         axis = 3
@@ -100,7 +103,10 @@ def bottleneck_2d(filters, stage=0, block=0, kernel_size=3, numerical_name=False
 
     """
     if stride is None:
-        stride = 1 if block != 0 or stage == 0 else 2
+        if block != 0 or stage == 0:
+            stride = 1
+        else:
+            stride = 2
 
     if keras.backend.image_data_format() == "channels_last":
         axis = 3
