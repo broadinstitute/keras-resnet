@@ -44,7 +44,11 @@ def basic_3d(filters, stage=0, block=0, kernel_size=3, numerical_name=False, str
     if stride is None:
         stride = 1 if block != 0 or stage == 0 else 2
 
-    axis       = 3 if keras.backend.image_data_format() == "channels_last" else 1
+    if keras.backend.image_data_format() == "channels_last":
+        axis = 3
+    else:
+        axis = 1
+
     block_char = "b{}".format(block) if block > 0 and numerical_name else chr(ord('a') + block)
     stage_char = str(stage + 2)
 
@@ -97,7 +101,11 @@ def bottleneck_3d(filters, stage=0, block=0, kernel_size=3, numerical_name=False
     if stride is None:
         stride = 1 if block != 0 or stage == 0 else 2
 
-    axis       = 3 if keras.backend.image_data_format() == "channels_last" else 1
+    if keras.backend.image_data_format() == "channels_last":
+        axis = 3
+    else:
+        axis = 1
+
     block_char = "b{}".format(block) if block > 0 and numerical_name else chr(ord('a') + block)
     stage_char = str(stage + 2)
 
