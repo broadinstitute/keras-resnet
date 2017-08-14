@@ -68,11 +68,13 @@ def TimeDistributedResNet(inputs, blocks, block, include_top=True, classes=1000,
 
     features = 64
 
+    outputs = []
     for stage_id, iterations in enumerate(blocks):
         for block_id in range(iterations):
             x = block(features, stage_id, block_id, numerical_name=(blocks[stage_id] > 6))(x)
 
         features *= 2
+        outputs.append(x)
 
     if include_top:
         assert classes > 0
@@ -80,7 +82,10 @@ def TimeDistributedResNet(inputs, blocks, block, include_top=True, classes=1000,
         x = keras.layers.TimeDistributed(keras.layers.GlobalAveragePooling2D(), name="pool5")(x)
         x = keras.layers.TimeDistributed(keras.layers.Dense(classes, activation="softmax"), name="fc1000")(x)
 
-    return keras.models.Model(inputs=inputs, outputs=x, *args, **kwargs)
+        return keras.models.Model(inputs=inputs, outputs=x, *args, **kwargs)
+    else:
+        # Else output each stages features
+        return keras.models.Model(inputs=inputs, outputs=outputs, *args, **kwargs)
 
 
 """
