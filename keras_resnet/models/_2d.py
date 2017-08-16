@@ -17,277 +17,267 @@ import keras.regularizers
 import keras_resnet.blocks
 
 
-class ResNet(keras.models.Model):
-    """
+"""
 
-    A custom :class:`ResNet <ResNet>` object.
+Constructs a `keras.models.Model` object using the given block count.
 
-    :param inputs: input tensor (e.g. an instance of `keras.layers.Input`)
+:param inputs: input tensor (e.g. an instance of `keras.layers.Input`)
 
-    :param blocks: list of blocks to use
+:param blocks: the network’s residual architecture
 
-    :param include_top: if true, includes classification layers
+:param block: a residual block (e.g. an instance of `keras_resnet.blocks.basic_2d`)
 
-    :param classes: number of classes to classify (include_top must be true)
+:param include_top: if true, includes classification layers
 
-    Usage:
+:param classes: number of classes to classify (include_top must be true)
 
-        >>> import keras_resnet.blocks
-        >>> import keras_resnet.models
+:return model: ResNet model with encoding output (if `include_top=False`) or classification output (if `include_top=True`)
 
-        >>> shape, classes = (224, 224, 3), 1000
+Usage:
 
-        >>> x = keras.layers.Input(shape)
+    >>> import keras_resnet.blocks
+    >>> import keras_resnet.models
 
-        >>> blocks = [2, 2, 2, 2]
+    >>> shape, classes = (224, 224, 3), 1000
 
-        >>> block = keras_resnet.blocks.basic_2d
+    >>> x = keras.layers.Input(shape)
 
-        >>> model = keras_resnet.models.ResNet(x, classes, blocks, block, classes=classes)
+    >>> blocks = [2, 2, 2, 2]
 
-        >>> model.compile("adam", "categorical_crossentropy", ["accuracy"])
+    >>> block = keras_resnet.blocks.basic_2d
 
-    """
+    >>> model = keras_resnet.models.ResNet(x, classes, blocks, block, classes=classes)
 
-    def __init__(self, inputs, blocks, block, include_top=True, classes=1000):
-        if keras.backend.image_data_format() == "channels_last":
-            axis = 3
-        else:
-            axis = 1
+    >>> model.compile("adam", "categorical_crossentropy", ["accuracy"])
 
-        x = keras.layers.Conv2D(64, (7, 7), strides=(2, 2), padding="same", name="conv1")(inputs)
-        x = keras.layers.BatchNormalization(axis=axis, name="bn_conv1")(x)
-        x = keras.layers.Activation("relu", name="conv1_relu")(x)
-        x = keras.layers.MaxPooling2D((3, 3), strides=(2, 2), padding="same", name="pool1")(x)
+"""
+def ResNet(inputs, blocks, block, include_top=True, classes=1000, *args, **kwargs):
+    if keras.backend.image_data_format() == "channels_last":
+        axis = 3
+    else:
+        axis = 1
 
-        features = 64
+    x = keras.layers.Conv2D(64, (7, 7), strides=(2, 2), padding="same", name="conv1")(inputs)
+    x = keras.layers.BatchNormalization(axis=axis, name="bn_conv1")(x)
+    x = keras.layers.Activation("relu", name="conv1_relu")(x)
+    x = keras.layers.MaxPooling2D((3, 3), strides=(2, 2), padding="same", name="pool1")(x)
 
-        for stage_id, iterations in enumerate(blocks):
-            for block_id in range(iterations):
-                x = block(features, stage_id, block_id, numerical_name=(blocks[stage_id] > 6))(x)
+    features = 64
 
-            features *= 2
+    for stage_id, iterations in enumerate(blocks):
+        for block_id in range(iterations):
+            x = block(features, stage_id, block_id, numerical_name=(blocks[stage_id] > 6))(x)
 
-        if include_top:
-            assert classes > 0
+        features *= 2
 
-            x = keras.layers.GlobalAveragePooling2D(name="pool5")(x)
-            x = keras.layers.Dense(classes, activation="softmax", name="fc1000")(x)
+    if include_top:
+        assert classes > 0
 
-        super(ResNet, self).__init__(inputs, x)
+        x = keras.layers.GlobalAveragePooling2D(name="pool5")(x)
+        x = keras.layers.Dense(classes, activation="softmax", name="fc1000")(x)
 
+    return keras.models.Model(inputs=inputs, outputs=x, *args, **kwargs)
 
-class ResNet18(ResNet):
-    """
 
-    A :class:`ResNet18 <ResNet18>` object.
+"""
 
-    :param inputs: input tensor (e.g. an instance of `keras.layers.Input`)
+Constructs a `keras.models.Model` according to the ResNet18 specifications.
 
-    :param blocks: list of blocks to use
+:param inputs: input tensor (e.g. an instance of `keras.layers.Input`)
 
-    :param include_top: if true, includes classification layers
+:param blocks: the network’s residual architecture
 
-    :param classes: number of classes to classify (include_top must be true)
+:param include_top: if true, includes classification layers
 
-    Usage:
+:param classes: number of classes to classify (include_top must be true)
 
-        >>> import keras_resnet.models
+:return model: ResNet model with encoding output (if `include_top=False`) or classification output (if `include_top=True`)
 
-        >>> shape, classes = (224, 224, 3), 1000
+Usage:
 
-        >>> x = keras.layers.Input(shape)
+    >>> import keras_resnet.models
 
-        >>> model = keras_resnet.models.ResNet18(x, classes=classes)
+    >>> shape, classes = (224, 224, 3), 1000
 
-        >>> model.compile("adam", "categorical_crossentropy", ["accuracy"])
+    >>> x = keras.layers.Input(shape)
 
-    """
+    >>> model = keras_resnet.models.ResNet18(x, classes=classes)
 
-    def __init__(self, inputs, blocks=None, include_top=True, classes=1000):
-        if blocks is None:
-            blocks = [2, 2, 2, 2]
+    >>> model.compile("adam", "categorical_crossentropy", ["accuracy"])
 
-        block = keras_resnet.blocks.basic_2d
+"""
+def ResNet18(inputs, blocks=None, include_top=True, classes=1000, *args, **kwargs):
+    if blocks is None:
+        blocks = [2, 2, 2, 2]
 
-        super(ResNet18, self).__init__(inputs, blocks, block, include_top=include_top, classes=classes)
+    return ResNet(inputs, blocks, block=keras_resnet.blocks.basic_2d, include_top=include_top, classes=classes, *args, **kwargs)
 
 
-class ResNet34(ResNet):
-    """
+"""
 
-    A :class:`ResNet34 <ResNet34>` object.
+Constructs a `keras.models.Model` according to the ResNet34 specifications.
 
-    :param inputs: input tensor (e.g. an instance of `keras.layers.Input`)
+:param inputs: input tensor (e.g. an instance of `keras.layers.Input`)
 
-    :param blocks: list of blocks to use
+:param blocks: the network’s residual architecture
 
-    :param include_top: if true, includes classification layers
+:param include_top: if true, includes classification layers
 
-    :param classes: number of classes to classify (include_top must be true)
+:param classes: number of classes to classify (include_top must be true)
 
-    Usage:
+:return model: ResNet model with encoding output (if `include_top=False`) or classification output (if `include_top=True`)
 
-        >>> import keras_resnet.models
+Usage:
 
-        >>> shape, classes = (224, 224, 3), 1000
+    >>> import keras_resnet.models
 
-        >>> x = keras.layers.Input(shape)
+    >>> shape, classes = (224, 224, 3), 1000
 
-        >>> model = keras_resnet.models.ResNet34(x, classes=classes)
+    >>> x = keras.layers.Input(shape)
 
-        >>> model.compile("adam", "categorical_crossentropy", ["accuracy"])
+    >>> model = keras_resnet.models.ResNet34(x, classes=classes)
 
-    """
+    >>> model.compile("adam", "categorical_crossentropy", ["accuracy"])
 
-    def __init__(self, inputs, blocks=None, include_top=True, classes=1000):
-        if blocks is None:
-            blocks = [3, 4, 6, 3]
+"""
+def ResNet34(inputs, blocks=None, include_top=True, classes=1000, *args, **kwargs):
+    if blocks is None:
+        blocks = [3, 4, 6, 3]
 
-        block = keras_resnet.blocks.basic_2d
+    return ResNet(inputs, blocks, block=keras_resnet.blocks.basic_2d, include_top=include_top, classes=classes, *args, **kwargs)
 
-        super(ResNet34, self).__init__(inputs, blocks, block, include_top=include_top, classes=classes)
 
+"""
 
-class ResNet50(ResNet):
-    """
+Constructs a `keras.models.Model` according to the ResNet50 specifications.
 
-    A :class:`ResNet50 <ResNet50>` object.
+:param inputs: input tensor (e.g. an instance of `keras.layers.Input`)
 
-    :param inputs: input tensor (e.g. an instance of `keras.layers.Input`)
+:param blocks: the network’s residual architecture
 
-    :param blocks: list of blocks to use
+:param include_top: if true, includes classification layers
 
-    :param include_top: if true, includes classification layers
+:param classes: number of classes to classify (include_top must be true)
 
-    :param classes: number of classes to classify (include_top must be true)
+:return model: ResNet model with encoding output (if `include_top=False`) or classification output (if `include_top=True`)
 
-    Usage:
+Usage:
 
-        >>> import keras_resnet.models
+    >>> import keras_resnet.models
 
-        >>> shape, classes = (224, 224, 3), 1000
+    >>> shape, classes = (224, 224, 3), 1000
 
-        >>> x = keras.layers.Input(shape)
+    >>> x = keras.layers.Input(shape)
 
-        >>> model = keras_resnet.models.ResNet50(x)
+    >>> model = keras_resnet.models.ResNet50(x)
 
-        >>> model.compile("adam", "categorical_crossentropy", ["accuracy"])
+    >>> model.compile("adam", "categorical_crossentropy", ["accuracy"])
 
-    """
+"""
+def ResNet50(inputs, blocks=None, include_top=True, classes=1000, *args, **kwargs):
+    if blocks is None:
+        blocks = [3, 4, 6, 3]
 
-    def __init__(self, inputs, blocks=None, include_top=True, classes=1000):
-        if blocks is None:
-            blocks = [3, 4, 6, 3]
+    return ResNet(inputs, blocks, block=keras_resnet.blocks.bottleneck_2d, include_top=include_top, classes=classes, *args, **kwargs)
 
-        block = keras_resnet.blocks.bottleneck_2d
 
-        super(ResNet50, self).__init__(inputs, blocks, block, include_top=include_top, classes=classes)
+"""
 
+Constructs a `keras.models.Model` according to the ResNet101 specifications.
 
-class ResNet101(ResNet):
-    """
+:param inputs: input tensor (e.g. an instance of `keras.layers.Input`)
 
-    A :class:`ResNet101 <ResNet101>` object.
+:param blocks: the network’s residual architecture
 
-    :param inputs: input tensor (e.g. an instance of `keras.layers.Input`)
+:param include_top: if true, includes classification layers
 
-    :param blocks: list of blocks to use
+:param classes: number of classes to classify (include_top must be true)
 
-    :param include_top: if true, includes classification layers
+:return model: ResNet model with encoding output (if `include_top=False`) or classification output (if `include_top=True`)
 
-    :param classes: number of classes to classify (include_top must be true)
+Usage:
 
-    Usage:
+    >>> import keras_resnet.models
 
-        >>> import keras_resnet.models
+    >>> shape, classes = (224, 224, 3), 1000
 
-        >>> shape, classes = (224, 224, 3), 1000
+    >>> x = keras.layers.Input(shape)
 
-        >>> x = keras.layers.Input(shape)
+    >>> model = keras_resnet.models.ResNet101(x, classes=classes)
 
-        >>> model = keras_resnet.models.ResNet101(x, classes=classes)
+    >>> model.compile("adam", "categorical_crossentropy", ["accuracy"])
 
-        >>> model.compile("adam", "categorical_crossentropy", ["accuracy"])
+"""
+def ResNet101(inputs, blocks=None, include_top=True, classes=1000, *args, **kwargs):
+    if blocks is None:
+        blocks = [3, 4, 23, 3]
 
-    """
+    return ResNet(inputs, blocks, block=keras_resnet.blocks.bottleneck_2d, include_top=include_top, classes=classes, *args, **kwargs)
 
-    def __init__(self, inputs, blocks=None, include_top=True, classes=1000):
-        if blocks is None:
-            blocks = [3, 4, 23, 3]
 
-        block = keras_resnet.blocks.bottleneck_2d
+"""
 
-        super(ResNet101, self).__init__(inputs, blocks, block, include_top=include_top, classes=classes)
+Constructs a `keras.models.Model` according to the ResNet152 specifications.
 
+:param inputs: input tensor (e.g. an instance of `keras.layers.Input`)
 
-class ResNet152(ResNet):
-    """
+:param blocks: the network’s residual architecture
 
-    A :class:`ResNet152 <ResNet152>` object.
+:param include_top: if true, includes classification layers
 
-    :param inputs: input tensor (e.g. an instance of `keras.layers.Input`)
+:param classes: number of classes to classify (include_top must be true)
 
-    :param blocks: list of blocks to use
+:return model: ResNet model with encoding output (if `include_top=False`) or classification output (if `include_top=True`)
 
-    :param include_top: if true, includes classification layers
+Usage:
 
-    :param classes: number of classes to classify (include_top must be true)
+    >>> import keras_resnet.models
 
-    Usage:
+    >>> shape, classes = (224, 224, 3), 1000
 
-        >>> import keras_resnet.models
+    >>> x = keras.layers.Input(shape)
 
-        >>> shape, classes = (224, 224, 3), 1000
+    >>> model = keras_resnet.models.ResNet152(x, classes=classes)
 
-        >>> x = keras.layers.Input(shape)
+    >>> model.compile("adam", "categorical_crossentropy", ["accuracy"])
 
-        >>> model = keras_resnet.models.ResNet152(x, classes=classes)
+"""
+def ResNet152(inputs, blocks=None, include_top=True, classes=1000, *args, **kwargs):
+    if blocks is None:
+        blocks = [3, 8, 36, 3]
 
-        >>> model.compile("adam", "categorical_crossentropy", ["accuracy"])
+    return ResNet(inputs, blocks, block=keras_resnet.blocks.bottleneck_2d, include_top=include_top, classes=classes, *args, **kwargs)
 
-    """
 
-    def __init__(self, inputs, blocks=None, include_top=True, classes=1000):
-        if blocks is None:
-            blocks = [3, 8, 36, 3]
+"""
 
-        block = keras_resnet.blocks.bottleneck_2d
+Constructs a `keras.models.Model` according to the ResNet200 specifications.
 
-        super(ResNet152, self).__init__(inputs, blocks, block, include_top=include_top, classes=classes)
+:param inputs: input tensor (e.g. an instance of `keras.layers.Input`)
 
+:param blocks: the network’s residual architecture
 
-class ResNet200(ResNet):
-    """
+:param include_top: if true, includes classification layers
 
-    A :class:`ResNet200 <ResNet200>` object.
+:param classes: number of classes to classify (include_top must be true)
 
-    :param inputs: input tensor (e.g. an instance of `keras.layers.Input`)
+:return model: ResNet model with encoding output (if `include_top=False`) or classification output (if `include_top=True`)
 
-    :param blocks: list of blocks to use
+Usage:
 
-    :param include_top: if true, includes classification layers
+    >>> import keras_resnet.models
 
-    :param classes: number of classes to classify (include_top must be true)
+    >>> shape, classes = (224, 224, 3), 1000
 
-    Usage:
+    >>> x = keras.layers.Input(shape)
 
-        >>> import keras_resnet.models
+    >>> model = keras_resnet.models.ResNet200(x, classes=classes)
 
-        >>> shape, classes = (224, 224, 3), 1000
+    >>> model.compile("adam", "categorical_crossentropy", ["accuracy"])
 
-        >>> x = keras.layers.Input(shape)
+"""
+def ResNet200(inputs, blocks=None, include_top=True, classes=1000, *args, **kwargs):
+    if blocks is None:
+        blocks = [3, 24, 36, 3]
 
-        >>> model = keras_resnet.models.ResNet200(x, classes=classes)
-
-        >>> model.compile("adam", "categorical_crossentropy", ["accuracy"])
-
-    """
-
-    def __init__(self, inputs, blocks=None, include_top=True, classes=1000):
-        if blocks is None:
-            blocks = [3, 24, 36, 3]
-
-        block = keras_resnet.blocks.bottleneck_2d
-
-        super(ResNet200, self).__init__(inputs, blocks, block, include_top=include_top, classes=classes)
+    return ResNet(inputs, blocks, block=keras_resnet.blocks.bottleneck_2d, include_top=include_top, classes=classes, *args, **kwargs)
