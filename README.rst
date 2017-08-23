@@ -12,6 +12,8 @@ A tantalizing preview of Keras-ResNet simplicity:
 
 .. code-block:: python
 
+    >>> import keras
+
     >>> import keras_resnet.models
 
     >>> shape, classes = (32, 32, 3), 10
