@@ -17,7 +17,7 @@ parameters = {
 }
 
 
-def basic_2d(filters, stage=0, block=0, kernel_size=3, numerical_name=False, stride=None):
+def basic_2d(filters, stage=0, block=0, kernel_size=3, numerical_name=False, stride=None, **parameters):
     """
 
     A two-dimensional basic block.
@@ -81,7 +81,7 @@ def basic_2d(filters, stage=0, block=0, kernel_size=3, numerical_name=False, str
     return f
 
 
-def bottleneck_2d(filters, stage=0, block=0, kernel_size=3, numerical_name=False, stride=None):
+def bottleneck_2d(filters, stage=0, block=0, kernel_size=3, numerical_name=False, stride=None, **parameters):
     """
 
     A two-dimensional bottleneck block.
