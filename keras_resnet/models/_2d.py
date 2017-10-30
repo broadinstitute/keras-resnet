@@ -13,9 +13,10 @@ import keras.models
 import keras.regularizers
 
 import keras_resnet.blocks
+import keras_resnet.layers
 
 
-def ResNet(inputs, blocks, block, include_top=True, classes=1000, *args, **kwargs):
+def ResNet(inputs, blocks, block, include_top=True, classes=1000, freeze_bn=True, *args, **kwargs):
     """
     Constructs a `keras.models.Model` object using the given block count.
 
@@ -28,6 +29,8 @@ def ResNet(inputs, blocks, block, include_top=True, classes=1000, *args, **kwarg
     :param include_top: if true, includes classification layers
 
     :param classes: number of classes to classify (include_top must be true)
+
+    :param freeze_bn: if true, freezes BatchNormalization layers (ie. no updates are done in these layers)
 
     :return model: ResNet model with encoding output (if `include_top=False`) or classification output (if `include_top=True`)
 
@@ -54,7 +57,7 @@ def ResNet(inputs, blocks, block, include_top=True, classes=1000, *args, **kwarg
         axis = 1
 
     x = keras.layers.Conv2D(64, (7, 7), strides=(2, 2), padding="same", name="conv1")(inputs)
-    x = keras.layers.BatchNormalization(axis=axis, name="bn_conv1")(x)
+    x = keras_resnet.layers.BatchNormalization(axis=axis, freeze=freeze_bn, name="bn_conv1")(x)
     x = keras.layers.Activation("relu", name="conv1_relu")(x)
     x = keras.layers.MaxPooling2D((3, 3), strides=(2, 2), padding="same", name="pool1")(x)
 
@@ -64,7 +67,7 @@ def ResNet(inputs, blocks, block, include_top=True, classes=1000, *args, **kwarg
 
     for stage_id, iterations in enumerate(blocks):
         for block_id in range(iterations):
-            x = block(features, stage_id, block_id, numerical_name=(blocks[stage_id] > 6))(x)
+            x = block(features, stage_id, block_id, numerical_name=(blocks[stage_id] > 6), freeze_bn=freeze_bn)(x)
 
         features *= 2
 
