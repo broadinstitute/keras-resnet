@@ -5,7 +5,8 @@ setuptools.setup(
     author_email="allen.goodman@icloud.com",
     extras_require={
         "benchmark": [
-            "click"
+            "click",
+            "sklearn"
         ],
         "test": [
             "pytest"
@@ -28,5 +29,5 @@ setuptools.setup(
         ]
     ),
     url="https://github.com/broadinstitute/keras-resnet",
-    version="0.0.7"
+    version="0.0.8"
 )
