@@ -1,12 +1,10 @@
 # -*- coding: utf-8 -*-
 
 """
-
 keras_resnet.classifiers
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
 This module implements popular residual two-dimensional classifiers.
-
 """
 
 import keras.backend
@@ -19,7 +17,6 @@ import keras_resnet.models
 
 class ResNet18(keras.models.Model):
     """
-
     A :class:`ResNet18 <ResNet18>` object.
 
     :param inputs: input tensor (e.g. an instance of `keras.layers.Input`)
@@ -35,9 +32,7 @@ class ResNet18(keras.models.Model):
         >>> model = keras_resnet.classifiers.ResNet18(x)
 
         >>> model.compile("adam", "categorical_crossentropy", ["accuracy"])
-
     """
-
     def __init__(self, inputs, classes):
         outputs = keras_resnet.models.ResNet18(inputs)
 
@@ -50,7 +45,6 @@ class ResNet18(keras.models.Model):
 
 class ResNet34(keras.models.Model):
     """
-
     A :class:`ResNet34 <ResNet34>` object.
 
     :param inputs: input tensor (e.g. an instance of `keras.layers.Input`)
@@ -66,9 +60,7 @@ class ResNet34(keras.models.Model):
         >>> model = keras_resnet.classifiers.ResNet34(x)
 
         >>> model.compile("adam", "categorical_crossentropy", ["accuracy"])
-
     """
-
     def __init__(self, inputs, classes):
         outputs = keras_resnet.models.ResNet34(inputs)
 
@@ -81,7 +73,6 @@ class ResNet34(keras.models.Model):
 
 class ResNet50(keras.models.Model):
     """
-
     A :class:`ResNet50 <ResNet50>` object.
 
     :param inputs: input tensor (e.g. an instance of `keras.layers.Input`)
@@ -97,9 +88,7 @@ class ResNet50(keras.models.Model):
         >>> model = keras_resnet.classifiers.ResNet50(x)
 
         >>> model.compile("adam", "categorical_crossentropy", ["accuracy"])
-
     """
-
     def __init__(self, inputs, classes):
         outputs = keras_resnet.models.ResNet50(inputs)
 
@@ -112,7 +101,6 @@ class ResNet50(keras.models.Model):
 
 class ResNet101(keras.models.Model):
     """
-
     A :class:`ResNet101 <ResNet101>` object.
 
     :param inputs: input tensor (e.g. an instance of `keras.layers.Input`)
@@ -128,9 +116,7 @@ class ResNet101(keras.models.Model):
         >>> model = keras_resnet.classifiers.ResNet101(x)
 
         >>> model.compile("adam", "categorical_crossentropy", ["accuracy"])
-
     """
-
     def __init__(self, inputs, classes):
         outputs = keras_resnet.models.ResNet101(inputs)
 
@@ -143,7 +129,6 @@ class ResNet101(keras.models.Model):
 
 class ResNet152(keras.models.Model):
     """
-
     A :class:`ResNet152 <ResNet152>` object.
 
     :param inputs: input tensor (e.g. an instance of `keras.layers.Input`)
@@ -161,7 +146,6 @@ class ResNet152(keras.models.Model):
         >>> model.compile("adam", "categorical_crossentropy", ["accuracy"])
 
     """
-
     def __init__(self, inputs, classes):
         outputs = keras_resnet.models.ResNet152(inputs)
 
@@ -174,7 +158,6 @@ class ResNet152(keras.models.Model):
 
 class ResNet200(keras.models.Model):
     """
-
     A :class:`ResNet200 <ResNet200>` object.
 
     :param inputs: input tensor (e.g. an instance of `keras.layers.Input`)
@@ -190,9 +173,7 @@ class ResNet200(keras.models.Model):
         >>> model = keras_resnet.classifiers.ResNet200(x)
 
         >>> model.compile("adam", "categorical_crossentropy", ["accuracy"])
-
     """
-
     def __init__(self, inputs, classes):
         outputs = keras_resnet.models.ResNet200(inputs)
 

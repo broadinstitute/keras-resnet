@@ -1,12 +1,10 @@
 # -*- coding: utf-8 -*-
 
 """
-
 keras_resnet.blocks._1d
 ~~~~~~~~~~~~~~~~~~~~~~~
 
 This module implements a number of popular one-dimensional residual blocks.
-
 """
 
 import keras.layers
@@ -19,7 +17,6 @@ parameters = {
 
 def basic_1d(filters, stage=0, block=0, kernel_size=3, numerical_name=False, stride=None):
     """
-
     A one-dimensional basic block.
 
     :param filters: the output’s feature space
@@ -39,7 +36,6 @@ def basic_1d(filters, stage=0, block=0, kernel_size=3, numerical_name=False, str
         >>> import keras_resnet.blocks
 
         >>> keras_resnet.blocks.basic_1d(64)
-
     """
     if stride is None:
         if block != 0 or stage == 0:
@@ -83,7 +79,6 @@ def basic_1d(filters, stage=0, block=0, kernel_size=3, numerical_name=False, str
 
 def bottleneck_1d(filters, stage=0, block=0, kernel_size=3, numerical_name=False, stride=None):
     """
-
     A one-dimensional bottleneck block.
 
     :param filters: the output’s feature space
@@ -103,7 +98,6 @@ def bottleneck_1d(filters, stage=0, block=0, kernel_size=3, numerical_name=False
         >>> import keras_resnet.blocks
 
         >>> keras_resnet.blocks.bottleneck_1d(64)
-
     """
     if stride is None:
         stride = 1 if block != 0 or stage == 0 else 2

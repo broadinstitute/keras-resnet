@@ -1,12 +1,10 @@
 # -*- coding: utf-8 -*-
 
 """
-
 keras_resnet.blocks._time_distributed_2d
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 This module implements a number of popular time distributed two-dimensional residual blocks.
-
 """
 
 import keras.layers

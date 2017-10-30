@@ -1,12 +1,10 @@
 # -*- coding: utf-8 -*-
 
 """
-
 keras_resnet.blocks._2d
 ~~~~~~~~~~~~~~~~~~~~~~~
 
 This module implements a number of popular two-dimensional residual blocks.
-
 """
 
 import keras.layers
@@ -19,7 +17,6 @@ parameters = {
 
 def basic_2d(filters, stage=0, block=0, kernel_size=3, numerical_name=False, stride=None):
     """
-
     A two-dimensional basic block.
 
     :param filters: the output’s feature space
@@ -39,7 +36,6 @@ def basic_2d(filters, stage=0, block=0, kernel_size=3, numerical_name=False, str
         >>> import keras_resnet.blocks
 
         >>> keras_resnet.blocks.basic_2d(64)
-
     """
     if stride is None:
         if block != 0 or stage == 0:
@@ -83,7 +79,6 @@ def basic_2d(filters, stage=0, block=0, kernel_size=3, numerical_name=False, str
 
 def bottleneck_2d(filters, stage=0, block=0, kernel_size=3, numerical_name=False, stride=None):
     """
-
     A two-dimensional bottleneck block.
 
     :param filters: the output’s feature space
@@ -103,7 +98,6 @@ def bottleneck_2d(filters, stage=0, block=0, kernel_size=3, numerical_name=False
         >>> import keras_resnet.blocks
 
         >>> keras_resnet.blocks.bottleneck_2d(64)
-
     """
     if stride is None:
         if block != 0 or stage == 0:

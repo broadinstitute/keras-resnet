@@ -1,12 +1,10 @@
 # -*- coding: utf-8 -*-
 
 """
-
 keras_resnet.models
 ~~~~~~~~~~~~~~~~~~~
 
 This module implements popular residual models.
-
 """
 
 from ._2d import (

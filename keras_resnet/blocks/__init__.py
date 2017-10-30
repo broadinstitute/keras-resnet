@@ -1,12 +1,10 @@
 # -*- coding: utf-8 -*-
 
 """
-
 keras_resnet.blocks
 ~~~~~~~~~~~~~~~~~~~
 
 This module implements a number of popular residual blocks.
-
 """
 
 from ._1d import (
