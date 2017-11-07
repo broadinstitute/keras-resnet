@@ -62,7 +62,7 @@ def TimeDistributedResNet(inputs, blocks, block, include_top=True, classes=1000,
     else:
         axis = 1
 
-    x = keras.layers.TimeDistributed(keras.layers.Conv2D(64, (7, 7), strides=(2, 2), padding="same"), name="conv1")(inputs)
+    x = keras.layers.TimeDistributed(keras.layers.Conv2D(64, (7, 7), strides=(2, 2), use_bias=False, padding="same"), name="conv1")(inputs)
     x = keras.layers.TimeDistributed(keras_resnet.layers.BatchNormalization(axis=axis, freeze=freeze_bn), name="bn_conv1")(x)
     x = keras.layers.TimeDistributed(keras.layers.Activation("relu"), name="conv1_relu")(x)
     x = keras.layers.TimeDistributed(keras.layers.MaxPooling2D((3, 3), strides=(2, 2), padding="same"), name="pool1")(x)
