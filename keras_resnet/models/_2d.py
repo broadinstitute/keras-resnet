@@ -16,7 +16,7 @@ import keras_resnet.blocks
 import keras_resnet.layers
 
 
-def ResNet(inputs, blocks, block, include_top=True, classes=1000, freeze_bn=True, *args, **kwargs):
+def ResNet(inputs, blocks, block, include_top=True, classes=1000, freeze_bn=True, numerical_names=None, *args, **kwargs):
     """
     Constructs a `keras.models.Model` object using the given block count.
 
@@ -53,7 +53,6 @@ def ResNet(inputs, blocks, block, include_top=True, classes=1000, freeze_bn=True
 
         >>> model.compile("adam", "categorical_crossentropy", ["accuracy"])
     """
-def ResNet(inputs, blocks, block, include_top=True, classes=1000, freeze_bn=False, numerical_names=None, *args, **kwargs):
     if keras.backend.image_data_format() == "channels_last":
         axis = 3
     else:
@@ -64,9 +63,9 @@ def ResNet(inputs, blocks, block, include_top=True, classes=1000, freeze_bn=Fals
 
     x = keras.layers.ZeroPadding2D(padding=3, name="padding_conv1")(inputs)
     x = keras.layers.Conv2D(64, (7, 7), strides=(2, 2), use_bias=False, name="conv1")(x)
-    x = keras_resnet.layers.BatchNormalization(axis=axis, freeze=freeze_bn, name="bn_conv1")(x)
+    x = keras_resnet.layers.BatchNormalization(axis=axis, epsilon=1e-5, freeze=freeze_bn, name="bn_conv1")(x)
     x = keras.layers.Activation("relu", name="conv1_relu")(x)
-    x = keras.layers.MaxPooling2D((3, 3), strides=(2, 2), name="pool1")(x)
+    x = keras.layers.MaxPooling2D((3, 3), strides=(2, 2), padding="same", name="pool1")(x)
 
     features = 64
 
