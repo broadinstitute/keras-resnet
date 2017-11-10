@@ -55,15 +55,15 @@ if __name__ == "__main__":
         elif isinstance(l, keras.layers.Dense):
             l.set_weights(convert_dense_weights(weights.get(l.name).get("0"), weights.get(l.name).get("1")))
         elif isinstance(l, keras.layers.BatchNormalization):
-            scale_name    = l.name.replace("bn", "scale")
-            bn_weights    = weights.get(l.name)
+            scale_name = l.name.replace("bn", "scale")
+            bn_weights = weights.get(l.name)
             scale_weights = weights.get(scale_name)
 
             l.set_weights([
-                np.array(scale_weights.get("0")), # gamma
-                np.array(scale_weights.get("1")), # beta
-                np.array(bn_weights.get("0")),    # mean
-                np.array(bn_weights.get("1")),    # variance
+                np.array(scale_weights.get("0")),  # gamma
+                np.array(scale_weights.get("1")),  # beta
+                np.array(bn_weights.get("0")),     # mean
+                np.array(bn_weights.get("1")),     # variance
             ])
 
         print("imported layer: {}/{}".format(index, len(model.layers)), end="\r")
@@ -71,4 +71,3 @@ if __name__ == "__main__":
     print("saving...")
     model.save(args.output)
     print("done.")
-
