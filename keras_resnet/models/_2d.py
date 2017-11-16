@@ -16,7 +16,7 @@ import keras_resnet.blocks
 import keras_resnet.layers
 
 
-def ResNet(inputs, blocks, block, include_top=True, classes=1000, freeze_bn=True, *args, **kwargs):
+def ResNet(inputs, blocks, block, include_top=True, classes=1000, freeze_bn=True, numerical_names=None, *args, **kwargs):
     """
     Constructs a `keras.models.Model` object using the given block count.
 
@@ -31,6 +31,8 @@ def ResNet(inputs, blocks, block, include_top=True, classes=1000, freeze_bn=True
     :param classes: number of classes to classify (include_top must be true)
 
     :param freeze_bn: if true, freezes BatchNormalization layers (ie. no updates are done in these layers)
+
+    :param numerical_names: list of bool, same size as blocks, used to indicate whether names of layers should include numbers or letters
 
     :return model: ResNet model with encoding output (if `include_top=False`) or classification output (if `include_top=True`)
 
@@ -56,8 +58,12 @@ def ResNet(inputs, blocks, block, include_top=True, classes=1000, freeze_bn=True
     else:
         axis = 1
 
-    x = keras.layers.Conv2D(64, (7, 7), strides=(2, 2), padding="same", name="conv1")(inputs)
-    x = keras_resnet.layers.BatchNormalization(axis=axis, freeze=freeze_bn, name="bn_conv1")(x)
+    if numerical_names is None:
+        numerical_names = [True] * len(blocks)
+
+    x = keras.layers.ZeroPadding2D(padding=3, name="padding_conv1")(inputs)
+    x = keras.layers.Conv2D(64, (7, 7), strides=(2, 2), use_bias=False, name="conv1")(x)
+    x = keras_resnet.layers.BatchNormalization(axis=axis, epsilon=1e-5, freeze=freeze_bn, name="bn_conv1")(x)
     x = keras.layers.Activation("relu", name="conv1_relu")(x)
     x = keras.layers.MaxPooling2D((3, 3), strides=(2, 2), padding="same", name="pool1")(x)
 
@@ -67,7 +73,7 @@ def ResNet(inputs, blocks, block, include_top=True, classes=1000, freeze_bn=True
 
     for stage_id, iterations in enumerate(blocks):
         for block_id in range(iterations):
-            x = block(features, stage_id, block_id, numerical_name=(blocks[stage_id] > 6), freeze_bn=freeze_bn)(x)
+            x = block(features, stage_id, block_id, numerical_name=(block_id > 0 and numerical_names[stage_id]), freeze_bn=freeze_bn)(x)
 
         features *= 2
 
@@ -177,8 +183,9 @@ def ResNet50(inputs, blocks=None, include_top=True, classes=1000, *args, **kwarg
     """
     if blocks is None:
         blocks = [3, 4, 6, 3]
+    numerical_names = [False, False, False, False]
 
-    return ResNet(inputs, blocks, block=keras_resnet.blocks.bottleneck_2d, include_top=include_top, classes=classes, *args, **kwargs)
+    return ResNet(inputs, blocks, numerical_names=numerical_names, block=keras_resnet.blocks.bottleneck_2d, include_top=include_top, classes=classes, *args, **kwargs)
 
 
 def ResNet101(inputs, blocks=None, include_top=True, classes=1000, *args, **kwargs):
@@ -209,8 +216,9 @@ def ResNet101(inputs, blocks=None, include_top=True, classes=1000, *args, **kwar
     """
     if blocks is None:
         blocks = [3, 4, 23, 3]
+    numerical_names = [False, True, True, False]
 
-    return ResNet(inputs, blocks, block=keras_resnet.blocks.bottleneck_2d, include_top=include_top, classes=classes, *args, **kwargs)
+    return ResNet(inputs, blocks, numerical_names=numerical_names, block=keras_resnet.blocks.bottleneck_2d, include_top=include_top, classes=classes, *args, **kwargs)
 
 
 def ResNet152(inputs, blocks=None, include_top=True, classes=1000, *args, **kwargs):
@@ -241,8 +249,9 @@ def ResNet152(inputs, blocks=None, include_top=True, classes=1000, *args, **kwar
     """
     if blocks is None:
         blocks = [3, 8, 36, 3]
+    numerical_names = [False, True, True, False]
 
-    return ResNet(inputs, blocks, block=keras_resnet.blocks.bottleneck_2d, include_top=include_top, classes=classes, *args, **kwargs)
+    return ResNet(inputs, blocks, numerical_names=numerical_names, block=keras_resnet.blocks.bottleneck_2d, include_top=include_top, classes=classes, *args, **kwargs)
 
 
 def ResNet200(inputs, blocks=None, include_top=True, classes=1000, *args, **kwargs):
@@ -273,5 +282,6 @@ def ResNet200(inputs, blocks=None, include_top=True, classes=1000, *args, **kwar
     """
     if blocks is None:
         blocks = [3, 24, 36, 3]
+    numerical_names = [False, True, True, False]
 
-    return ResNet(inputs, blocks, block=keras_resnet.blocks.bottleneck_2d, include_top=include_top, classes=classes, *args, **kwargs)
+    return ResNet(inputs, blocks, numerical_names=numerical_names, block=keras_resnet.blocks.bottleneck_2d, include_top=include_top, classes=classes, *args, **kwargs)
