@@ -17,4 +17,6 @@ class BatchNormalization(keras.layers.BatchNormalization):
         return super(BatchNormalization, self).call(training=(not self.freeze), *args, **kwargs)
 
     def get_config(self):
-        return {'freeze': self.freeze}
+        config = super(BatchNormalization, self).get_config()
+        config.update({'freeze': self.freeze})
+        return config
