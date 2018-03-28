@@ -4,6 +4,7 @@ import keras.engine.topology
 
 import keras_resnet.backend
 
+
 class Upsample(keras.engine.topology.Layer):
     def __init__(self, **kwargs):
         super(Upsample, self).__init__(**kwargs)
