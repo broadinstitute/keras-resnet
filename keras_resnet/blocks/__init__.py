@@ -22,7 +22,17 @@ from ._3d import (
     bottleneck_3d
 )
 
+from ._time_distributed_1d import (
+    time_distributed_basic_1d,
+    time_distributed_bottleneck_1d
+)
+
 from ._time_distributed_2d import (
     time_distributed_basic_2d,
     time_distributed_bottleneck_2d
+)
+
+from ._time_distributed_3d import (
+    time_distributed_basic_3d,
+    time_distributed_bottleneck_3d
 )

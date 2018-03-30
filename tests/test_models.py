@@ -1,43 +1,37 @@
 import keras_resnet.models
 
 
-class TestResNet18:
-    def test_constructor(self, x):
-        model = keras_resnet.models.ResNet18(x)
+def test_resnet18(x):
+    model = keras_resnet.models.resnet18(x)
 
-        assert len(model.layers) == 88
-
-
-class TestResNet34:
-    def test_constructor(self, x):
-        model = keras_resnet.models.ResNet34(x)
-
-        assert len(model.layers) == 160
+    assert len(model.layers) == 88
 
 
-class TestResNet50:
-    def test_constructor(self, x):
-        model = keras_resnet.models.ResNet50(x)
+def test_resnet34(x):
+    model = keras_resnet.models.resnet34(x)
 
-        assert len(model.layers) == 192
-
-
-class TestResNet101:
-    def test_constructor(self, x):
-        model = keras_resnet.models.ResNet101(x)
-
-        assert len(model.layers) == 379
+    assert len(model.layers) == 160
 
 
-class TestResNet152:
-    def test_constructor(self, x):
-        model = keras_resnet.models.ResNet152(x)
+def test_resnet50(x):
+    model = keras_resnet.models.resnet50(x)
 
-        assert len(model.layers) == 566
+    assert len(model.layers) == 192
 
 
-class TestResNet200:
-    def test_constructor(self, x):
-        model = keras_resnet.models.ResNet200(x)
+def test_resnet101(x):
+    model = keras_resnet.models.resnet101(x)
 
-        assert len(model.layers) == 742
+    assert len(model.layers) == 379
+
+
+def test_resnet152(x):
+    model = keras_resnet.models.resnet152(x)
+
+    assert len(model.layers) == 566
+
+
+def test_resnet200(x):
+    model = keras_resnet.models.resnet200(x)
+
+    assert len(model.layers) == 742

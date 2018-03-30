@@ -7,6 +7,7 @@ keras_resnet.classifiers
 This module implements popular residual two-dimensional classifiers.
 """
 
+import deprecated
 import keras.backend
 import keras.layers
 import keras.models
@@ -15,6 +16,18 @@ import keras.regularizers
 import keras_resnet.models
 
 
+@deprecated.deprecated(
+    reason="""
+
+    The `ResNet18` function was depreciated in version 0.2.0 of Keras-ResNet. 
+    It will be removed in version 0.3.0.
+
+    You can replace `keras_resnet.classifiers.ResNet18` with:
+
+        keras_resnet.models.resnet18
+    """,
+    version="0.2.0"
+)
 class ResNet18(keras.models.Model):
     """
     A :class:`ResNet18 <ResNet18>` object.
@@ -43,6 +56,18 @@ class ResNet18(keras.models.Model):
         super(ResNet18, self).__init__(inputs, outputs)
 
 
+@deprecated.deprecated(
+    reason="""
+
+    The `ResNet34` function was depreciated in version 0.2.0 of Keras-ResNet. 
+    It will be removed in version 0.3.0.
+
+    You can replace `keras_resnet.classifiers.ResNet34` with:
+
+        keras_resnet.models.resnet34
+    """,
+    version="0.2.0"
+)
 class ResNet34(keras.models.Model):
     """
     A :class:`ResNet34 <ResNet34>` object.
@@ -71,6 +96,18 @@ class ResNet34(keras.models.Model):
         super(ResNet34, self).__init__(inputs, outputs)
 
 
+@deprecated.deprecated(
+    reason="""
+
+    The `ResNet50` function was depreciated in version 0.2.0 of Keras-ResNet. 
+    It will be removed in version 0.3.0.
+
+    You can replace `keras_resnet.classifiers.ResNet50` with:
+
+        keras_resnet.models.resnet50
+    """,
+    version="0.2.0"
+)
 class ResNet50(keras.models.Model):
     """
     A :class:`ResNet50 <ResNet50>` object.
@@ -99,6 +136,18 @@ class ResNet50(keras.models.Model):
         super(ResNet50, self).__init__(inputs, outputs)
 
 
+@deprecated.deprecated(
+    reason="""
+
+    The `ResNet101` function was depreciated in version 0.2.0 of Keras-ResNet. 
+    It will be removed in version 0.3.0.
+
+    You can replace `keras_resnet.classifiers.ResNet101` with:
+
+        keras_resnet.models.resnet101
+    """,
+    version="0.2.0"
+)
 class ResNet101(keras.models.Model):
     """
     A :class:`ResNet101 <ResNet101>` object.
@@ -113,7 +162,7 @@ class ResNet101(keras.models.Model):
 
         >>> x = keras.layers.Input(shape)
 
-        >>> model = keras_resnet.classifiers.ResNet101(x)
+        >>> model = keras_resnet.classifiers.ResNet101(x, classes)
 
         >>> model.compile("adam", "categorical_crossentropy", ["accuracy"])
     """
@@ -127,6 +176,18 @@ class ResNet101(keras.models.Model):
         super(ResNet101, self).__init__(inputs, outputs)
 
 
+@deprecated.deprecated(
+    reason="""
+
+    The `ResNet152` function was depreciated in version 0.2.0 of Keras-ResNet. 
+    It will be removed in version 0.3.0.
+
+    You can replace `keras_resnet.classifiers.ResNet152` with:
+
+        keras_resnet.models.resnet152
+    """,
+    version="0.2.0"
+)
 class ResNet152(keras.models.Model):
     """
     A :class:`ResNet152 <ResNet152>` object.
@@ -156,6 +217,18 @@ class ResNet152(keras.models.Model):
         super(ResNet152, self).__init__(inputs, outputs)
 
 
+@deprecated.deprecated(
+    reason="""
+
+    The `ResNet200` function was depreciated in version 0.2.0 of Keras-ResNet. 
+    It will be removed in version 0.3.0.
+
+    You can replace `keras_resnet.classifiers.ResNet200` with:
+
+        keras_resnet.models.resnet200
+    """,
+    version="0.2.0"
+)
 class ResNet200(keras.models.Model):
     """
     A :class:`ResNet200 <ResNet200>` object.

@@ -18,6 +18,7 @@
 .idea/
 .installed.cfg
 .ipynb_checkpoints
+.pytest_cache/
 .Python
 .python-version
 .ropeproject

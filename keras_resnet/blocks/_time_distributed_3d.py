@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 
 """
-keras_resnet.blocks._time_distributed_2d
+keras_resnet.blocks._time_distributed_3d
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-This module implements a number of popular time distributed two-dimensional
+This module implements a number of popular time distributed three-dimensional
 residual blocks.
 """
 
@@ -14,7 +14,7 @@ import keras.layers
 import keras.regularizers
 
 
-def time_distributed_basic_2d(
+def time_distributed_basic_3d(
     filters,
     stage=0,
     block=0,
@@ -23,7 +23,7 @@ def time_distributed_basic_2d(
     **kwargs
 ):
     """
-    A time distributed two-dimensional basic block.
+    A time distributed three-dimensional basic block.
 
     :param filters: the output’s feature space
 
@@ -40,7 +40,7 @@ def time_distributed_basic_2d(
 
         >>> import keras_resnet.blocks
 
-        >>> keras_resnet.blocks.time_distributed_basic_2d(64)
+        >>> keras_resnet.blocks.time_distributed_basic_3d(64)
     """
     if "freeze_bn" in kwargs:
         message = """
@@ -119,7 +119,7 @@ def time_distributed_basic_2d(
         )(x)
 
         y = keras.layers.TimeDistributed(
-            keras.layers.Conv2D(
+            keras.layers.Conv3D(
                 filters=filters,
                 kernel_size=kernel_size,
                 strides=strides,
@@ -151,7 +151,7 @@ def time_distributed_basic_2d(
         )(y)
 
         y = keras.layers.TimeDistributed(
-            keras.layers.Conv2D(
+            keras.layers.Conv3D(
                 filters=filters,
                 kernel_size=kernel_size,
                 **convolution_kwargs
@@ -169,7 +169,7 @@ def time_distributed_basic_2d(
 
         if block == 0:
             shortcut = keras.layers.TimeDistributed(
-                keras.layers.Conv2D(
+                keras.layers.Conv3D(
                     filters=filters,
                     kernel_size=(1, 1),
                     strides=strides,
@@ -204,7 +204,7 @@ def time_distributed_basic_2d(
     return f
 
 
-def time_distributed_bottleneck_2d(
+def time_distributed_bottleneck_3d(
     filters,
     stage=0,
     block=0,
@@ -213,7 +213,7 @@ def time_distributed_bottleneck_2d(
     **kwargs
 ):
     """
-    A time distributed two-dimensional bottleneck block.
+    A time distributed three-dimensional bottleneck block.
 
     :param filters: the output’s feature space
 
@@ -230,7 +230,7 @@ def time_distributed_bottleneck_2d(
 
         >>> import keras_resnet.blocks
 
-        >>> keras_resnet.blocks.time_distributed_bottleneck_2d(64)
+        >>> keras_resnet.blocks.time_distributed_bottleneck_3d(64)
     """
     if "freeze_bn" in kwargs:
         message = """
@@ -302,7 +302,7 @@ def time_distributed_bottleneck_2d(
 
     def f(x):
         y = keras.layers.TimeDistributed(
-            keras.layers.Conv2D(
+            keras.layers.Conv3D(
                 filters=filters,
                 kernel_size=(1, 1),
                 strides=strides,
@@ -334,7 +334,7 @@ def time_distributed_bottleneck_2d(
         )(y)
 
         y = keras.layers.TimeDistributed(
-            keras.layers.Conv2D(
+            keras.layers.Conv3D(
                 filters=filters,
                 kernel_size=kernel_size,
                 **convolution_kwargs
@@ -357,7 +357,7 @@ def time_distributed_bottleneck_2d(
         )(y)
 
         y = keras.layers.TimeDistributed(
-            keras.layers.Conv2D(
+            keras.layers.Conv3D(
                 filters=filters * 4,
                 kernel_size=(1, 1),
                 **convolution_kwargs
@@ -374,7 +374,7 @@ def time_distributed_bottleneck_2d(
 
         if block == 0:
             shortcut = keras.layers.TimeDistributed(
-                keras.layers.Conv2D(
+                keras.layers.Conv3D(
                     filters=filters * 4,
                     kernel_size=(1, 1),
                     strides=strides,

@@ -13,7 +13,8 @@ setuptools.setup(
         ]
     },
     install_requires=[
-        "keras"
+        "deprecated",
+        "keras >= 2.1.3"
     ],
     license="MIT",
     name="keras-resnet",
@@ -29,5 +30,5 @@ setuptools.setup(
         ]
     ),
     url="https://github.com/broadinstitute/keras-resnet",
-    version="0.1.0"
+    version="0.2.0"
 )
