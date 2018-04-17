@@ -112,7 +112,7 @@ def time_distributed_basic_1d(
 
     def f(x):
         y = keras.layers.TimeDistributed(
-            keras.layers.ZeroPadding2D(
+            keras.layers.ZeroPadding1D(
                 padding=1
             ),
             name="padding{}{}_branch2a".format(stage_char, block_char)
@@ -144,7 +144,7 @@ def time_distributed_basic_1d(
         )(y)
 
         y = keras.layers.TimeDistributed(
-            keras.layers.ZeroPadding2D(
+            keras.layers.ZeroPadding1D(
                 padding=1
             ),
             name="padding{}{}_branch2b".format(stage_char, block_char)
@@ -329,7 +329,7 @@ def time_distributed_bottleneck_1d(
         )(y)
 
         y = keras.layers.TimeDistributed(
-            keras.layers.ZeroPadding2D(
+            keras.layers.ZeroPadding1D(
                 padding=1
             ),
             name="padding{}{}_branch2b".format(stage_char, block_char)
