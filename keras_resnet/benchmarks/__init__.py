@@ -135,7 +135,14 @@ def __main__(benchmark, device, name, pretrained):
 
     x = keras.layers.Input(shape)
 
-    model = _names[name](x, classes=classes, numerical_names=True)
+    preamble = keras.layers.Conv2D(16, (3, 3), name="conv1", strides=(1, 1))
+
+    model = _names[name](
+        inputs=x,
+        classes=classes,
+        numerical_names=True,
+        preamble=preamble
+    )
 
     if pretrained:
         weights_pathname = keras.utils.get_file(
