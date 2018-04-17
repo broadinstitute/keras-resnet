@@ -32,11 +32,11 @@ class GroupNormalization(keras.engine.Layer):
 
         self.beta = None
 
-        self.beta_constraint = keras.initializers.get(beta_constraint)
+        self.beta_constraint = keras.constraints.get(beta_constraint)
 
         self.beta_initializer = keras.initializers.get(beta_initializer)
 
-        self.beta_regularizer = keras.initializers.get(beta_regularizer)
+        self.beta_regularizer = keras.regularizers.get(beta_regularizer)
 
         self.center = center
 
@@ -44,11 +44,11 @@ class GroupNormalization(keras.engine.Layer):
 
         self.gamma = None
 
-        self.gamma_constraint = keras.initializers.get(gamma_constraint)
+        self.gamma_constraint = keras.constraints.get(gamma_constraint)
 
         self.gamma_initializer = keras.initializers.get(gamma_initializer)
 
-        self.gamma_regularizer = keras.initializers.get(gamma_regularizer)
+        self.gamma_regularizer = keras.regularizers.get(gamma_regularizer)
 
         self.groups = groups
 
