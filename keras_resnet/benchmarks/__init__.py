@@ -31,12 +31,12 @@ _metrics = {
 }
 
 _names = {
-    "ResNet-18": keras_resnet.models.ResNet18,
-    "ResNet-34": keras_resnet.models.ResNet34,
-    "ResNet-50": keras_resnet.models.ResNet50,
-    "ResNet-101": keras_resnet.models.ResNet101,
-    "ResNet-152": keras_resnet.models.ResNet152,
-    "ResNet-200": keras_resnet.models.ResNet200
+    "ResNet-18": keras_resnet.models.resnet18,
+    "ResNet-34": keras_resnet.models.resnet34,
+    "ResNet-50": keras_resnet.models.resnet50,
+    "ResNet-101": keras_resnet.models.resnet101,
+    "ResNet-152": keras_resnet.models.resnet152,
+    "ResNet-200": keras_resnet.models.resnet200
 }
 
 
@@ -135,14 +135,13 @@ def __main__(benchmark, device, name, pretrained):
 
     x = keras.layers.Input(shape)
 
-    preamble = keras.layers.Conv2D(16, (3, 3), name="conv1", strides=(1, 1))
+    def preamble():
+        def f(x):
+            return keras.layers.Conv2D(16, (3, 3), name="conv1", strides=(1, 1))(x)
 
-    model = _names[name](
-        inputs=x,
-        classes=classes,
-        numerical_names=True,
-        preamble=preamble
-    )
+        return f
+
+    model = _names[name](x, classes=classes, preamble=preamble)
 
     if pretrained:
         weights_pathname = keras.utils.get_file(
