@@ -108,7 +108,7 @@ def __main__(benchmark, device, name, pretrained):
     generator = generator.flow(
         x=training_x,
         y=training_y,
-        batch_size=256
+        batch_size=128
     )
 
     validation_data = keras.preprocessing.image.ImageDataGenerator()
@@ -118,7 +118,7 @@ def __main__(benchmark, device, name, pretrained):
     validation_data = validation_data.flow(
         x=validation_x,
         y=validation_y,
-        batch_size=256
+        batch_size=128
     )
 
     test_data = keras.preprocessing.image.ImageDataGenerator()
@@ -128,7 +128,7 @@ def __main__(benchmark, device, name, pretrained):
     test_data = test_data.flow(
         x=test_x,
         y=test_y,
-        batch_size=256
+        batch_size=128
     )
 
     shape, classes = training_x.shape[1:], training_y.shape[-1]
