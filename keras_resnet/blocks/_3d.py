@@ -110,7 +110,7 @@ def basic_3d(
     stage_char = str(stage + 2)
 
     def f(x):
-        y = keras.layers.ZeroPadding2D(
+        y = keras.layers.ZeroPadding3D(
             name="padding{}{}_branch2a".format(stage_char, block_char),
             padding=1
         )(x)
@@ -134,7 +134,7 @@ def basic_3d(
             name="res{}{}_branch2a_relu".format(stage_char, block_char)
         )(y)
 
-        y = keras.layers.ZeroPadding2D(
+        y = keras.layers.ZeroPadding3D(
             name="padding{}{}_branch2b".format(stage_char, block_char),
             padding=1
         )(y)
@@ -299,7 +299,7 @@ def bottleneck_3d(
             name="res{}{}_branch2a_relu".format(stage_char, block_char)
         )(y)
 
-        y = keras.layers.ZeroPadding2D(
+        y = keras.layers.ZeroPadding3D(
             name="padding{}{}_branch2b".format(stage_char, block_char),
             padding=1
         )(y)
