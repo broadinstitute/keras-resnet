@@ -1,10 +1,12 @@
-from keras import backend as K
-from keras import initializers, regularizers, constraints
-from keras.engine import Layer, InputSpec
-from keras.utils.generic_utils import get_custom_objects
+import keras.backend
+import keras.constraints
+import keras.engine
+import keras.initializers
+import keras.regularizers
+import keras.utils.generic_utils
 
 
-class GroupNormalization(Layer):
+class GroupNormalization(keras.engine.Layer):
     """
     # References
         - [Group Normalization](https://arxiv.org/abs/1803.08494)
@@ -28,21 +30,25 @@ class GroupNormalization(Layer):
 
         self.axis = axis
 
-        self.beta_constraint = constraints.get(beta_constraint)
+        self.beta = None
 
-        self.beta_initializer = initializers.get(beta_initializer)
+        self.beta_constraint = keras.initializers.get(beta_constraint)
 
-        self.beta_regularizer = regularizers.get(beta_regularizer)
+        self.beta_initializer = keras.initializers.get(beta_initializer)
+
+        self.beta_regularizer = keras.initializers.get(beta_regularizer)
 
         self.center = center
 
         self.epsilon = epsilon
 
-        self.gamma_constraint = constraints.get(gamma_constraint)
+        self.gamma = None
 
-        self.gamma_initializer = initializers.get(gamma_initializer)
+        self.gamma_constraint = keras.initializers.get(gamma_constraint)
 
-        self.gamma_regularizer = regularizers.get(gamma_regularizer)
+        self.gamma_initializer = keras.initializers.get(gamma_initializer)
+
+        self.gamma_regularizer = keras.initializers.get(gamma_regularizer)
 
         self.groups = groups
 
@@ -54,15 +60,21 @@ class GroupNormalization(Layer):
         dimension = input_shape[self.axis]
 
         if dimension is None:
-            raise ValueError("Axis " + str(self.axis) + " of input tensor should have a defined dimension but the layer received an input with shape " + str(input_shape) + ".")
+            error = "Axis " + str(self.axis) + " of input tensor should have a defined dimension but the layer received an input with shape " + str(input_shape) + "."
+
+            raise ValueError(error)
 
         if dimension < self.groups:
-            raise ValueError("Number of groups (" + str(self.groups) + ") cannot be more than the number of channels (" + str(dimension) + ").")
+            error = "Number of groups (" + str(self.groups) + ") cannot be more than the number of channels (" + str(dimension) + ")."
+
+            raise ValueError(error)
 
         if dimension % self.groups != 0:
-            raise ValueError("Number of groups (" + str(self.groups) + ") must be a multiple of the number of channels (" + str(dimension) + ").")
+            error = "Number of groups (" + str(self.groups) + ") must be a multiple of the number of channels (" + str(dimension) + ")."
 
-        self.input_spec = InputSpec(
+            raise ValueError(error)
+
+        self.input_spec = keras.engine.InputSpec(
             axes={
                 self.axis: dimension
             },
@@ -79,8 +91,6 @@ class GroupNormalization(Layer):
                 regularizer=self.gamma_regularizer,
                 shape=shape
             )
-        else:
-            self.gamma = None
 
         if self.center:
             self.beta = self.add_weight(
@@ -90,13 +100,11 @@ class GroupNormalization(Layer):
                 regularizer=self.beta_regularizer,
                 shape=shape
             )
-        else:
-            self.beta = None
 
         self.built = True
 
     def call(self, inputs, **kwargs):
-        input_shape = K.int_shape(inputs)
+        input_shape = keras.backend.int_shape(inputs)
 
         # Prepare broadcasting shape.
         ndim = len(input_shape)
@@ -122,27 +130,37 @@ class GroupNormalization(Layer):
         # Determines whether broadcasting is needed.
         needs_broadcasting = (sorted(reduction_axes) != list(range(ndim))[:-1])
 
-        inputs = K.reshape(inputs, group_shape)
+        inputs = keras.backend.reshape(inputs, group_shape)
 
-        mean, variance = K.moments(inputs, group_reduction_axes[2:], keep_dims=True)
+        mean = keras.backend.mean(
+            axis=group_reduction_axes[2:],
+            keepdims=True,
+            x=inputs
+        )
 
-        inputs = (inputs - mean) / (K.sqrt(variance + self.epsilon))
+        variance = keras.backend.var(
+            axis=group_reduction_axes[2:],
+            keepdims=True,
+            x=inputs
+        )
+
+        inputs = (inputs - mean) / (keras.backend.sqrt(variance + self.epsilon))
 
         original_shape = [-1] + list(input_shape[1:])
 
-        inputs = K.reshape(inputs, original_shape)
+        inputs = keras.backend.reshape(inputs, original_shape)
 
         if needs_broadcasting:
             outputs = inputs
 
             # In this case we must explicitly broadcast all parameters.
             if self.scale:
-                broadcast_gamma = K.reshape(self.gamma, broadcast_shape)
+                broadcast_gamma = keras.backend.reshape(self.gamma, broadcast_shape)
 
                 outputs = outputs * broadcast_gamma
 
             if self.center:
-                broadcast_beta = K.reshape(self.beta, broadcast_shape)
+                broadcast_beta = keras.backend.reshape(self.beta, broadcast_shape)
 
                 outputs = outputs + broadcast_beta
         else:
@@ -159,24 +177,24 @@ class GroupNormalization(Layer):
     def get_config(self):
         config = {
             "axis": self.axis,
-            "beta_constraint": constraints.serialize(
+            "beta_constraint": keras.initializers.serialize(
                 self.beta_constraint
             ),
-            "beta_initializer": initializers.serialize(
+            "beta_initializer": keras.initializers.serialize(
                 self.beta_initializer
             ),
-            "beta_regularizer": regularizers.serialize(
+            "beta_regularizer": keras.initializers.serialize(
                 self.beta_regularizer
             ),
             "center": self.center,
             "epsilon": self.epsilon,
-            "gamma_constraint": constraints.serialize(
+            "gamma_constraint": keras.initializers.serialize(
                 self.gamma_constraint
             ),
-            "gamma_initializer": initializers.serialize(
+            "gamma_initializer": keras.initializers.serialize(
                 self.gamma_initializer
             ),
-            "gamma_regularizer": regularizers.serialize(
+            "gamma_regularizer": keras.initializers.serialize(
                 self.gamma_regularizer
             ),
             "groups": self.groups,
@@ -191,7 +209,7 @@ class GroupNormalization(Layer):
         return input_shape
 
 
-get_custom_objects().update(
+keras.utils.generic_utils.get_custom_objects().update(
     {
         "GroupNormalization": GroupNormalization
     }
