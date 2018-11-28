@@ -16,7 +16,7 @@ import keras_resnet.blocks
 import keras_resnet.layers
 
 
-def ResNet(inputs, blocks, block, include_top=True, classes=1000, freeze_bn=True, numerical_names=None, *args, **kwargs):
+class ResNet2D(keras.Model):
     """
     Constructs a `keras.models.Model` object using the given block count.
 
@@ -53,45 +53,63 @@ def ResNet(inputs, blocks, block, include_top=True, classes=1000, freeze_bn=True
 
         >>> model.compile("adam", "categorical_crossentropy", ["accuracy"])
     """
-    if keras.backend.image_data_format() == "channels_last":
-        axis = 3
-    else:
-        axis = 1
+    def __init__(
+        self,
+        inputs,
+        blocks,
+        block,
+        include_top=True,
+        classes=1000,
+        freeze_bn=True,
+        numerical_names=None,
+        *args,
+        **kwargs
+    ):
+        if keras.backend.image_data_format() == "channels_last":
+            axis = 3
+        else:
+            axis = 1
 
-    if numerical_names is None:
-        numerical_names = [True] * len(blocks)
+        if numerical_names is None:
+            numerical_names = [True] * len(blocks)
 
-    x = keras.layers.ZeroPadding2D(padding=3, name="padding_conv1")(inputs)
-    x = keras.layers.Conv2D(64, (7, 7), strides=(2, 2), use_bias=False, name="conv1")(x)
-    x = keras_resnet.layers.BatchNormalization(axis=axis, epsilon=1e-5, freeze=freeze_bn, name="bn_conv1")(x)
-    x = keras.layers.Activation("relu", name="conv1_relu")(x)
-    x = keras.layers.MaxPooling2D((3, 3), strides=(2, 2), padding="same", name="pool1")(x)
+        x = keras.layers.ZeroPadding2D(padding=3, name="padding_conv1")(inputs)
+        x = keras.layers.Conv2D(64, (7, 7), strides=(2, 2), use_bias=False, name="conv1")(x)
+        x = keras_resnet.layers.BatchNormalization(axis=axis, epsilon=1e-5, freeze=freeze_bn, name="bn_conv1")(x)
+        x = keras.layers.Activation("relu", name="conv1_relu")(x)
+        x = keras.layers.MaxPooling2D((3, 3), strides=(2, 2), padding="same", name="pool1")(x)
 
-    features = 64
+        features = 64
 
-    outputs = []
+        outputs = []
 
-    for stage_id, iterations in enumerate(blocks):
-        for block_id in range(iterations):
-            x = block(features, stage_id, block_id, numerical_name=(block_id > 0 and numerical_names[stage_id]), freeze_bn=freeze_bn)(x)
+        for stage_id, iterations in enumerate(blocks):
+            for block_id in range(iterations):
+                x = block(
+                    features,
+                    stage_id,
+                    block_id,
+                    numerical_name=(block_id > 0 and numerical_names[stage_id]),
+                    freeze_bn=freeze_bn
+                )(x)
 
-        features *= 2
+            features *= 2
 
-        outputs.append(x)
+            outputs.append(x)
 
-    if include_top:
-        assert classes > 0
+        if include_top:
+            assert classes > 0
 
-        x = keras.layers.GlobalAveragePooling2D(name="pool5")(x)
-        x = keras.layers.Dense(classes, activation="softmax", name="fc1000")(x)
+            x = keras.layers.GlobalAveragePooling2D(name="pool5")(x)
+            x = keras.layers.Dense(classes, activation="softmax", name="fc1000")(x)
 
-        return keras.models.Model(inputs=inputs, outputs=x, *args, **kwargs)
-    else:
-        # Else output each stages features
-        return keras.models.Model(inputs=inputs, outputs=outputs, *args, **kwargs)
+            super(ResNet2D, self).__init__(inputs=inputs, outputs=x, *args, **kwargs)
+        else:
+            # Else output each stages features
+            super(ResNet2D, self).__init__(inputs=inputs, outputs=outputs, *args, **kwargs)
 
 
-def ResNet18(inputs, blocks=None, include_top=True, classes=1000, *args, **kwargs):
+class ResNet2D18(ResNet2D):
     """
     Constructs a `keras.models.Model` according to the ResNet18 specifications.
 
@@ -117,13 +135,22 @@ def ResNet18(inputs, blocks=None, include_top=True, classes=1000, *args, **kwarg
 
         >>> model.compile("adam", "categorical_crossentropy", ["accuracy"])
     """
-    if blocks is None:
-        blocks = [2, 2, 2, 2]
+    def __init__(self, inputs, blocks=None, include_top=True, classes=1000, *args, **kwargs):
+        if blocks is None:
+            blocks = [2, 2, 2, 2]
 
-    return ResNet(inputs, blocks, block=keras_resnet.blocks.basic_2d, include_top=include_top, classes=classes, *args, **kwargs)
+        super(ResNet2D, self).__init__(
+            inputs,
+            blocks,
+            block=keras_resnet.blocks.basic_2d,
+            include_top=include_top,
+            classes=classes,
+            *args,
+            **kwargs
+        )
 
 
-def ResNet34(inputs, blocks=None, include_top=True, classes=1000, *args, **kwargs):
+class ResNet2D34(ResNet2D):
     """
     Constructs a `keras.models.Model` according to the ResNet34 specifications.
 
@@ -149,13 +176,22 @@ def ResNet34(inputs, blocks=None, include_top=True, classes=1000, *args, **kwarg
 
         >>> model.compile("adam", "categorical_crossentropy", ["accuracy"])
     """
-    if blocks is None:
-        blocks = [3, 4, 6, 3]
+    def __init__(self, inputs, blocks=None, include_top=True, classes=1000, *args, **kwargs):
+        if blocks is None:
+            blocks = [3, 4, 6, 3]
 
-    return ResNet(inputs, blocks, block=keras_resnet.blocks.basic_2d, include_top=include_top, classes=classes, *args, **kwargs)
+        super(ResNet2D, self).__init__(
+            inputs,
+            blocks,
+            block=keras_resnet.blocks.basic_2d,
+            include_top=include_top,
+            classes=classes,
+            *args,
+            **kwargs
+        )
 
 
-def ResNet50(inputs, blocks=None, include_top=True, classes=1000, *args, **kwargs):
+class ResNet2D50(ResNet2D):
     """
     Constructs a `keras.models.Model` according to the ResNet50 specifications.
 
@@ -181,14 +217,23 @@ def ResNet50(inputs, blocks=None, include_top=True, classes=1000, *args, **kwarg
 
         >>> model.compile("adam", "categorical_crossentropy", ["accuracy"])
     """
-    if blocks is None:
-        blocks = [3, 4, 6, 3]
-    numerical_names = [False, False, False, False]
+    def __init__(self, inputs, blocks=None, include_top=True, classes=1000, *args, **kwargs):
+        if blocks is None:
+            blocks = [3, 4, 6, 3]
 
-    return ResNet(inputs, blocks, numerical_names=numerical_names, block=keras_resnet.blocks.bottleneck_2d, include_top=include_top, classes=classes, *args, **kwargs)
+        numerical_names = [False, False, False, False]
+
+        super(ResNet2D, self).__init__(
+            inputs,
+            blocks,
+            numerical_names=numerical_names,
+            block=keras_resnet.blocks.bottleneck_2d,
+            include_top=include_top,
+            classes=classes, *args, **kwargs
+        )
 
 
-def ResNet101(inputs, blocks=None, include_top=True, classes=1000, *args, **kwargs):
+class ResNet2D101(ResNet2D):
     """
     Constructs a `keras.models.Model` according to the ResNet101 specifications.
 
@@ -214,14 +259,25 @@ def ResNet101(inputs, blocks=None, include_top=True, classes=1000, *args, **kwar
 
         >>> model.compile("adam", "categorical_crossentropy", ["accuracy"])
     """
-    if blocks is None:
-        blocks = [3, 4, 23, 3]
-    numerical_names = [False, True, True, False]
+    def __init__(self, inputs, blocks=None, include_top=True, classes=1000, *args, **kwargs):
+        if blocks is None:
+            blocks = [3, 4, 23, 3]
 
-    return ResNet(inputs, blocks, numerical_names=numerical_names, block=keras_resnet.blocks.bottleneck_2d, include_top=include_top, classes=classes, *args, **kwargs)
+        numerical_names = [False, True, True, False]
+
+        super(ResNet2D, self).__init__(
+            inputs,
+            blocks,
+            numerical_names=numerical_names,
+            block=keras_resnet.blocks.bottleneck_2d,
+            include_top=include_top,
+            classes=classes,
+            *args,
+            **kwargs
+        )
 
 
-def ResNet152(inputs, blocks=None, include_top=True, classes=1000, *args, **kwargs):
+class ResNet2D152(ResNet2D):
     """
     Constructs a `keras.models.Model` according to the ResNet152 specifications.
 
@@ -247,14 +303,25 @@ def ResNet152(inputs, blocks=None, include_top=True, classes=1000, *args, **kwar
 
         >>> model.compile("adam", "categorical_crossentropy", ["accuracy"])
     """
-    if blocks is None:
-        blocks = [3, 8, 36, 3]
-    numerical_names = [False, True, True, False]
+    def __init__(self, inputs, blocks=None, include_top=True, classes=1000, *args, **kwargs):
+        if blocks is None:
+            blocks = [3, 8, 36, 3]
 
-    return ResNet(inputs, blocks, numerical_names=numerical_names, block=keras_resnet.blocks.bottleneck_2d, include_top=include_top, classes=classes, *args, **kwargs)
+        numerical_names = [False, True, True, False]
+
+        super(ResNet2D, self).__init__(
+            inputs,
+            blocks,
+            numerical_names=numerical_names,
+            block=keras_resnet.blocks.bottleneck_2d,
+            include_top=include_top,
+            classes=classes,
+            *args,
+            **kwargs
+        )
 
 
-def ResNet200(inputs, blocks=None, include_top=True, classes=1000, *args, **kwargs):
+class ResNet2D200(ResNet2D):
     """
     Constructs a `keras.models.Model` according to the ResNet200 specifications.
 
@@ -280,8 +347,19 @@ def ResNet200(inputs, blocks=None, include_top=True, classes=1000, *args, **kwar
 
         >>> model.compile("adam", "categorical_crossentropy", ["accuracy"])
     """
-    if blocks is None:
-        blocks = [3, 24, 36, 3]
-    numerical_names = [False, True, True, False]
+    def __init__(self, inputs, blocks=None, include_top=True, classes=1000, *args, **kwargs):
+        if blocks is None:
+            blocks = [3, 24, 36, 3]
 
-    return ResNet(inputs, blocks, numerical_names=numerical_names, block=keras_resnet.blocks.bottleneck_2d, include_top=include_top, classes=classes, *args, **kwargs)
+        numerical_names = [False, True, True, False]
+
+        super(ResNet2D, self).__init__(
+            inputs,
+            blocks,
+            numerical_names=numerical_names,
+            block=keras_resnet.blocks.bottleneck_2d,
+            include_top=include_top,
+            classes=classes,
+            *args,
+            **kwargs
+        )

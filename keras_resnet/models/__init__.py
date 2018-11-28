@@ -18,13 +18,13 @@ from ._1d import (
 )
 
 from ._2d import (
-    ResNet,
-    ResNet18,
-    ResNet34,
-    ResNet50,
-    ResNet101,
-    ResNet152,
-    ResNet200
+    ResNet2D,
+    ResNet2D18,
+    ResNet2D34,
+    ResNet2D50,
+    ResNet2D101,
+    ResNet2D152,
+    ResNet2D200
 )
 
 from ._3d import (
