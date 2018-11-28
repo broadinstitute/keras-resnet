@@ -37,6 +37,16 @@ from ._3d import (
     ResNet3D200
 )
 
+from ._feature_pyramid_2d import (
+    FPN2D,
+    FPN2D18,
+    FPN2D34,
+    FPN2D50,
+    FPN2D101,
+    FPN2D152,
+    FPN2D200
+)
+
 from ._time_distributed_2d import (
     TimeDistributedResNet,
     TimeDistributedResNet18,
