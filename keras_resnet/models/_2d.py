@@ -121,6 +121,8 @@ class ResNet2D18(ResNet2D):
 
     :param classes: number of classes to classify (include_top must be true)
 
+    :param freeze_bn: if true, freezes BatchNormalization layers (ie. no updates are done in these layers)
+
     :return model: ResNet model with encoding output (if `include_top=False`) or classification output (if `include_top=True`)
 
     Usage:
@@ -135,7 +137,7 @@ class ResNet2D18(ResNet2D):
 
         >>> model.compile("adam", "categorical_crossentropy", ["accuracy"])
     """
-    def __init__(self, inputs, blocks=None, include_top=True, classes=1000, *args, **kwargs):
+    def __init__(self, inputs, blocks=None, include_top=True, classes=1000, freeze_bn=False, *args, **kwargs):
         if blocks is None:
             blocks = [2, 2, 2, 2]
 
@@ -145,6 +147,7 @@ class ResNet2D18(ResNet2D):
             block=keras_resnet.blocks.basic_2d,
             include_top=include_top,
             classes=classes,
+            freeze_bn=freeze_bn,
             *args,
             **kwargs
         )
@@ -162,6 +165,8 @@ class ResNet2D34(ResNet2D):
 
     :param classes: number of classes to classify (include_top must be true)
 
+    :param freeze_bn: if true, freezes BatchNormalization layers (ie. no updates are done in these layers)
+
     :return model: ResNet model with encoding output (if `include_top=False`) or classification output (if `include_top=True`)
 
     Usage:
@@ -176,7 +181,7 @@ class ResNet2D34(ResNet2D):
 
         >>> model.compile("adam", "categorical_crossentropy", ["accuracy"])
     """
-    def __init__(self, inputs, blocks=None, include_top=True, classes=1000, *args, **kwargs):
+    def __init__(self, inputs, blocks=None, include_top=True, classes=1000, freeze_bn=False, *args, **kwargs):
         if blocks is None:
             blocks = [3, 4, 6, 3]
 
@@ -186,6 +191,7 @@ class ResNet2D34(ResNet2D):
             block=keras_resnet.blocks.basic_2d,
             include_top=include_top,
             classes=classes,
+            freeze_bn=freeze_bn,
             *args,
             **kwargs
         )
@@ -203,6 +209,8 @@ class ResNet2D50(ResNet2D):
 
     :param classes: number of classes to classify (include_top must be true)
 
+    :param freeze_bn: if true, freezes BatchNormalization layers (ie. no updates are done in these layers)
+
     :return model: ResNet model with encoding output (if `include_top=False`) or classification output (if `include_top=True`)
 
     Usage:
@@ -217,7 +225,7 @@ class ResNet2D50(ResNet2D):
 
         >>> model.compile("adam", "categorical_crossentropy", ["accuracy"])
     """
-    def __init__(self, inputs, blocks=None, include_top=True, classes=1000, *args, **kwargs):
+    def __init__(self, inputs, blocks=None, include_top=True, classes=1000, freeze_bn=False, *args, **kwargs):
         if blocks is None:
             blocks = [3, 4, 6, 3]
 
@@ -229,7 +237,10 @@ class ResNet2D50(ResNet2D):
             numerical_names=numerical_names,
             block=keras_resnet.blocks.bottleneck_2d,
             include_top=include_top,
-            classes=classes, *args, **kwargs
+            classes=classes,
+            freeze_bn=freeze_bn,
+            *args,
+            **kwargs
         )
 
 
@@ -245,6 +256,8 @@ class ResNet2D101(ResNet2D):
 
     :param classes: number of classes to classify (include_top must be true)
 
+    :param freeze_bn: if true, freezes BatchNormalization layers (ie. no updates are done in these layers)
+
     :return model: ResNet model with encoding output (if `include_top=False`) or classification output (if `include_top=True`)
 
     Usage:
@@ -259,7 +272,7 @@ class ResNet2D101(ResNet2D):
 
         >>> model.compile("adam", "categorical_crossentropy", ["accuracy"])
     """
-    def __init__(self, inputs, blocks=None, include_top=True, classes=1000, *args, **kwargs):
+    def __init__(self, inputs, blocks=None, include_top=True, classes=1000, freeze_bn=False, *args, **kwargs):
         if blocks is None:
             blocks = [3, 4, 23, 3]
 
@@ -272,6 +285,7 @@ class ResNet2D101(ResNet2D):
             block=keras_resnet.blocks.bottleneck_2d,
             include_top=include_top,
             classes=classes,
+            freeze_bn=freeze_bn,
             *args,
             **kwargs
         )
@@ -289,6 +303,8 @@ class ResNet2D152(ResNet2D):
 
     :param classes: number of classes to classify (include_top must be true)
 
+    :param freeze_bn: if true, freezes BatchNormalization layers (ie. no updates are done in these layers)
+
     :return model: ResNet model with encoding output (if `include_top=False`) or classification output (if `include_top=True`)
 
     Usage:
@@ -303,7 +319,7 @@ class ResNet2D152(ResNet2D):
 
         >>> model.compile("adam", "categorical_crossentropy", ["accuracy"])
     """
-    def __init__(self, inputs, blocks=None, include_top=True, classes=1000, *args, **kwargs):
+    def __init__(self, inputs, blocks=None, include_top=True, classes=1000, freeze_bn=False, *args, **kwargs):
         if blocks is None:
             blocks = [3, 8, 36, 3]
 
@@ -316,6 +332,7 @@ class ResNet2D152(ResNet2D):
             block=keras_resnet.blocks.bottleneck_2d,
             include_top=include_top,
             classes=classes,
+            freeze_bn=freeze_bn,
             *args,
             **kwargs
         )
@@ -333,6 +350,8 @@ class ResNet2D200(ResNet2D):
 
     :param classes: number of classes to classify (include_top must be true)
 
+    :param freeze_bn: if true, freezes BatchNormalization layers (ie. no updates are done in these layers)
+
     :return model: ResNet model with encoding output (if `include_top=False`) or classification output (if `include_top=True`)
 
     Usage:
@@ -347,7 +366,7 @@ class ResNet2D200(ResNet2D):
 
         >>> model.compile("adam", "categorical_crossentropy", ["accuracy"])
     """
-    def __init__(self, inputs, blocks=None, include_top=True, classes=1000, *args, **kwargs):
+    def __init__(self, inputs, blocks=None, include_top=True, classes=1000, freeze_bn=False, *args, **kwargs):
         if blocks is None:
             blocks = [3, 24, 36, 3]
 
@@ -360,6 +379,7 @@ class ResNet2D200(ResNet2D):
             block=keras_resnet.blocks.bottleneck_2d,
             include_top=include_top,
             classes=classes,
+            freeze_bn=freeze_bn,
             *args,
             **kwargs
         )
