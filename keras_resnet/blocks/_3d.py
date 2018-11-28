@@ -17,7 +17,15 @@ parameters = {
 }
 
 
-def basic_3d(filters, stage=0, block=0, kernel_size=3, numerical_name=False, stride=None, freeze_bn=False):
+def basic_3d(
+    filters,
+    stage=0,
+    block=0,
+    kernel_size=3,
+    numerical_name=False,
+    stride=None,
+    freeze_bn=False
+):
     """
     A three-dimensional basic block.
 
@@ -61,21 +69,28 @@ def basic_3d(filters, stage=0, block=0, kernel_size=3, numerical_name=False, str
 
     def f(x):
         y = keras.layers.ZeroPadding3D(padding=1, name="padding{}{}_branch2a".format(stage_char, block_char))(x)
+
         y = keras.layers.Conv3D(filters, kernel_size, strides=stride, use_bias=False, name="res{}{}_branch2a".format(stage_char, block_char), **parameters)(y)
+
         y = keras_resnet.layers.BatchNormalization(axis=axis, epsilon=1e-5, freeze=freeze_bn, name="bn{}{}_branch2a".format(stage_char, block_char))(y)
+
         y = keras.layers.Activation("relu", name="res{}{}_branch2a_relu".format(stage_char, block_char))(y)
 
         y = keras.layers.ZeroPadding3D(padding=1, name="padding{}{}_branch2b".format(stage_char, block_char))(y)
+
         y = keras.layers.Conv3D(filters, kernel_size, use_bias=False, name="res{}{}_branch2b".format(stage_char, block_char), **parameters)(y)
+
         y = keras_resnet.layers.BatchNormalization(axis=axis, epsilon=1e-5, freeze=freeze_bn, name="bn{}{}_branch2b".format(stage_char, block_char))(y)
 
         if block == 0:
             shortcut = keras.layers.Conv3D(filters, (1, 1), strides=stride, use_bias=False, name="res{}{}_branch1".format(stage_char, block_char), **parameters)(x)
+
             shortcut = keras_resnet.layers.BatchNormalization(axis=axis, epsilon=1e-5, freeze=freeze_bn, name="bn{}{}_branch1".format(stage_char, block_char))(shortcut)
         else:
             shortcut = x
 
         y = keras.layers.Add(name="res{}{}".format(stage_char, block_char))([y, shortcut])
+
         y = keras.layers.Activation("relu", name="res{}{}_relu".format(stage_char, block_char))(y)
 
         return y
@@ -83,7 +98,15 @@ def basic_3d(filters, stage=0, block=0, kernel_size=3, numerical_name=False, str
     return f
 
 
-def bottleneck_3d(filters, stage=0, block=0, kernel_size=3, numerical_name=False, stride=None, freeze_bn=False):
+def bottleneck_3d(
+    filters,
+    stage=0,
+    block=0,
+    kernel_size=3,
+    numerical_name=False,
+    stride=None,
+    freeze_bn=False
+):
     """
     A three-dimensional bottleneck block.
 
@@ -127,24 +150,32 @@ def bottleneck_3d(filters, stage=0, block=0, kernel_size=3, numerical_name=False
 
     def f(x):
         y = keras.layers.Conv3D(filters, (1, 1), strides=stride, use_bias=False, name="res{}{}_branch2a".format(stage_char, block_char), **parameters)(x)
+
         y = keras_resnet.layers.BatchNormalization(axis=axis, epsilon=1e-5, freeze=freeze_bn, name="bn{}{}_branch2a".format(stage_char, block_char))(y)
+
         y = keras.layers.Activation("relu", name="res{}{}_branch2a_relu".format(stage_char, block_char))(y)
 
         y = keras.layers.ZeroPadding3D(padding=1, name="padding{}{}_branch2b".format(stage_char, block_char))(y)
+
         y = keras.layers.Conv3D(filters, kernel_size, use_bias=False, name="res{}{}_branch2b".format(stage_char, block_char), **parameters)(y)
+
         y = keras_resnet.layers.BatchNormalization(axis=axis, epsilon=1e-5, freeze=freeze_bn, name="bn{}{}_branch2b".format(stage_char, block_char))(y)
+
         y = keras.layers.Activation("relu", name="res{}{}_branch2b_relu".format(stage_char, block_char))(y)
 
         y = keras.layers.Conv3D(filters * 4, (1, 1), use_bias=False, name="res{}{}_branch2c".format(stage_char, block_char), **parameters)(y)
+
         y = keras_resnet.layers.BatchNormalization(axis=axis, epsilon=1e-5, freeze=freeze_bn, name="bn{}{}_branch2c".format(stage_char, block_char))(y)
 
         if block == 0:
             shortcut = keras.layers.Conv3D(filters * 4, (1, 1), strides=stride, use_bias=False, name="res{}{}_branch1".format(stage_char, block_char), **parameters)(x)
+
             shortcut = keras_resnet.layers.BatchNormalization(axis=axis, epsilon=1e-5, freeze=freeze_bn, name="bn{}{}_branch1".format(stage_char, block_char))(shortcut)
         else:
             shortcut = x
 
         y = keras.layers.Add(name="res{}{}".format(stage_char, block_char))([y, shortcut])
+
         y = keras.layers.Activation("relu", name="res{}{}_relu".format(stage_char, block_char))(y)
 
         return y
