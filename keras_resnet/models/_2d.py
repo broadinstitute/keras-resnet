@@ -139,7 +139,7 @@ class ResNet2D18(ResNet2D):
         if blocks is None:
             blocks = [2, 2, 2, 2]
 
-        super(ResNet2D, self).__init__(
+        super(ResNet2D18, self).__init__(
             inputs,
             blocks,
             block=keras_resnet.blocks.basic_2d,
@@ -180,7 +180,7 @@ class ResNet2D34(ResNet2D):
         if blocks is None:
             blocks = [3, 4, 6, 3]
 
-        super(ResNet2D, self).__init__(
+        super(ResNet2D34, self).__init__(
             inputs,
             blocks,
             block=keras_resnet.blocks.basic_2d,
@@ -223,7 +223,7 @@ class ResNet2D50(ResNet2D):
 
         numerical_names = [False, False, False, False]
 
-        super(ResNet2D, self).__init__(
+        super(ResNet2D50, self).__init__(
             inputs,
             blocks,
             numerical_names=numerical_names,
@@ -265,7 +265,7 @@ class ResNet2D101(ResNet2D):
 
         numerical_names = [False, True, True, False]
 
-        super(ResNet2D, self).__init__(
+        super(ResNet2D101, self).__init__(
             inputs,
             blocks,
             numerical_names=numerical_names,
@@ -309,7 +309,7 @@ class ResNet2D152(ResNet2D):
 
         numerical_names = [False, True, True, False]
 
-        super(ResNet2D, self).__init__(
+        super(ResNet2D152, self).__init__(
             inputs,
             blocks,
             numerical_names=numerical_names,
@@ -353,7 +353,7 @@ class ResNet2D200(ResNet2D):
 
         numerical_names = [False, True, True, False]
 
-        super(ResNet2D, self).__init__(
+        super(ResNet2D200, self).__init__(
             inputs,
             blocks,
             numerical_names=numerical_names,

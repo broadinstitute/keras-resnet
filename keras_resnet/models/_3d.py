@@ -139,7 +139,7 @@ class ResNet3D18(ResNet3D):
         if blocks is None:
             blocks = [2, 2, 2, 2]
 
-        super(ResNet3D, self).__init__(
+        super(ResNet3D18, self).__init__(
             inputs,
             blocks,
             block=keras_resnet.blocks.basic_3d,
@@ -180,7 +180,7 @@ class ResNet3D34(ResNet3D):
         if blocks is None:
             blocks = [3, 4, 6, 3]
 
-        super(ResNet3D, self).__init__(
+        super(ResNet3D34, self).__init__(
             inputs,
             blocks,
             block=keras_resnet.blocks.basic_3d,
@@ -223,7 +223,7 @@ class ResNet3D50(ResNet3D):
 
         numerical_names = [False, False, False, False]
 
-        super(ResNet3D, self).__init__(
+        super(ResNet3D50, self).__init__(
             inputs,
             blocks,
             numerical_names=numerical_names,
@@ -265,7 +265,7 @@ class ResNet3D101(ResNet3D):
 
         numerical_names = [False, True, True, False]
 
-        super(ResNet3D, self).__init__(
+        super(ResNet3D101, self).__init__(
             inputs,
             blocks,
             numerical_names=numerical_names,
@@ -309,7 +309,7 @@ class ResNet3D152(ResNet3D):
 
         numerical_names = [False, True, True, False]
 
-        super(ResNet3D, self).__init__(
+        super(ResNet3D152, self).__init__(
             inputs,
             blocks,
             numerical_names=numerical_names,
@@ -353,7 +353,7 @@ class ResNet3D200(ResNet3D):
 
         numerical_names = [False, True, True, False]
 
-        super(ResNet3D, self).__init__(
+        super(ResNet3D200, self).__init__(
             inputs,
             blocks,
             numerical_names=numerical_names,

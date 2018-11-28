@@ -139,7 +139,7 @@ class ResNet1D18(ResNet1D):
         if blocks is None:
             blocks = [2, 2, 2, 2]
 
-        super(ResNet1D, self).__init__(
+        super(ResNet1D18, self).__init__(
             inputs,
             blocks,
             block=keras_resnet.blocks.basic_1d,
@@ -180,7 +180,7 @@ class ResNet1D34(ResNet1D):
         if blocks is None:
             blocks = [3, 4, 6, 3]
 
-        super(ResNet1D, self).__init__(
+        super(ResNet1D34, self).__init__(
             inputs,
             blocks,
             block=keras_resnet.blocks.basic_1d,
@@ -223,7 +223,7 @@ class ResNet1D50(ResNet1D):
 
         numerical_names = [False, False, False, False]
 
-        super(ResNet1D, self).__init__(
+        super(ResNet1D50, self).__init__(
             inputs,
             blocks,
             numerical_names=numerical_names,
@@ -265,7 +265,7 @@ class ResNet1D101(ResNet1D):
 
         numerical_names = [False, True, True, False]
 
-        super(ResNet1D, self).__init__(
+        super(ResNet1D101, self).__init__(
             inputs,
             blocks,
             numerical_names=numerical_names,
@@ -309,7 +309,7 @@ class ResNet1D152(ResNet1D):
 
         numerical_names = [False, True, True, False]
 
-        super(ResNet1D, self).__init__(
+        super(ResNet1D152, self).__init__(
             inputs,
             blocks,
             numerical_names=numerical_names,
@@ -353,7 +353,7 @@ class ResNet1D200(ResNet1D):
 
         numerical_names = [False, True, True, False]
 
-        super(ResNet1D, self).__init__(
+        super(ResNet1D200, self).__init__(
             inputs,
             blocks,
             numerical_names=numerical_names,
