@@ -8,6 +8,7 @@ import pkg_resources
 import sklearn.model_selection
 import tensorflow
 
+import keras_resnet.metrics
 import keras_resnet.models
 
 _benchmarks = {
@@ -70,9 +71,15 @@ def __main__(benchmark, device, name):
 
     training_x = training_x.astype(numpy.float16)
 
+    if benchmark is "MNIST":
+        training_x = numpy.expand_dims(training_x, -1)
+
     training_y = keras.utils.np_utils.to_categorical(training_y)
 
-    training_x, validation_x, training_y, validation_y = sklearn.model_selection.train_test_split(training_x, training_y)
+    training_x, validation_x, training_y, validation_y = sklearn.model_selection.train_test_split(
+        training_x,
+        training_y
+    )
 
     generator = keras.preprocessing.image.ImageDataGenerator(
         horizontal_flip=True
@@ -102,7 +109,12 @@ def __main__(benchmark, device, name):
 
     model = _names[name](x, classes)
 
-    model.compile("adam", "categorical_crossentropy", ["accuracy"])
+    metrics = [
+        keras_resnet.metrics.top_1_categorical_error,
+        keras_resnet.metrics.top_5_categorical_error
+    ]
+
+    model.compile("adam", "categorical_crossentropy", metrics)
 
     pathname = os.path.join("data", "checkpoints", benchmark, "{}.hdf5".format(name))
 
@@ -123,11 +135,9 @@ def __main__(benchmark, device, name):
 
     model.fit_generator(
         callbacks=callbacks,
-        epochs=200,
+        epochs=100,
         generator=generator,
-        steps_per_epoch=training_x.shape[0] // 256,
-        validation_data=validation_data,
-        validation_steps=validation_x.shape[0] // 256
+        validation_data=validation_data
     )
 
 
