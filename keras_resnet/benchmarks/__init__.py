@@ -107,7 +107,7 @@ def __main__(benchmark, device, name):
 
     x = keras.layers.Input(shape)
 
-    model = _names[name](x, classes)
+    model = _names[name](inputs=x, classes=classes)
 
     metrics = [
         keras_resnet.metrics.top_1_categorical_error,
