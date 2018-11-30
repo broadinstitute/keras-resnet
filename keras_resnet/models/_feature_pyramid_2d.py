@@ -16,7 +16,6 @@ import keras_resnet.blocks
 import keras_resnet.layers
 
 
-
 class FPN2D(keras.Model):
     def __init__(
         self,

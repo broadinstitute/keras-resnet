@@ -15,8 +15,6 @@ import keras.regularizers
 import keras_resnet.blocks
 import keras_resnet.layers
 
-import tensorflow.contrib.layers
-
 
 class ResNet2D(keras.Model):
     """
