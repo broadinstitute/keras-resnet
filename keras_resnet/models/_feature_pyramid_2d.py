@@ -35,8 +35,8 @@ class FPN2D(keras.Model):
         if numerical_names is None:
             numerical_names = [True] * len(blocks)
 
-        x = keras.layers.ZeroPadding2D(padding=3, name="padding_conv1")(inputs)
-        x = keras.layers.Conv2D(64, (7, 7), strides=(2, 2), use_bias=False, name="conv1")(x)
+        x = keras.layers.Conv2D(64, (7, 7), strides=(2, 2), use_bias=False, name="conv1", padding="same")(inputs)
+        # x = keras.layers.Lambda(lambda x_in: tensorflow.contrib.layers.group_norm(x_in, groups=1, channels_axis=axis))(x)
         x = keras_resnet.layers.BatchNormalization(axis=axis, epsilon=1e-5, freeze=freeze_bn, name="bn_conv1")(x)
         x = keras.layers.Activation("relu", name="conv1_relu")(x)
         x = keras.layers.MaxPooling2D((3, 3), strides=(2, 2), padding="same", name="pool1")(x)
@@ -72,7 +72,8 @@ class FPN2D(keras.Model):
         upsampled_p5 = keras.layers.UpSampling2D(
             interpolation="bilinear",
             name="p5_upsampled",
-            size=(c4.shape[1], c4.shape[2])
+            # size=(c4.shape[1], c4.shape[2]) # NOT THE SHAPE ! THE STRIDE
+            size=(2, 2)
         )(pyramid_5)
 
         pyramid_5 = keras.layers.Conv2D(
@@ -98,7 +99,8 @@ class FPN2D(keras.Model):
         upsampled_p4 = keras.layers.UpSampling2D(
             interpolation="bilinear",
             name="p4_upsampled",
-            size=(c3.shape[1], c3.shape[2])
+            # size=(c3.shape[1], c3.shape[2])
+            size=(2, 2)
         )(pyramid_4)
 
         pyramid_4 = keras.layers.Conv2D(
@@ -121,6 +123,13 @@ class FPN2D(keras.Model):
             name="p3_merged"
         )([upsampled_p4, pyramid_3])
 
+        upsampled_p3 = keras.layers.UpSampling2D(
+            interpolation="bilinear",
+            name="p3_upsampled",
+            # size=(c3.shape[1], c3.shape[2])
+            size=(2, 2)
+        )(pyramid_3)
+
         pyramid_3 = keras.layers.Conv2D(
             filters=256,
             kernel_size=3,
@@ -128,6 +137,26 @@ class FPN2D(keras.Model):
             padding="same",
             name="p3"
         )(pyramid_3)
+
+        pyramid_2 = keras.layers.Conv2D(
+            filters=256,
+            kernel_size=1,
+            strides=1,
+            padding="same",
+            name="c2_reduced"
+        )(c2)
+
+        pyramid_2 = keras.layers.Add(
+            name="p2_merged"
+        )([upsampled_p3, pyramid_2])
+
+        pyramid_2 = keras.layers.Conv2D(
+            filters=256,
+            kernel_size=3,
+            strides=1,
+            padding="same",
+            name="p2"
+        )(pyramid_2)
 
         pyramid_6 = keras.layers.Conv2D(
             filters=256,
@@ -137,25 +166,12 @@ class FPN2D(keras.Model):
             name="p6"
         )(c5)
 
-        pyramid_7 = keras.layers.Activation(
-            activation="relu",
-            name="C6_relu"
-        )(pyramid_6)
-
-        pyramid_7 = keras.layers.Conv2D(
-            filters=256,
-            kernel_size=3,
-            strides=2,
-            padding="same",
-            name="p7"
-        )(pyramid_7)
-
         outputs = [
+            pyramid_2,
             pyramid_3,
             pyramid_4,
             pyramid_5,
-            pyramid_6,
-            pyramid_7
+            pyramid_6
         ]
 
         super(FPN2D, self).__init__(
@@ -171,7 +187,7 @@ class FPN2D18(FPN2D):
         if blocks is None:
             blocks = [2, 2, 2, 2]
 
-        super(FPN2D, self).__init__(
+        super(FPN2D18, self).__init__(
             inputs,
             blocks,
             block=keras_resnet.blocks.basic_2d,
@@ -185,7 +201,7 @@ class FPN2D34(FPN2D):
         if blocks is None:
             blocks = [3, 4, 6, 3]
 
-        super(FPN2D, self).__init__(
+        super(FPN2D34, self).__init__(
             inputs,
             blocks,
             block=keras_resnet.blocks.basic_2d,
@@ -201,7 +217,7 @@ class FPN2D50(FPN2D):
 
         numerical_names = [False, False, False, False]
 
-        super(FPN2D, self).__init__(
+        super(FPN2D50, self).__init__(
             inputs,
             blocks,
             numerical_names=numerical_names,
@@ -218,7 +234,7 @@ class FPN2D101(FPN2D):
 
         numerical_names = [False, True, True, False]
 
-        super(FPN2D, self).__init__(
+        super(FPN2D101, self).__init__(
             inputs,
             blocks,
             numerical_names=numerical_names,
@@ -235,7 +251,7 @@ class FPN2D152(FPN2D):
 
         numerical_names = [False, True, True, False]
 
-        super(FPN2D, self).__init__(
+        super(FPN2D152, self).__init__(
             inputs,
             blocks,
             numerical_names=numerical_names,
@@ -252,7 +268,7 @@ class FPN2D200(FPN2D):
 
         numerical_names = [False, True, True, False]
 
-        super(FPN2D, self).__init__(
+        super(FPN2D200, self).__init__(
             inputs,
             blocks,
             numerical_names=numerical_names,
