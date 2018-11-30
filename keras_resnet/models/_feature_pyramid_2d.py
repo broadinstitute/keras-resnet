@@ -15,6 +15,8 @@ import keras.regularizers
 import keras_resnet.blocks
 import keras_resnet.layers
 
+import tensorflow.contrib.layers
+
 
 class FPN2D(keras.Model):
     def __init__(
@@ -123,6 +125,13 @@ class FPN2D(keras.Model):
             name="p3_merged"
         )([upsampled_p4, pyramid_3])
 
+        upsampled_p3 = keras.layers.UpSampling2D(
+            interpolation="bilinear",
+            name="p3_upsampled",
+            # size=(c3.shape[1], c3.shape[2])
+            size=(2, 2)
+        )(pyramid_3)
+
         pyramid_3 = keras.layers.Conv2D(
             filters=256,
             kernel_size=3,
@@ -130,6 +139,26 @@ class FPN2D(keras.Model):
             padding="same",
             name="p3"
         )(pyramid_3)
+
+        pyramid_2 = keras.layers.Conv2D(
+            filters=256,
+            kernel_size=1,
+            strides=1,
+            padding="same",
+            name="c2_reduced"
+        )(c2)
+
+        pyramid_2 = keras.layers.Add(
+            name="p2_merged"
+        )([upsampled_p3, pyramid_2])
+
+        pyramid_2 = keras.layers.Conv2D(
+            filters=256,
+            kernel_size=3,
+            strides=1,
+            padding="same",
+            name="p2"
+        )(pyramid_2)
 
         pyramid_6 = keras.layers.Conv2D(
             filters=256,
@@ -139,25 +168,12 @@ class FPN2D(keras.Model):
             name="p6"
         )(c5)
 
-        pyramid_7 = keras.layers.Activation(
-            activation="relu",
-            name="C6_relu"
-        )(pyramid_6)
-
-        pyramid_7 = keras.layers.Conv2D(
-            filters=256,
-            kernel_size=3,
-            strides=2,
-            padding="same",
-            name="p7"
-        )(pyramid_7)
-
         outputs = [
+            pyramid_2,
             pyramid_3,
             pyramid_4,
             pyramid_5,
-            pyramid_6,
-            pyramid_7
+            pyramid_6
         ]
 
         super(FPN2D, self).__init__(
