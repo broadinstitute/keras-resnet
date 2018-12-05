@@ -36,7 +36,6 @@ class FPN2D(keras.Model):
             numerical_names = [True] * len(blocks)
 
         x = keras.layers.Conv2D(64, (7, 7), strides=(2, 2), use_bias=False, name="conv1", padding="same")(inputs)
-        # x = keras.layers.Lambda(lambda x_in: tensorflow.contrib.layers.group_norm(x_in, groups=1, channels_axis=axis))(x)
         x = keras_resnet.layers.BatchNormalization(axis=axis, epsilon=1e-5, freeze=freeze_bn, name="bn_conv1")(x)
         x = keras.layers.Activation("relu", name="conv1_relu")(x)
         x = keras.layers.MaxPooling2D((3, 3), strides=(2, 2), padding="same", name="pool1")(x)
@@ -72,7 +71,6 @@ class FPN2D(keras.Model):
         upsampled_p5 = keras.layers.UpSampling2D(
             interpolation="bilinear",
             name="p5_upsampled",
-            # size=(c4.shape[1], c4.shape[2]) # NOT THE SHAPE ! THE STRIDE
             size=(2, 2)
         )(pyramid_5)
 
@@ -99,7 +97,6 @@ class FPN2D(keras.Model):
         upsampled_p4 = keras.layers.UpSampling2D(
             interpolation="bilinear",
             name="p4_upsampled",
-            # size=(c3.shape[1], c3.shape[2])
             size=(2, 2)
         )(pyramid_4)
 
@@ -126,7 +123,6 @@ class FPN2D(keras.Model):
         upsampled_p3 = keras.layers.UpSampling2D(
             interpolation="bilinear",
             name="p3_upsampled",
-            # size=(c3.shape[1], c3.shape[2])
             size=(2, 2)
         )(pyramid_3)
 
@@ -182,6 +178,23 @@ class FPN2D(keras.Model):
         )
 
 
+class FPN2D50(FPN2D):
+    def __init__(self, inputs, blocks=None, *args, **kwargs):
+        if blocks is None:
+            blocks = [3, 4, 6, 3]
+
+        numerical_names = [False, False, False, False]
+
+        super(FPN2D50, self).__init__(
+            inputs,
+            blocks,
+            numerical_names=numerical_names,
+            block=keras_resnet.blocks.bottleneck_2d,
+            *args,
+            **kwargs
+        )
+
+
 class FPN2D18(FPN2D):
     def __init__(self, inputs, blocks=None, *args, **kwargs):
         if blocks is None:
@@ -205,23 +218,6 @@ class FPN2D34(FPN2D):
             inputs,
             blocks,
             block=keras_resnet.blocks.basic_2d,
-            *args,
-            **kwargs
-        )
-
-
-class FPN2D50(FPN2D):
-    def __init__(self, inputs, blocks=None, *args, **kwargs):
-        if blocks is None:
-            blocks = [3, 4, 6, 3]
-
-        numerical_names = [False, False, False, False]
-
-        super(FPN2D50, self).__init__(
-            inputs,
-            blocks,
-            numerical_names=numerical_names,
-            block=keras_resnet.blocks.bottleneck_2d,
             *args,
             **kwargs
         )
