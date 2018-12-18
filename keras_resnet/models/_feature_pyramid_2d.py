@@ -18,14 +18,14 @@ import keras_resnet.layers
 
 class FPN2D(keras.Model):
     def __init__(
-        self,
-        inputs,
-        blocks,
-        block,
-        freeze_bn=True,
-        numerical_names=None,
-        *args,
-        **kwargs
+            self,
+            inputs,
+            blocks,
+            block,
+            freeze_bn=True,
+            numerical_names=None,
+            *args,
+            **kwargs
     ):
         if keras.backend.image_data_format() == "channels_last":
             axis = 3
@@ -72,14 +72,6 @@ class FPN2D(keras.Model):
             interpolation="bilinear",
             name="p5_upsampled",
             size=(2, 2)
-        )(pyramid_5)
-
-        pyramid_5 = keras.layers.Conv2D(
-            filters=256,
-            kernel_size=3,
-            strides=1,
-            padding="same",
-            name="p5"
         )(pyramid_5)
 
         pyramid_4 = keras.layers.Conv2D(
@@ -154,13 +146,7 @@ class FPN2D(keras.Model):
             name="p2"
         )(pyramid_2)
 
-        pyramid_6 = keras.layers.Conv2D(
-            filters=256,
-            kernel_size=3,
-            strides=2,
-            padding="same",
-            name="p6"
-        )(c5)
+        pyramid_6 = keras.layers.MaxPooling2D(strides=2, name="p6")(pyramid_5)
 
         outputs = [
             pyramid_2,
