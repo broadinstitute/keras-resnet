@@ -56,3 +56,12 @@ from ._time_distributed_2d import (
     TimeDistributedResNet152,
     TimeDistributedResNet200
 )
+
+# for backwards compatibility reasons
+ResNet = ResNet2D
+ResNet18 = ResNet2D18
+ResNet34 = ResNet2D34
+ResNet50 = ResNet2D50
+ResNet101 = ResNet2D101
+ResNet152 = ResNet2D152
+ResNet200 = ResNet2D200
