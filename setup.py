@@ -29,5 +29,5 @@ setuptools.setup(
         ]
     ),
     url="https://github.com/broadinstitute/keras-resnet",
-    version="0.1.0"
+    version="0.2.0"
 )
