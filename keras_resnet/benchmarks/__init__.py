@@ -41,7 +41,7 @@ _names = {
         ]
     )
 )
-@click.option("--device", default=0)
+@click.option("--device", default=0, type=int, help='Comma separator list of devices for gpu_options.visible_device_list, e.g. 1,2,3.')
 @click.option(
     "--name",
     default="ResNet-50",
