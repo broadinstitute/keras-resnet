@@ -5,7 +5,7 @@ Keras-ResNet
     :target: https://travis-ci.org/broadinstitute/keras-resnet
 
 .. image:: https://img.shields.io/pypi/v/keras-resnet   
-    :alt: PyPI
+    :target: https://pypi.org/project/keras-resnet
 
 Keras-ResNet is **the** Keras package for deep residual networks. It's fast *and* flexible.
 
