@@ -1,9 +1,14 @@
 Keras-ResNet
 ============
 
+.. image:: https://img.shields.io/pypi/v/keras-resnet?style=plastic
+    :target: https://pypi.org/project/keras-resnet/
 .. image:: https://travis-ci.org/broadinstitute/keras-resnet.svg?branch=master
     :target: https://travis-ci.org/broadinstitute/keras-resnet
-
+.. image:: https://anaconda.org/conda-forge/keras-resnet/badges/downloads.svg
+    :target: https://anaconda.org/conda-forge/keras-resnet
+.. image:: https://anaconda.org/conda-forge/keras-resnet/badges/version.svg
+    :target: https://anaconda.org/conda-forge/keras-resnet
 
 
 Keras-ResNet is **the** Keras package for deep residual networks. It's fast *and* flexible.
@@ -33,11 +38,15 @@ A tantalizing preview of Keras-ResNet simplicity:
 Installation
 ------------
 
-Installation couldn’t be easier:
+Installation using pip or conda couldn’t be easier:
 
 .. code-block:: bash
 
     $ pip install keras-resnet
+
+.. code-block:: bash
+
+    $ conda install keras-resnet
 
 Contributing
 ------------
