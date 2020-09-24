@@ -33,11 +33,15 @@ A tantalizing preview of Keras-ResNet simplicity:
 Installation
 ------------
 
-Installation couldn’t be easier:
+Installation using pip or conda couldn’t be easier:
 
 .. code-block:: bash
 
     $ pip install keras-resnet
+
+.. code-block:: bash
+
+    $ conda install keras-resnet
 
 Contributing
 ------------
