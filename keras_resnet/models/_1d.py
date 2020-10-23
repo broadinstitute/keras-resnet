@@ -66,7 +66,7 @@ class ResNet1D(keras.Model):
         **kwargs
     ):
         if keras.backend.image_data_format() == "channels_last":
-            axis = 3
+            axis = -1
         else:
             axis = 1
 
