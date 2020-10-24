@@ -73,7 +73,7 @@ class ResNet1D(keras.Model):
         if numerical_names is None:
             numerical_names = [True] * len(blocks)
 
-        print ("Epsilon is 1e-4. Reinstalled.")
+        print ("Epsilon is 1e-4. Reinstalled again.")
         x = keras.layers.ZeroPadding1D(padding=3, name="padding_conv1")(inputs)
         x = keras.layers.Conv1D(64, 7, strides=2, use_bias=False, name="conv1")(x)
         x = keras_resnet.layers.BatchNormalization(axis=axis, epsilon=1e-4, freeze=freeze_bn, name="bn_conv1")(x)
