@@ -144,7 +144,8 @@ class ResNet1D18(ResNet1D):
     def __init__(self, inputs, blocks=None, include_top=True, classes=1000, freeze_bn=False, *args, **kwargs):
         if blocks is None:
             blocks = [2, 2, 2, 2]
-
+        
+        print ("added inputs")
         super(ResNet1D18, self).__init__(
             inputs,
             blocks,
@@ -157,7 +158,6 @@ class ResNet1D18(ResNet1D):
         )
 
     def call (self, inputs):
-        print ("added inputs")
         return super(ResNet1D18, self).call(inputs)
 
 
