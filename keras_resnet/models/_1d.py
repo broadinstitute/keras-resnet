@@ -121,6 +121,8 @@ class ResNet1D(keras.Model):
         freeze_bn=True,
         *args,
         **kwargs):
+
+        print (inputs)
         
         return self.ret
 
