@@ -110,7 +110,8 @@ class ResNet1D(keras.Model):
             self.ret = outputs
             super(ResNet1D, self).__init__(inputs=inputs, outputs=outputs, *args, **kwargs)
 
-    def call(self, inputs):
+    
+    def call(self, inputs, *args, **kwargs):
         return self.ret
 
 class ResNet1D18(ResNet1D):
@@ -145,7 +146,6 @@ class ResNet1D18(ResNet1D):
         if blocks is None:
             blocks = [2, 2, 2, 2]
         
-        print ("added inputs")
         super(ResNet1D18, self).__init__(
             inputs,
             blocks,
@@ -157,7 +157,7 @@ class ResNet1D18(ResNet1D):
             **kwargs
         )
 
-    def call (self, inputs):
+    def call (self, inputs, *args, **kwargs):
         return super(ResNet1D18, self).call(inputs)
 
 
