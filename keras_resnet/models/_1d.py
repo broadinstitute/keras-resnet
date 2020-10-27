@@ -111,27 +111,18 @@ class ResNet1D(keras.Model):
             super(ResNet1D, self).__init__(inputs=inputs, outputs=outputs, *args, **kwargs)
 
     
-    def call(self,
+    def call(
+        self,
         inputs,
         blocks,
         block,
         include_top=True,
         classes=1000,
         freeze_bn=True,
-        numerical_names=None,
         *args,
         **kwargs):
         
-        mymodel = ResNet1D(inputs,
-            blocks,
-            block,
-            include_top,
-            classes,
-            freeze_bn,
-            *args,
-            **kwargs)
-        
-        return mymodel.ret
+        return self.ret
 
 class ResNet1D18(ResNet1D):
     """
