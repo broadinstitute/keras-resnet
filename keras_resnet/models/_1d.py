@@ -118,9 +118,8 @@ class ResNet1D(keras.Model):
         block,
         include_top=True,
         classes=1000,
-        freeze_bn=True,
-        *args,
-        **kwargs):
+        freeze_bn=True
+        ):
 
         print (inputs)
         
@@ -179,9 +178,7 @@ class ResNet1D18(ResNet1D):
             block=keras_resnet.blocks.basic_1d,
             include_top=include_top,
             classes=classes,
-            freeze_bn=freeze_bn,
-            *args,
-            **kwargs
+            freeze_bn=freeze_bn
         )
 
 
