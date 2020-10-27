@@ -110,7 +110,7 @@ class ResNet1D(keras.Model):
             self.ret = outputs
             super(ResNet1D, self).__init__(inputs=inputs, outputs=outputs, *args, **kwargs)
 
-    def call(self):
+    def call(self, inputs):
         return self.ret
 
 class ResNet1D18(ResNet1D):
@@ -157,7 +157,7 @@ class ResNet1D18(ResNet1D):
         )
 
     def call (self):
-        return super(ResNet1D18, self).call()
+        return super(ResNet1D18, self).call(None)
 
 
 class ResNet1D34(ResNet1D):
