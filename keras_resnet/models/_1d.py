@@ -156,8 +156,8 @@ class ResNet1D18(ResNet1D):
             **kwargs
         )
 
-    def call (self):
-        return super(ResNet1D18, self).call(None)
+    def call (self, inputs):
+        return super(ResNet1D18, self).call(inputs)
 
 
 class ResNet1D34(ResNet1D):
