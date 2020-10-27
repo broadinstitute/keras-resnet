@@ -157,6 +157,7 @@ class ResNet1D18(ResNet1D):
         )
 
     def call (self, inputs):
+        print ("added inputs")
         return super(ResNet1D18, self).call(inputs)
 
 
