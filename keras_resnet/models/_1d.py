@@ -83,13 +83,13 @@ class ResNet1D(keras.Model):
         self.maxpool1 = keras.layers.MaxPooling1D(3, strides=2, padding="same", name="pool1")
 
         features = 64
-        self.layers = []
+        self.lyrs = []
         self.iterations = []
 
         for stage_id, iterations in enumerate(blocks):
             self.iterations.append(iterations)
             for block_id in range(iterations):
-                self.layers.append (block(
+                self.lyrs.append (block(
                     features,
                     stage_id,
                     block_id,
@@ -111,9 +111,9 @@ class ResNet1D(keras.Model):
         
         outputs = []
         i = 0
-        while len(self.layers) > 0:
-            x = self.layers[0](x)
-            self.layers.pop()
+        while len(self.lyrs) > 0:
+            x = self.lyrs[0](x)
+            self.lyrs.pop()
             i += 1
             if i == self.iterations[0]:
                 outputs.append(x)
