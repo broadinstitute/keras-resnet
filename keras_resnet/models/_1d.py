@@ -62,7 +62,7 @@ class ResNet1D(keras.Model):
         freeze_bn=True,
         numerical_names=None,
         *args,
-        **kwargs
+        **kwargs,
     ):
         super(ResNet1D, self).__init__(*args, **kwargs)
         self.classes = classes
@@ -74,7 +74,7 @@ class ResNet1D(keras.Model):
             axis = 1
 
         if numerical_names is None:
-            self.numerical_names = [True] * len(blocks)
+            numerical_names = [True] * len(blocks)
 
         self.zeropad1 = keras.layers.ZeroPadding1D(padding=3, name="padding_conv1")
         self.conv1 = keras.layers.Conv1D(64, 7, strides=2, use_bias=False, name="conv1")
@@ -84,10 +84,10 @@ class ResNet1D(keras.Model):
 
         features = 64
         self.lyrs = []
-        self.iterations = []
+        self.iters = []
 
         for stage_id, iterations in enumerate(blocks):
-            self.iterations.append(iterations)
+            self.iters.append(iterations)
             for block_id in range(iterations):
                 self.lyrs.append (block(
                     features,
@@ -115,9 +115,9 @@ class ResNet1D(keras.Model):
             x = self.lyrs[0](x)
             self.lyrs.pop()
             i += 1
-            if i == self.iterations[0]:
+            if i == self.iters[0]:
                 outputs.append(x)
-                self.iterations.pop()
+                self.iters.pop()
                 i = 0
 
         if self.include_top:
@@ -126,7 +126,7 @@ class ResNet1D(keras.Model):
             return self.fclast(x)
         else:
             return outputs
-        
+
 
 class ResNet1D18(ResNet1D):
     """
@@ -155,7 +155,8 @@ class ResNet1D18(ResNet1D):
         >>> model = keras_resnet.models.ResNet18(x, classes=classes)
 
         >>> model.compile("adam", "categorical_crossentropy", ["accuracy"])
-    """
+    """ 
+    
     def __init__(self, blocks=None, include_top=True, classes=1000, freeze_bn=False, *args, **kwargs):
         if blocks is None:
             blocks = [2, 2, 2, 2]
@@ -177,37 +178,24 @@ class ResNet1D18(ResNet1D):
 class ResNet1D34(ResNet1D):
     """
     Constructs a `keras.models.Model` according to the ResNet34 specifications.
-
     :param inputs: input tensor (e.g. an instance of `keras.layers.Input`)
-
     :param blocks: the network’s residual architecture
-
     :param include_top: if true, includes classification layers
-
     :param classes: number of classes to classify (include_top must be true)
-
     :param freeze_bn: if true, freezes BatchNormalization layers (ie. no updates are done in these layers)
-
     :return model: ResNet model with encoding output (if `include_top=False`) or classification output (if `include_top=True`)
-
     Usage:
-
         >>> import keras_resnet.models
-
         >>> shape, classes = (224, 224, 3), 1000
-
         >>> x = keras.layers.Input(shape)
-
         >>> model = keras_resnet.models.ResNet34(x, classes=classes)
-
         >>> model.compile("adam", "categorical_crossentropy", ["accuracy"])
     """
-    def __init__(self, inputs, blocks=None, include_top=True, classes=1000, freeze_bn=False, *args, **kwargs):
+    def __init__(self, blocks=None, include_top=True, classes=1000, freeze_bn=False, *args, **kwargs):
         if blocks is None:
             blocks = [3, 4, 6, 3]
 
         super(ResNet1D34, self).__init__(
-            inputs,
             blocks,
             block=keras_resnet.blocks.basic_1d,
             include_top=include_top,
@@ -217,43 +205,33 @@ class ResNet1D34(ResNet1D):
             **kwargs
         )
 
+    def call (self, inputs):
+        return super(ResNet1D34, self).call(inputs)
+
 
 class ResNet1D50(ResNet1D):
     """
     Constructs a `keras.models.Model` according to the ResNet50 specifications.
-
     :param inputs: input tensor (e.g. an instance of `keras.layers.Input`)
-
     :param blocks: the network’s residual architecture
-
     :param include_top: if true, includes classification layers
-
     :param classes: number of classes to classify (include_top must be true)
-
     :param freeze_bn: if true, freezes BatchNormalization layers (ie. no updates are done in these layers)
-
     :return model: ResNet model with encoding output (if `include_top=False`) or classification output (if `include_top=True`)
-
     Usage:
-
         >>> import keras_resnet.models
-
         >>> shape, classes = (224, 224, 3), 1000
-
         >>> x = keras.layers.Input(shape)
-
         >>> model = keras_resnet.models.ResNet50(x)
-
         >>> model.compile("adam", "categorical_crossentropy", ["accuracy"])
     """
-    def __init__(self, inputs, blocks=None, include_top=True, classes=1000, freeze_bn=False, *args, **kwargs):
+    def __init__(self, blocks=None, include_top=True, classes=1000, freeze_bn=False, *args, **kwargs):
         if blocks is None:
             blocks = [3, 4, 6, 3]
 
         numerical_names = [False, False, False, False]
 
         super(ResNet1D50, self).__init__(
-            inputs,
             blocks,
             numerical_names=numerical_names,
             block=keras_resnet.blocks.bottleneck_1d,
@@ -264,43 +242,33 @@ class ResNet1D50(ResNet1D):
             **kwargs
         )
 
+    def call (self, inputs):
+        return super(ResNet1D50, self).call(inputs)
+
 
 class ResNet1D101(ResNet1D):
     """
     Constructs a `keras.models.Model` according to the ResNet101 specifications.
-
     :param inputs: input tensor (e.g. an instance of `keras.layers.Input`)
-
     :param blocks: the network’s residual architecture
-
     :param include_top: if true, includes classification layers
-
     :param classes: number of classes to classify (include_top must be true)
-
     :param freeze_bn: if true, freezes BatchNormalization layers (ie. no updates are done in these layers)
-
     :return model: ResNet model with encoding output (if `include_top=False`) or classification output (if `include_top=True`)
-
     Usage:
-
         >>> import keras_resnet.models
-
         >>> shape, classes = (224, 224, 3), 1000
-
         >>> x = keras.layers.Input(shape)
-
         >>> model = keras_resnet.models.ResNet101(x, classes=classes)
-
         >>> model.compile("adam", "categorical_crossentropy", ["accuracy"])
     """
-    def __init__(self, inputs, blocks=None, include_top=True, classes=1000, freeze_bn=False, *args, **kwargs):
+    def __init__(self, blocks=None, include_top=True, classes=1000, freeze_bn=False, *args, **kwargs):
         if blocks is None:
             blocks = [3, 4, 23, 3]
 
         numerical_names = [False, True, True, False]
 
         super(ResNet1D101, self).__init__(
-            inputs,
             blocks,
             numerical_names=numerical_names,
             block=keras_resnet.blocks.bottleneck_1d,
@@ -311,43 +279,33 @@ class ResNet1D101(ResNet1D):
             **kwargs
         )
 
+    def call (self, inputs):
+            return super(ResNet1D101, self).call(inputs)
+
 
 class ResNet1D152(ResNet1D):
     """
     Constructs a `keras.models.Model` according to the ResNet152 specifications.
-
     :param inputs: input tensor (e.g. an instance of `keras.layers.Input`)
-
     :param blocks: the network’s residual architecture
-
     :param include_top: if true, includes classification layers
-
     :param classes: number of classes to classify (include_top must be true)
-
     :param freeze_bn: if true, freezes BatchNormalization layers (ie. no updates are done in these layers)
-
     :return model: ResNet model with encoding output (if `include_top=False`) or classification output (if `include_top=True`)
-
     Usage:
-
         >>> import keras_resnet.models
-
         >>> shape, classes = (224, 224, 3), 1000
-
         >>> x = keras.layers.Input(shape)
-
         >>> model = keras_resnet.models.ResNet152(x, classes=classes)
-
         >>> model.compile("adam", "categorical_crossentropy", ["accuracy"])
     """
-    def __init__(self, inputs, blocks=None, include_top=True, classes=1000, freeze_bn=False, *args, **kwargs):
+    def __init__(self, blocks=None, include_top=True, classes=1000, freeze_bn=False, *args, **kwargs):
         if blocks is None:
             blocks = [3, 8, 36, 3]
 
         numerical_names = [False, True, True, False]
 
         super(ResNet1D152, self).__init__(
-            inputs,
             blocks,
             numerical_names=numerical_names,
             block=keras_resnet.blocks.bottleneck_1d,
@@ -358,43 +316,32 @@ class ResNet1D152(ResNet1D):
             **kwargs
         )
 
+    def call (self, inputs):
+        return super(ResNet1D152, self).call(inputs)
 
 class ResNet1D200(ResNet1D):
     """
     Constructs a `keras.models.Model` according to the ResNet200 specifications.
-
     :param inputs: input tensor (e.g. an instance of `keras.layers.Input`)
-
     :param blocks: the network’s residual architecture
-
     :param include_top: if true, includes classification layers
-
     :param classes: number of classes to classify (include_top must be true)
-
     :param freeze_bn: if true, freezes BatchNormalization layers (ie. no updates are done in these layers)
-
     :return model: ResNet model with encoding output (if `include_top=False`) or classification output (if `include_top=True`)
-
     Usage:
-
         >>> import keras_resnet.models
-
         >>> shape, classes = (224, 224, 3), 1000
-
         >>> x = keras.layers.Input(shape)
-
         >>> model = keras_resnet.models.ResNet200(x, classes=classes)
-
         >>> model.compile("adam", "categorical_crossentropy", ["accuracy"])
     """
-    def __init__(self, inputs, blocks=None, include_top=True, classes=1000, freeze_bn=False, *args, **kwargs):
+    def __init__(self, blocks=None, include_top=True, classes=1000, freeze_bn=False, *args, **kwargs):
         if blocks is None:
             blocks = [3, 24, 36, 3]
 
         numerical_names = [False, True, True, False]
 
         super(ResNet1D200, self).__init__(
-            inputs,
             blocks,
             numerical_names=numerical_names,
             block=keras_resnet.blocks.bottleneck_1d,
@@ -404,3 +351,6 @@ class ResNet1D200(ResNet1D):
             *args,
             **kwargs
         )
+
+    def call (self, inputs):
+        return super(ResNet1D200, self).call(inputs)
