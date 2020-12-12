@@ -6,9 +6,8 @@ keras_resnet.blocks._1d
 
 This module implements a number of popular one-dimensional residual blocks.
 """
-
-import keras.layers
-import keras.regularizers
+import tensorflow.tensorflow.keras.layers
+import tensorflow.tensorflow.keras.regularizers
 
 import keras_resnet.layers
 
@@ -55,7 +54,7 @@ def basic_1d(
         else:
             stride = 2
 
-    if keras.backend.image_data_format() == "channels_last":
+    if tensorflow.keras.backend.image_data_format() == "channels_last":
         axis = -1
     else:
         axis = 1
@@ -68,12 +67,12 @@ def basic_1d(
     stage_char = str(stage + 2)
 
     def f(x):
-        y = keras.layers.ZeroPadding1D(
+        y = tensorflow.keras.layers.ZeroPadding1D(
             padding=1, 
             name="padding{}{}_branch2a".format(stage_char, block_char)
         )(x)
         
-        y = keras.layers.Conv1D(
+        y = tensorflow.keras.layers.Conv1D(
             filters,
             kernel_size,
             strides=stride,
@@ -89,17 +88,17 @@ def basic_1d(
             name="bn{}{}_branch2a".format(stage_char, block_char)
         )(y)
         
-        y = keras.layers.Activation(
+        y = tensorflow.keras.layers.Activation(
             "relu",
             name="res{}{}_branch2a_relu".format(stage_char, block_char)
         )(y)
 
-        y = keras.layers.ZeroPadding1D(
+        y = tensorflow.keras.layers.ZeroPadding1D(
             padding=1,
             name="padding{}{}_branch2b".format(stage_char, block_char)
         )(y)
         
-        y = keras.layers.Conv1D(
+        y = tensorflow.keras.layers.Conv1D(
             filters,
             kernel_size,
             use_bias=False,
@@ -115,7 +114,7 @@ def basic_1d(
         )(y)
 
         if block == 0:
-            shortcut = keras.layers.Conv1D(
+            shortcut = tensorflow.keras.layers.Conv1D(
                 filters,
                 1,
                 strides=stride,
@@ -133,11 +132,11 @@ def basic_1d(
         else:
             shortcut = x
 
-        y = keras.layers.Add(
+        y = tensorflow.keras.layers.Add(
             name="res{}{}".format(stage_char, block_char)
         )([y, shortcut])
         
-        y = keras.layers.Activation(
+        y = tensorflow.keras.layers.Activation(
             "relu",
             name="res{}{}_relu".format(stage_char, block_char)
         )(y)
@@ -182,7 +181,7 @@ def bottleneck_1d(
     if stride is None:
         stride = 1 if block != 0 or stage == 0 else 2
 
-    if keras.backend.image_data_format() == "channels_last":
+    if tensorflow.keras.backend.image_data_format() == "channels_last":
         axis = -1
     else:
         axis = 1
@@ -195,7 +194,7 @@ def bottleneck_1d(
     stage_char = str(stage + 2)
 
     def f(x):
-        y = keras.layers.Conv1D(
+        y = tensorflow.keras.layers.Conv1D(
             filters,
             1,
             strides=stride,
@@ -211,17 +210,17 @@ def bottleneck_1d(
             name="bn{}{}_branch2a".format(stage_char, block_char)
         )(y)
 
-        y = keras.layers.Activation(
+        y = tensorflow.keras.layers.Activation(
             "relu",
             name="res{}{}_branch2a_relu".format(stage_char, block_char)
         )(y)
 
-        y = keras.layers.ZeroPadding1D(
+        y = tensorflow.keras.layers.ZeroPadding1D(
             padding=1,
             name="padding{}{}_branch2b".format(stage_char, block_char)
         )(y)
 
-        y = keras.layers.Conv1D(
+        y = tensorflow.keras.layers.Conv1D(
             filters,
             kernel_size,
             use_bias=False,
@@ -236,12 +235,12 @@ def bottleneck_1d(
             name="bn{}{}_branch2b".format(stage_char, block_char)
         )(y)
 
-        y = keras.layers.Activation(
+        y = tensorflow.keras.layers.Activation(
             "relu",
             name="res{}{}_branch2b_relu".format(stage_char, block_char)
         )(y)
 
-        y = keras.layers.Conv1D(
+        y = tensorflow.keras.layers.Conv1D(
             filters * 4,
             1,
             use_bias=False,
@@ -257,7 +256,7 @@ def bottleneck_1d(
         )(y)
 
         if block == 0:
-            shortcut = keras.layers.Conv1D(
+            shortcut = tensorflow.keras.layers.Conv1D(
                 filters * 4,
                 1,
                 strides=stride,
@@ -275,11 +274,11 @@ def bottleneck_1d(
         else:
             shortcut = x
 
-        y = keras.layers.Add(
+        y = tensorflow.keras.layers.Add(
             name="res{}{}".format(stage_char, block_char)
         )([y, shortcut])
 
-        y = keras.layers.Activation(
+        y = tensorflow.keras.layers.Activation(
             "relu",
             name="res{}{}_relu".format(stage_char, block_char)
         )(y)
