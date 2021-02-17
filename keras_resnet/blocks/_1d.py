@@ -6,8 +6,8 @@ keras_resnet.blocks._1d
 
 This module implements a number of popular one-dimensional residual blocks.
 """
-import tensorflow.tensorflow.keras.layers
-import tensorflow.tensorflow.keras.regularizers
+import tensorflow.keras.layers
+import tensorflow.keras.regularizers
 
 import keras_resnet.layers
 

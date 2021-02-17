@@ -7,8 +7,8 @@ keras_resnet.blocks._2d
 This module implements a number of popular two-dimensional residual blocks.
 """
 
-import tensorflow.tensorflow.keras.layers
-import tensorflow.tensorflow.keras.regularizers
+import tensorflow.keras.layers
+import tensorflow.keras.regularizers
 
 import keras_resnet.layers
 
