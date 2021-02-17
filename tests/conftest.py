@@ -1,4 +1,4 @@
-import tensorflow.tensorflow.keras.layers
+import tensorflow.keras.layers
 import pytest
 
 

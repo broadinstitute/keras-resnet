@@ -2,7 +2,7 @@ import os.path
 
 import click
 import tensorflow.keras
-import tensorflow.tensorflow.keras.preprocessing.image
+import tensorflow.keras.preprocessing.image
 import numpy
 import pkg_resources
 import sklearn.model_selection
@@ -12,9 +12,9 @@ import keras_resnet.metrics
 import keras_resnet.models
 
 _benchmarks = {
-    "CIFAR-10": tensorflow.tensorflow.keras.datasets.cifar10,
-    "CIFAR-100": tensorflow.tensorflow.keras.datasets.cifar100,
-    "MNIST": tensorflow.tensorflow.keras.datasets.mnist
+    "CIFAR-10": tensorflow.keras.datasets.cifar10,
+    "CIFAR-100": tensorflow.keras.datasets.cifar100,
+    "MNIST": tensorflow.keras.datasets.mnist
 }
 
 
