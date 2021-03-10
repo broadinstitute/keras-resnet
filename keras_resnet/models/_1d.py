@@ -62,7 +62,7 @@ class ResNet1D(tensorflow.keras.Model):
         freeze_bn=True,
         numerical_names=None,
         *args,
-        **kwargs,
+        **kwargs
     ):
         super(ResNet1D, self).__init__(*args, **kwargs)
         self.classes = classes
