@@ -7,20 +7,20 @@ keras_resnet.models._1d
 This module implements popular one-dimensional residual models.
 """
 
-import tensorflow.keras.backend
-import tensorflow.keras.layers
-import tensorflow.keras.models
-import tensorflow.keras.regularizers
+import keras.backend
+import keras.layers
+import keras.models
+import keras.regularizers
 
 import keras_resnet.blocks
 import keras_resnet.layers
 
 
-class ResNet1D(tensorflow.keras.Model):
+class ResNet1D(keras.Model):
     """
-    Constructs a `tensorflow.keras.models.Model` object using the given block count.
+    Constructs a `keras.models.Model` object using the given block count.
 
-    :param inputs: input tensor (e.g. an instance of `tensorflow.keras.layers.Input`)
+    :param inputs: input tensor (e.g. an instance of `keras.layers.Input`)
 
     :param blocks: the network’s residual architecture
 
@@ -43,7 +43,7 @@ class ResNet1D(tensorflow.keras.Model):
 
         >>> shape, classes = (224, 224, 3), 1000
 
-        >>> x = tensorflow.keras.layers.Input(shape)
+        >>> x = keras.layers.Input(shape)
 
         >>> blocks = [2, 2, 2, 2]
 
@@ -68,7 +68,7 @@ class ResNet1D(tensorflow.keras.Model):
         self.classes = classes
         self.include_top = include_top
 
-        if tensorflow.keras.backend.image_data_format() == "channels_last":
+        if keras.backend.image_data_format() == "channels_last":
             axis = -1
         else:
             axis = 1
@@ -76,11 +76,11 @@ class ResNet1D(tensorflow.keras.Model):
         if numerical_names is None:
             numerical_names = [True] * len(blocks)
 
-        self.zeropad1 = tensorflow.keras.layers.ZeroPadding1D(padding=3, name="padding_conv1")
-        self.conv1 = tensorflow.keras.layers.Conv1D(64, 7, strides=2, use_bias=False, name="conv1")
+        self.zeropad1 = keras.layers.ZeroPadding1D(padding=3, name="padding_conv1")
+        self.conv1 = keras.layers.Conv1D(64, 7, strides=2, use_bias=False, name="conv1")
         self.rnbn1 = keras_resnet.layers.BatchNormalization(axis=axis, epsilon=1e-5, freeze=freeze_bn, name="bn_conv1")
-        self.relu1 = tensorflow.keras.layers.Activation("relu", name="conv1_relu")
-        self.maxpool1 = tensorflow.keras.layers.MaxPooling1D(3, strides=2, padding="same", name="pool1")
+        self.relu1 = keras.layers.Activation("relu", name="conv1_relu")
+        self.maxpool1 = keras.layers.MaxPooling1D(3, strides=2, padding="same", name="pool1")
 
         features = 64
         self.lyrs = []
@@ -100,8 +100,8 @@ class ResNet1D(tensorflow.keras.Model):
                 self.layers.append (lyr)
             features *= 2
 
-        self.glopoollast = tensorflow.keras.layers.GlobalAveragePooling1D(name="pool5")
-        self.fclast = tensorflow.keras.layers.Dense(classes, activation="softmax", name="fc1000")
+        self.glopoollast = keras.layers.GlobalAveragePooling1D(name="pool5")
+        self.fclast = keras.layers.Dense(classes, activation="softmax", name="fc1000")
 
     
     def call(self, inputs):
@@ -132,9 +132,9 @@ class ResNet1D(tensorflow.keras.Model):
 
 class ResNet1D18(ResNet1D):
     """
-    Constructs a `tensorflow.keras.models.Model` according to the ResNet18 specifications.
+    Constructs a `keras.models.Model` according to the ResNet18 specifications.
 
-    :param inputs: input tensor (e.g. an instance of `tensorflow.keras.layers.Input`)
+    :param inputs: input tensor (e.g. an instance of `keras.layers.Input`)
 
     :param blocks: the network’s residual architecture
 
@@ -152,7 +152,7 @@ class ResNet1D18(ResNet1D):
 
         >>> shape, classes = (224, 3), 1000
 
-        >>> x = tensorflow.keras.layers.Input(shape)
+        >>> x = keras.layers.Input(shape)
 
         >>> model = keras_resnet.models.ResNet18(x, classes=classes)
 
@@ -179,8 +179,8 @@ class ResNet1D18(ResNet1D):
 
 class ResNet1D34(ResNet1D):
     """
-    Constructs a `tensorflow.keras.models.Model` according to the ResNet34 specifications.
-    :param inputs: input tensor (e.g. an instance of `tensorflow.keras.layers.Input`)
+    Constructs a `keras.models.Model` according to the ResNet34 specifications.
+    :param inputs: input tensor (e.g. an instance of `keras.layers.Input`)
     :param blocks: the network’s residual architecture
     :param include_top: if true, includes classification layers
     :param classes: number of classes to classify (include_top must be true)
@@ -189,7 +189,7 @@ class ResNet1D34(ResNet1D):
     Usage:
         >>> import keras_resnet.models
         >>> shape, classes = (224, 224, 3), 1000
-        >>> x = tensorflow.keras.layers.Input(shape)
+        >>> x = keras.layers.Input(shape)
         >>> model = keras_resnet.models.ResNet34(x, classes=classes)
         >>> model.compile("adam", "categorical_crossentropy", ["accuracy"])
     """
@@ -213,8 +213,8 @@ class ResNet1D34(ResNet1D):
 
 class ResNet1D50(ResNet1D):
     """
-    Constructs a `tensorflow.keras.models.Model` according to the ResNet50 specifications.
-    :param inputs: input tensor (e.g. an instance of `tensorflow.keras.layers.Input`)
+    Constructs a `keras.models.Model` according to the ResNet50 specifications.
+    :param inputs: input tensor (e.g. an instance of `keras.layers.Input`)
     :param blocks: the network’s residual architecture
     :param include_top: if true, includes classification layers
     :param classes: number of classes to classify (include_top must be true)
@@ -223,7 +223,7 @@ class ResNet1D50(ResNet1D):
     Usage:
         >>> import keras_resnet.models
         >>> shape, classes = (224, 224, 3), 1000
-        >>> x = tensorflow.keras.layers.Input(shape)
+        >>> x = keras.layers.Input(shape)
         >>> model = keras_resnet.models.ResNet50(x)
         >>> model.compile("adam", "categorical_crossentropy", ["accuracy"])
     """
@@ -250,8 +250,8 @@ class ResNet1D50(ResNet1D):
 
 class ResNet1D101(ResNet1D):
     """
-    Constructs a `tensorflow.keras.models.Model` according to the ResNet101 specifications.
-    :param inputs: input tensor (e.g. an instance of `tensorflow.keras.layers.Input`)
+    Constructs a `keras.models.Model` according to the ResNet101 specifications.
+    :param inputs: input tensor (e.g. an instance of `keras.layers.Input`)
     :param blocks: the network’s residual architecture
     :param include_top: if true, includes classification layers
     :param classes: number of classes to classify (include_top must be true)
@@ -260,7 +260,7 @@ class ResNet1D101(ResNet1D):
     Usage:
         >>> import keras_resnet.models
         >>> shape, classes = (224, 224, 3), 1000
-        >>> x = tensorflow.keras.layers.Input(shape)
+        >>> x = keras.layers.Input(shape)
         >>> model = keras_resnet.models.ResNet101(x, classes=classes)
         >>> model.compile("adam", "categorical_crossentropy", ["accuracy"])
     """
@@ -287,8 +287,8 @@ class ResNet1D101(ResNet1D):
 
 class ResNet1D152(ResNet1D):
     """
-    Constructs a `tensorflow.keras.models.Model` according to the ResNet152 specifications.
-    :param inputs: input tensor (e.g. an instance of `tensorflow.keras.layers.Input`)
+    Constructs a `keras.models.Model` according to the ResNet152 specifications.
+    :param inputs: input tensor (e.g. an instance of `keras.layers.Input`)
     :param blocks: the network’s residual architecture
     :param include_top: if true, includes classification layers
     :param classes: number of classes to classify (include_top must be true)
@@ -297,7 +297,7 @@ class ResNet1D152(ResNet1D):
     Usage:
         >>> import keras_resnet.models
         >>> shape, classes = (224, 224, 3), 1000
-        >>> x = tensorflow.keras.layers.Input(shape)
+        >>> x = keras.layers.Input(shape)
         >>> model = keras_resnet.models.ResNet152(x, classes=classes)
         >>> model.compile("adam", "categorical_crossentropy", ["accuracy"])
     """
@@ -323,8 +323,8 @@ class ResNet1D152(ResNet1D):
 
 class ResNet1D200(ResNet1D):
     """
-    Constructs a `tensorflow.keras.models.Model` according to the ResNet200 specifications.
-    :param inputs: input tensor (e.g. an instance of `tensorflow.keras.layers.Input`)
+    Constructs a `keras.models.Model` according to the ResNet200 specifications.
+    :param inputs: input tensor (e.g. an instance of `keras.layers.Input`)
     :param blocks: the network’s residual architecture
     :param include_top: if true, includes classification layers
     :param classes: number of classes to classify (include_top must be true)
@@ -333,7 +333,7 @@ class ResNet1D200(ResNet1D):
     Usage:
         >>> import keras_resnet.models
         >>> shape, classes = (224, 224, 3), 1000
-        >>> x = tensorflow.keras.layers.Input(shape)
+        >>> x = keras.layers.Input(shape)
         >>> model = keras_resnet.models.ResNet200(x, classes=classes)
         >>> model.compile("adam", "categorical_crossentropy", ["accuracy"])
     """

@@ -1,4 +1,4 @@
-import tensorflow.keras.layers
+import keras.layers
 import pytest
 
 
@@ -6,4 +6,4 @@ import pytest
 def x():
     shape = (224, 224, 3)
 
-    return tensorflow.keras.layers.Input(shape)
+    return keras.layers.Input(shape)

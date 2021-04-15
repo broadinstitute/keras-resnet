@@ -12,21 +12,21 @@ A tantalizing preview of Keras-ResNet simplicity:
 
 .. code-block:: python
 
-    >>> import tensorflow.keras
+    >>> import keras
 
     >>> import keras_resnet.models
 
     >>> shape, classes = (32, 32, 3), 10
 
-    >>> x = tensorflow.keras.layers.Input(shape)
+    >>> x = keras.layers.Input(shape)
 
     >>> model = keras_resnet.models.ResNet50(x, classes=classes)
 
     >>> model.compile("adam", "categorical_crossentropy", ["accuracy"])
 
-    >>> (training_x, training_y), (_, _) = tensorflow.keras.datasets.cifar10.load_data()
+    >>> (training_x, training_y), (_, _) = keras.datasets.cifar10.load_data()
 
-    >>> training_y = tensorflow.keras.utils.np_utils.to_categorical(training_y)
+    >>> training_y = keras.utils.np_utils.to_categorical(training_y)
 
     >>> model.fit(training_x, training_y)
 
