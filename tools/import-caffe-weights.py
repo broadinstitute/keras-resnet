@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 import keras_resnet.models
-import keras
+import tensorflow.keras
 
 import h5py
 import argparse
@@ -21,7 +21,7 @@ def create_model(resnet):
     if resnet not in valid:
         raise ValueError("Invalid resnet argument (valid: {}) : '{}'".format(valid, resnet))
 
-    image = keras.layers.Input((None, None, 3))
+    image = tensorflow.keras.layers.Input((None, None, 3))
     if resnet == "resnet50":
         return keras_resnet.models.ResNet50(image)
     elif resnet == "resnet101":
@@ -50,11 +50,11 @@ if __name__ == "__main__":
 
     # port each layer
     for index, l in enumerate(model.layers):
-        if isinstance(l, keras.layers.Conv2D):
+        if isinstance(l, tensorflow.keras.layers.Conv2D):
             l.set_weights([convert_conv_weights(weights.get(l.name).get("0"))])
-        elif isinstance(l, keras.layers.Dense):
+        elif isinstance(l, tensorflow.keras.layers.Dense):
             l.set_weights(convert_dense_weights(weights.get(l.name).get("0"), weights.get(l.name).get("1")))
-        elif isinstance(l, keras.layers.BatchNormalization):
+        elif isinstance(l, tensorflow.keras.layers.BatchNormalization):
             scale_name = l.name.replace("bn", "scale")
             bn_weights = weights.get(l.name)
             scale_weights = weights.get(scale_name)
