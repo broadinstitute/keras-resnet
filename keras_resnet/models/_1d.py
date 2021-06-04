@@ -117,10 +117,13 @@ class ResNet1D(tensorflow.keras.Model):
             x = self.lyrs[0](x)
             self.lyrs.pop()
             i += 1
-            if i == self.iters[0]:
-                outputs.append(x)
-                self.iters.pop()
-                i = 0
+            try:
+                if i == self.iters[0]:
+                    outputs.append(x)
+                    self.iters.pop()
+                    i = 0
+            except:
+                pass
 
         if self.include_top:
             assert self.classes > 0
