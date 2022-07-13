@@ -15,6 +15,9 @@ class BatchNormalization(keras.layers.BatchNormalization):
     def build(self, input_shape):
         return super(BatchNormalization, self).build(input_shape)
 
+    def get_config(self):
+        return super(BatchNormalization, self).get_config()
+
     def call(self, *args, **kwargs):
         # Force test mode if frozen, otherwise use default behaviour (i.e., training=None).
         if self.freeze:

@@ -93,17 +93,16 @@ class ResNet1D(keras.Model):
 
         self.blocklist = []
 
-        for stage_id, iterations in enumerate(self.blocks):
-            for block_id in range(iterations):
-                curr_block = block(features,
-                                    stage_id,
-                                    block_id,
-                                    numerical_name=(block_id > 0 and self.numerical_names[stage_id]),
-                                    freeze_bn=self.freeze_bn
-                                    )
-                self.blocklist.append(curr_block)
-            features *= 2
-
+        # for stage_id, iterations in enumerate(self.blocks):
+        #     for block_id in range(iterations):
+        #         curr_block = block(features,
+        #                             stage_id,
+        #                             block_id,
+        #                             numerical_name=(block_id > 0 and self.numerical_names[stage_id]),
+        #                             freeze_bn=self.freeze_bn
+        #                             )
+        #         self.blocklist.append(curr_block)
+        #     features *= 2
 
     def call(self, inputs):
         x = self.zeropadding1d(inputs)
@@ -112,8 +111,8 @@ class ResNet1D(keras.Model):
         x = self.activation(x)
         x = self.maxpooling1d(x)
 
-        for block in self.blocklist:
-            x = block(x)
+        # for block in self.blocklist:
+        #     x = block(x)
 
         if self.include_top:
             assert self.classes > 0
@@ -158,7 +157,7 @@ class ResNet1D18(ResNet1D):
 
         super(ResNet1D18, self).__init__(
             blocks,
-            block=keras_resnet.blocks.Basic1D,
+            block=None,
             include_top=include_top,
             classes=classes,
             freeze_bn=freeze_bn,

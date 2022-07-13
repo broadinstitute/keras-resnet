@@ -116,7 +116,6 @@ class Basic1D(keras.layers.Layer):
             name="res{}{}_relu".format(self.stage_char, self.block_char)
         )
 
-
     def call(self, inputs):
         y = self.zeropadding1da(inputs)
         y = self.conv1da(y)
@@ -134,7 +133,7 @@ class Basic1D(keras.layers.Layer):
 
         y = self.add([y, shortcut])
         y = self.activationb(y)
-        
+
         return y
 
 
