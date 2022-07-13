@@ -61,9 +61,11 @@ class ResNet1D(keras.Model):
         classes=1000,
         freeze_bn=True,
         numerical_names=None,
+        name = "ResNet1D",
         *args,
         **kwargs
     ):
+        super(ResNet1D, self).__init__(name=name, **kwargs)
         self.blocks = blocks
         self.block = block
         self.include_top = include_top
@@ -79,38 +81,45 @@ class ResNet1D(keras.Model):
         if numerical_names is None:
             self.numerical_names = [True] * len(blocks)
 
-        super(ResNet1D, self).__init__(*args, **kwargs)
-    
-    def call(self, inputs):
-        x = keras.layers.ZeroPadding1D(padding=3, name="padding_conv1")(inputs)
-        x = keras.layers.Conv1D(64, 7, strides=2, use_bias=False, name="conv1")(x)
-        x = keras_resnet.layers.BatchNormalization(axis=self.axis, epsilon=1e-5, freeze=self.freeze_bn, name="bn_conv1")(x)
-        x = keras.layers.Activation("relu", name="conv1_relu")(x)
-        x = keras.layers.MaxPooling1D(3, strides=2, padding="same", name="pool1")(x)
+        self.zeropadding1d = keras.layers.ZeroPadding1D(padding=3, name="padding_conv1")
+        self.conv1d = keras.layers.Conv1D(64, 7, strides=2, use_bias=False, name="conv1")
+        self.batchnormalization = keras_resnet.layers.BatchNormalization(axis=self.axis, epsilon=1e-5, freeze=self.freeze_bn, name="bn_conv1")
+        self.activation = keras.layers.Activation("relu", name="conv1_relu")
+        self.maxpooling1d = keras.layers.MaxPooling1D(3, strides=2, padding="same", name="pool1")
+        self.globalaveragepooling1d = keras.layers.GlobalAveragePooling1D(name="pool5")
+        self.dense = keras.layers.Dense(self.classes, activation="softmax", name="fc1000")
 
         features = 64
 
-        outputs = []
+        self.blocklist = []
 
         for stage_id, iterations in enumerate(self.blocks):
             for block_id in range(iterations):
-                x = self.block(
-                    features,
-                    stage_id,
-                    block_id,
-                    numerical_name=(block_id > 0 and self.numerical_names[stage_id]),
-                    freeze_bn=self.freeze_bn
-                )(x)
-
+                curr_block = block(features,
+                                    stage_id,
+                                    block_id,
+                                    numerical_name=(block_id > 0 and self.numerical_names[stage_id]),
+                                    freeze_bn=self.freeze_bn
+                                    )
+                self.blocklist.append(curr_block)
             features *= 2
 
-            outputs.append(x)
+
+    def call(self, inputs):
+        x = self.zeropadding1d(inputs)
+        x = self.conv1d(x)
+        x = self.batchnormalization(x)
+        x = self.activation(x)
+        x = self.maxpooling1d(x)
+
+        for block in self.blocklist:
+            x = block(x)
 
         if self.include_top:
             assert self.classes > 0
 
-            x = keras.layers.GlobalAveragePooling1D(name="pool5")(x)
-            x = keras.layers.Dense(self.classes, activation="softmax", name="fc1000")(x)
+            x = self.globalaveragepooling1d(x)
+            x = self.dense(x)
 
         return x
 
@@ -143,22 +152,21 @@ class ResNet1D18(ResNet1D):
 
         >>> model.compile("adam", "categorical_crossentropy", ["accuracy"])
     """
-    def __init__(self, blocks=None, include_top=True, classes=1000, freeze_bn=False, *args, **kwargs):
+    def __init__(self, blocks=None, include_top=True, classes=1000, freeze_bn=False, **kwargs):
         if blocks is None:
             blocks = [2, 2, 2, 2]
 
         super(ResNet1D18, self).__init__(
             blocks,
-            block=keras_resnet.blocks.basic_1d,
+            block=keras_resnet.blocks.Basic1D,
             include_top=include_top,
             classes=classes,
             freeze_bn=freeze_bn,
-            *args,
             **kwargs
         )
 
     def call(self, inputs):
-        super(ResNet1D18, self).call(inputs)
+        return super(ResNet1D18, self).call(inputs)
 
 class ResNet1D34(ResNet1D):
     """

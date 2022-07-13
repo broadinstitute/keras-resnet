@@ -8,7 +8,8 @@ This module implements a number of popular residual blocks.
 """
 
 from ._1d import (
-    basic_1d,
+    Basic1D,
+    # basic_1d,
     bottleneck_1d
 )
 
