@@ -188,12 +188,11 @@ class ResNet1D34(ResNet1D):
 
         >>> model.compile("adam", "categorical_crossentropy", ["accuracy"])
     """
-    def __init__(self, inputs, blocks=None, include_top=True, classes=1000, freeze_bn=False, *args, **kwargs):
+    def __init__(self, blocks=None, include_top=True, classes=1000, freeze_bn=False, *args, **kwargs):
         if blocks is None:
             blocks = [3, 4, 6, 3]
 
         super(ResNet1D34, self).__init__(
-            inputs,
             blocks,
             block=keras_resnet.blocks.basic_1d,
             include_top=include_top,
@@ -202,6 +201,9 @@ class ResNet1D34(ResNet1D):
             *args,
             **kwargs
         )
+
+    def call(self, inputs):
+        super(ResNet1D34, self).call(inputs)
 
 class ResNet1D50(ResNet1D):
     """
@@ -231,14 +233,13 @@ class ResNet1D50(ResNet1D):
 
         >>> model.compile("adam", "categorical_crossentropy", ["accuracy"])
     """
-    def __init__(self, inputs, blocks=None, include_top=True, classes=1000, freeze_bn=False, *args, **kwargs):
+    def __init__(self, blocks=None, include_top=True, classes=1000, freeze_bn=False, *args, **kwargs):
         if blocks is None:
             blocks = [3, 4, 6, 3]
 
         numerical_names = [False, False, False, False]
 
         super(ResNet1D50, self).__init__(
-            inputs,
             blocks,
             numerical_names=numerical_names,
             block=keras_resnet.blocks.bottleneck_1d,
@@ -249,6 +250,8 @@ class ResNet1D50(ResNet1D):
             **kwargs
         )
 
+    def call(self, inputs):
+        super(ResNet1D50, self).call(inputs)
 
 class ResNet1D101(ResNet1D):
     """
@@ -278,14 +281,13 @@ class ResNet1D101(ResNet1D):
 
         >>> model.compile("adam", "categorical_crossentropy", ["accuracy"])
     """
-    def __init__(self, inputs, blocks=None, include_top=True, classes=1000, freeze_bn=False, *args, **kwargs):
+    def __init__(self, blocks=None, include_top=True, classes=1000, freeze_bn=False, *args, **kwargs):
         if blocks is None:
             blocks = [3, 4, 23, 3]
 
         numerical_names = [False, True, True, False]
 
         super(ResNet1D101, self).__init__(
-            inputs,
             blocks,
             numerical_names=numerical_names,
             block=keras_resnet.blocks.bottleneck_1d,
@@ -296,7 +298,8 @@ class ResNet1D101(ResNet1D):
             **kwargs
         )
 
-
+    def call(self, inputs):
+        super(ResNet1D101, self).call(inputs)
 class ResNet1D152(ResNet1D):
     """
     Constructs a `keras.models.Model` according to the ResNet152 specifications.
@@ -325,14 +328,13 @@ class ResNet1D152(ResNet1D):
 
         >>> model.compile("adam", "categorical_crossentropy", ["accuracy"])
     """
-    def __init__(self, inputs, blocks=None, include_top=True, classes=1000, freeze_bn=False, *args, **kwargs):
+    def __init__(self, blocks=None, include_top=True, classes=1000, freeze_bn=False, *args, **kwargs):
         if blocks is None:
             blocks = [3, 8, 36, 3]
 
         numerical_names = [False, True, True, False]
 
         super(ResNet1D152, self).__init__(
-            inputs,
             blocks,
             numerical_names=numerical_names,
             block=keras_resnet.blocks.bottleneck_1d,
@@ -343,7 +345,8 @@ class ResNet1D152(ResNet1D):
             **kwargs
         )
 
-
+    def call(self, inputs):
+        super(ResNet1D152, self).call(inputs)
 class ResNet1D200(ResNet1D):
     """
     Constructs a `keras.models.Model` according to the ResNet200 specifications.
@@ -372,14 +375,13 @@ class ResNet1D200(ResNet1D):
 
         >>> model.compile("adam", "categorical_crossentropy", ["accuracy"])
     """
-    def __init__(self, inputs, blocks=None, include_top=True, classes=1000, freeze_bn=False, *args, **kwargs):
+    def __init__(self, blocks=None, include_top=True, classes=1000, freeze_bn=False, *args, **kwargs):
         if blocks is None:
             blocks = [3, 24, 36, 3]
 
         numerical_names = [False, True, True, False]
 
         super(ResNet1D200, self).__init__(
-            inputs,
             blocks,
             numerical_names=numerical_names,
             block=keras_resnet.blocks.bottleneck_1d,
@@ -389,3 +391,6 @@ class ResNet1D200(ResNet1D):
             *args,
             **kwargs
         )
+
+    def call(self, inputs):
+        super(ResNet1D200, self).call(inputs)
