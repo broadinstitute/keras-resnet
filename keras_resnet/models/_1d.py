@@ -55,7 +55,6 @@ class ResNet1D(keras.Model):
     """
     def __init__(
         self,
-        inputs,
         blocks,
         block,
         include_top=True,
@@ -65,17 +64,27 @@ class ResNet1D(keras.Model):
         *args,
         **kwargs
     ):
+        self.blocks = blocks
+        self.block = block
+        self.include_top = include_top
+        self.classes = classes
+        self.freeze_bn = freeze_bn
+        self.numerical_names = numerical_names
+        
         if keras.backend.image_data_format() == "channels_last":
-            axis = -1
+            self.axis = -1
         else:
-            axis = 1
+            self.axis = 1
 
         if numerical_names is None:
-            numerical_names = [True] * len(blocks)
+            self.numerical_names = [True] * len(blocks)
 
+        super(ResNet1D, self).__init__(*args, **kwargs)
+    
+    def call(self, inputs):
         x = keras.layers.ZeroPadding1D(padding=3, name="padding_conv1")(inputs)
         x = keras.layers.Conv1D(64, 7, strides=2, use_bias=False, name="conv1")(x)
-        x = keras_resnet.layers.BatchNormalization(axis=axis, epsilon=1e-5, freeze=freeze_bn, name="bn_conv1")(x)
+        x = keras_resnet.layers.BatchNormalization(axis=self.axis, epsilon=1e-5, freeze=self.freeze_bn, name="bn_conv1")(x)
         x = keras.layers.Activation("relu", name="conv1_relu")(x)
         x = keras.layers.MaxPooling1D(3, strides=2, padding="same", name="pool1")(x)
 
@@ -83,30 +92,27 @@ class ResNet1D(keras.Model):
 
         outputs = []
 
-        for stage_id, iterations in enumerate(blocks):
+        for stage_id, iterations in enumerate(self.blocks):
             for block_id in range(iterations):
-                x = block(
+                x = self.block(
                     features,
                     stage_id,
                     block_id,
-                    numerical_name=(block_id > 0 and numerical_names[stage_id]),
-                    freeze_bn=freeze_bn
+                    numerical_name=(block_id > 0 and self.numerical_names[stage_id]),
+                    freeze_bn=self.freeze_bn
                 )(x)
 
             features *= 2
 
             outputs.append(x)
 
-        if include_top:
-            assert classes > 0
+        if self.include_top:
+            assert self.classes > 0
 
             x = keras.layers.GlobalAveragePooling1D(name="pool5")(x)
-            x = keras.layers.Dense(classes, activation="softmax", name="fc1000")(x)
+            x = keras.layers.Dense(self.classes, activation="softmax", name="fc1000")(x)
 
-            super(ResNet1D, self).__init__(inputs=inputs, outputs=x, *args, **kwargs)
-        else:
-            # Else output each stages features
-            super(ResNet1D, self).__init__(inputs=inputs, outputs=outputs, *args, **kwargs)
+        return x
 
 
 class ResNet1D18(ResNet1D):
@@ -137,12 +143,11 @@ class ResNet1D18(ResNet1D):
 
         >>> model.compile("adam", "categorical_crossentropy", ["accuracy"])
     """
-    def __init__(self, inputs, blocks=None, include_top=True, classes=1000, freeze_bn=False, *args, **kwargs):
+    def __init__(self, blocks=None, include_top=True, classes=1000, freeze_bn=False, *args, **kwargs):
         if blocks is None:
             blocks = [2, 2, 2, 2]
 
         super(ResNet1D18, self).__init__(
-            inputs,
             blocks,
             block=keras_resnet.blocks.basic_1d,
             include_top=include_top,
@@ -152,6 +157,8 @@ class ResNet1D18(ResNet1D):
             **kwargs
         )
 
+    def call(self, inputs):
+        super(ResNet1D18, self).call(inputs)
 
 class ResNet1D34(ResNet1D):
     """
@@ -195,7 +202,6 @@ class ResNet1D34(ResNet1D):
             *args,
             **kwargs
         )
-
 
 class ResNet1D50(ResNet1D):
     """
