@@ -84,7 +84,7 @@ def basic_1d(
         
         y = keras_resnet.layers.BatchNormalization(
             axis=axis,
-            epsilon=1e-4,
+            epsilon=1e-5,
             freeze=freeze_bn,
             name="bn{}{}_branch2a".format(stage_char, block_char)
         )(y)
@@ -109,7 +109,7 @@ def basic_1d(
         
         y = keras_resnet.layers.BatchNormalization(
             axis=axis,
-            epsilon=1e-4,
+            epsilon=1e-5,
             freeze=freeze_bn,
             name="bn{}{}_branch2b".format(stage_char, block_char)
         )(y)
@@ -126,7 +126,7 @@ def basic_1d(
 
             shortcut = keras_resnet.layers.BatchNormalization(
                 axis=axis,
-                epsilon=1e-4,
+                epsilon=1e-5,
                 freeze=freeze_bn,
                 name="bn{}{}_branch1".format(stage_char, block_char)
             )(shortcut)
