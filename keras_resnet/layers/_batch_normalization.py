@@ -12,6 +12,9 @@ class BatchNormalization(keras.layers.BatchNormalization):
         # set to non-trainable if freeze is true
         self.trainable = not self.freeze
 
+    def build(self, input_shape):
+        return super(BatchNormalization, self).build(input_shape)
+
     def call(self, *args, **kwargs):
         # Force test mode if frozen, otherwise use default behaviour (i.e., training=None).
         if self.freeze:
