@@ -89,21 +89,23 @@ class ResNet1D(keras.Model):
         self.globalaveragepooling1d = keras.layers.GlobalAveragePooling1D(name="pool5")
         self.dense = keras.layers.Dense(self.classes, activation="softmax", name="fc1000")
 
-
-
-        self.block1 = keras_resnet.blocks.Basic1D(64, 0, 0, numerical_name=(0 > 0 and self.numerical_names[0]), freeze_bn=self.freeze_bn)
-        # features = 64
-        # self.blocklist = []
-        # for stage_id, iterations in enumerate(self.blocks):
-        #     for block_id in range(iterations):
-        #         curr_block = block(features,
-        #                             stage_id,
-        #                             block_id,
-        #                             numerical_name=(block_id > 0 and self.numerical_names[stage_id]),
-        #                             freeze_bn=self.freeze_bn
-        #                             )
-        #         self.blocklist.append(curr_block)
-        #     features *= 2
+        self.stagelist = []
+        self.blocklist = []
+            
+        features = 64
+        for stage_id, iterations in enumerate(blocks):
+            for block_id in range(iterations):
+                curr_block = block(features,
+                                    stage_id,
+                                    block_id,
+                                    numerical_name=(block_id > 0 and self.numerical_names[stage_id]),
+                                    freeze_bn=self.freeze_bn
+                                    )
+                self.blocklist.append(curr_block)
+            self.stagelist.append(self.blocklist)
+            self.blocklist = []
+            features *= 2
+        
 
     def call(self, inputs):
         x = self.zeropadding1d(inputs)
@@ -111,19 +113,21 @@ class ResNet1D(keras.Model):
         x = self.batchnormalization(x)
         x = self.activation(x)
         x = self.maxpooling1d(x)
-
-        x = self.block1(x)
         
-        # for block in self.blocklist:
-        #     x = block(x)
+        outputs = list()
+
+        for stage in self.stagelist:
+            for block in stage:
+                x = block(x)
+            outputs.append(x)
 
         if self.include_top:
             assert self.classes > 0
-
             x = self.globalaveragepooling1d(x)
             x = self.dense(x)
-
-        return x
+            return x
+        else:
+            return outputs
 
 
 class ResNet1D18(ResNet1D):
@@ -160,7 +164,7 @@ class ResNet1D18(ResNet1D):
 
         super(ResNet1D18, self).__init__(
             blocks,
-            keras_resnet.blocks.Basic1D,
+            block=keras_resnet.blocks.Basic1D,
             include_top=include_top,
             classes=classes,
             freeze_bn=freeze_bn,
@@ -204,7 +208,7 @@ class ResNet1D34(ResNet1D):
 
         super(ResNet1D34, self).__init__(
             blocks,
-            block=keras_resnet.blocks.basic_1d,
+            block=keras_resnet.blocks.Basic1D,
             include_top=include_top,
             classes=classes,
             freeze_bn=freeze_bn,
@@ -252,7 +256,7 @@ class ResNet1D50(ResNet1D):
         super(ResNet1D50, self).__init__(
             blocks,
             numerical_names=numerical_names,
-            block=keras_resnet.blocks.bottleneck_1d,
+            block=keras_resnet.blocks.Bottleneck1D,
             include_top=include_top,
             classes=classes,
             freeze_bn=freeze_bn,
@@ -300,7 +304,7 @@ class ResNet1D101(ResNet1D):
         super(ResNet1D101, self).__init__(
             blocks,
             numerical_names=numerical_names,
-            block=keras_resnet.blocks.bottleneck_1d,
+            block=keras_resnet.blocks.Bottleneck1D,
             include_top=include_top,
             classes=classes,
             freeze_bn=freeze_bn,
@@ -347,7 +351,7 @@ class ResNet1D152(ResNet1D):
         super(ResNet1D152, self).__init__(
             blocks,
             numerical_names=numerical_names,
-            block=keras_resnet.blocks.bottleneck_1d,
+            block=keras_resnet.blocks.Bottleneck1D,
             include_top=include_top,
             classes=classes,
             freeze_bn=freeze_bn,
@@ -394,7 +398,7 @@ class ResNet1D200(ResNet1D):
         super(ResNet1D200, self).__init__(
             blocks,
             numerical_names=numerical_names,
-            block=keras_resnet.blocks.bottleneck_1d,
+            block=keras_resnet.blocks.Bottleneck1D,
             include_top=include_top,
             classes=classes,
             freeze_bn=freeze_bn,

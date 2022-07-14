@@ -9,8 +9,7 @@ This module implements a number of popular residual blocks.
 
 from ._1d import (
     Basic1D,
-    # basic_1d,
-    bottleneck_1d
+    Bottleneck1D
 )
 
 from ._2d import (
