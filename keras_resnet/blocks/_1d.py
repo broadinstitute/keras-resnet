@@ -17,124 +17,127 @@ parameters = {
     "kernel_initializer": "he_normal"
 }
 
-# class Basic1D(keras.layers.Layer):
+class Basic1D(keras.layers.Layer):
 
-#     def __init__(self, 
-#                 filters,
-#                 stage=0,
-#                 block=0,
-#                 kernel_size=3,
-#                 numerical_name=False,
-#                 stride=None,
-#                 freeze_bn=False,
-#                 **kwargs):
-#         super(Basic1D, self).__init__(**kwargs)
+    def __init__(self, 
+                filters,
+                stage=0,
+                block=0,
+                kernel_size=3,
+                numerical_name=False,
+                stride=None,
+                freeze_bn=False,
+                **kwargs):
+        super(Basic1D, self).__init__(**kwargs)
         
-#         self.filters = filters
-#         self.block = block
-#         self.kernel_size = kernel_size
-#         self.freeze_bn = freeze_bn
-#         self.stride = stride
+        self.filters = filters
+        self.block = block
+        self.kernel_size = kernel_size
+        self.freeze_bn = freeze_bn
+        self.stride = stride
 
-#         if stride is None:
-#             if block != 0 or stage == 0:
-#                 self.stride = 1
-#             else:
-#                 self.stride = 2
+        if stride is None:
+            if block != 0 or stage == 0:
+                self.stride = 1
+            else:
+                self.stride = 2
 
-#         if keras.backend.image_data_format() == "channels_last":
-#             self.axis = -1
-#         else:
-#             self.axis = 1
+        if keras.backend.image_data_format() == "channels_last":
+            self.axis = -1
+        else:
+            self.axis = 1
 
-#         if block > 0 and numerical_name:
-#             self.block_char = "b{}".format(block)
-#         else:
-#             self.block_char = chr(ord('a') + block)
+        if block > 0 and numerical_name:
+            self.block_char = "b{}".format(block)
+        else:
+            self.block_char = chr(ord('a') + block)
 
-#         self.stage_char = str(stage + 2)
+        self.stage_char = str(stage + 2)
 
         
-#         self.zeropadding1da = keras.layers.ZeroPadding1D(
-#             padding=1, 
-#             name="padding{}{}_branch2a".format(self.stage_char, self.block_char)
-#         )
-#         self.conv1da = keras.layers.Conv1D(
-#             self.filters,
-#             self.kernel_size,
-#             strides=self.stride,
-#             use_bias=False,
-#             name="res{}{}_branch2a".format(self.stage_char, self.block_char),
-#             **parameters
-#         )
-#         self.batchnormalizationa = keras_resnet.layers.BatchNormalization(
-#             axis=self.axis,
-#             epsilon=1e-5,
-#             freeze=self.freeze_bn,
-#             name="bn{}{}_branch2a".format(self.stage_char, self.block_char)
-#         )
-#         self.activationa = keras.layers.Activation(
-#             "relu",
-#             name="res{}{}_branch2a_relu".format(self.stage_char, self.block_char)
-#         )
-#         self.zeropadding1db = keras.layers.ZeroPadding1D(
-#             padding=1,
-#             name="padding{}{}_branch2b".format(self.stage_char, self.block_char)
-#         )
-#         self.conv1db = keras.layers.Conv1D(
-#             self.filters,
-#             self.kernel_size,
-#             use_bias=False,
-#             name="res{}{}_branch2b".format(self.stage_char, self.block_char),
-#             **parameters
-#         )
-#         self.batchnormalizationb = keras_resnet.layers.BatchNormalization(
-#             axis=self.axis,
-#             epsilon=1e-5,
-#             freeze=self.freeze_bn,
-#             name="bn{}{}_branch2b".format(self.stage_char, self.block_char)
-#         )
-#         self.conv1dc = keras.layers.Conv1D(
-#                 self.filters,
-#                 1,
-#                 strides=self.stride,
-#                 use_bias=False,
-#                 name="res{}{}_branch1".format(self.stage_char, self.block_char),
-#                 **parameters
-#             )
-#         self.batchnormalizationc = keras_resnet.layers.BatchNormalization(
-#                 axis=self.axis,
-#                 epsilon=1e-5,
-#                 freeze=self.freeze_bn,
-#                 name="bn{}{}_branch1".format(self.stage_char, self.block_char)
-#             )
-#         self.add = keras.layers.Add(
-#             name="res{}{}".format(self.stage_char, self.block_char)
-#         )
-#         self.activationb = keras.layers.Activation(
-#             "relu",
-#             name="res{}{}_relu".format(self.stage_char, self.block_char)
-#         )
+        self.zeropadding1da = keras.layers.ZeroPadding1D(
+            padding=1,
+            name="padding{}{}_branch2a".format(self.stage_char, self.block_char)
+        )
+        self.conv1da = keras.layers.Conv1D(
+            self.filters,
+            self.kernel_size,
+            strides=self.stride,
+            use_bias=False,
+            name="res{}{}_branch2a".format(self.stage_char, self.block_char),
+            **parameters
+        )
+        self.batchnormalizationa = keras_resnet.layers.ResNetBatchNormalization(
+            axis=self.axis,
+            epsilon=1e-5,
+            freeze=self.freeze_bn,
+            name="bn{}{}_branch2a".format(self.stage_char, self.block_char)
+        )
+        # self.activationa = keras.layers.Activation(
+        #     "relu",
+        #     name="res{}{}_branch2a_relu".format(self.stage_char, self.block_char)
+        # )
+        # self.zeropadding1db = keras.layers.ZeroPadding1D(
+        #     padding=1,
+        #     name="padding{}{}_branch2b".format(self.stage_char, self.block_char)
+        # )
+        # self.conv1db = keras.layers.Conv1D(
+        #     self.filters,
+        #     self.kernel_size,
+        #     use_bias=False,
+        #     name="res{}{}_branch2b".format(self.stage_char, self.block_char),
+        #     **parameters
+        # )
+        # self.batchnormalizationb = keras_resnet.layers.ResNetBatchNormalization(
+        #     axis=self.axis,
+        #     epsilon=1e-5,
+        #     freeze=self.freeze_bn,
+        #     name="bn{}{}_branch2b".format(self.stage_char, self.block_char)
+        # )
+        # self.conv1dc = keras.layers.Conv1D(
+        #         self.filters,
+        #         1,
+        #         strides=self.stride,
+        #         use_bias=False,
+        #         name="res{}{}_branch1".format(self.stage_char, self.block_char),
+        #         **parameters
+        #     )
+        # self.batchnormalizationc = keras_resnet.layers.ResNetBatchNormalization(
+        #         axis=self.axis,
+        #         epsilon=1e-5,
+        #         freeze=self.freeze_bn,
+        #         name="bn{}{}_branch1".format(self.stage_char, self.block_char)
+        #     )
+        # self.add = keras.layers.Add(
+        #     name="res{}{}".format(self.stage_char, self.block_char)
+        # )
+        # self.activationb = keras.layers.Activation(
+        #     "relu",
+        #     name="res{}{}_relu".format(self.stage_char, self.block_char)
+        # )
 
-    # def call(self, inputs):
-    #     y = self.zeropadding1da(inputs)
-    #     y = self.conv1da(y)
-    #     y = self.batchnormalizationa(y)
-    #     y = self.activationa(y)
-    #     y = self.zeropadding1db(y)
-    #     y = self.conv1db(y)
-    #     y = self.batchnormalizationb(y)
+    def call(self, inputs):
+        y = self.zeropadding1da(inputs)
+        y = self.conv1da(y)
+        y = self.batchnormalizationa(y)
+        # y = self.activationa(y)
+        # y = self.zeropadding1db(y)
+        # y = self.conv1db(y)
+        # y = self.batchnormalizationb(y)
 
-    #     if self.block == 0:
-    #         shortcut = self.conv1dc(inputs)
-    #         shortcut = self.batchnormalizationc(shortcut)
-    #     else:
-    #         shortcut = inputs
+        # if self.block == 0:
+        #     shortcut = self.conv1dc(inputs)
+        #     shortcut = self.batchnormalizationc(shortcut)
+        # else:
+        #     shortcut = inputs
 
-    #     y = self.add([y, shortcut])
-    #     y = self.activationb(y)
+        # y = self.add([y, shortcut])
+        # y = self.activationb(y)
 
-    #     return y
+        return y
+
+    def get_config(self):
+        return super().get_config()
 
 
 # def basic_1d(
@@ -202,7 +205,7 @@ parameters = {
 #             **parameters
 #         )(y)
         
-#         y = keras_resnet.layers.BatchNormalization(
+#         y = keras_resnet.layers.ResNetBatchNormalization(
 #             axis=axis,
 #             epsilon=1e-5,
 #             freeze=freeze_bn,
@@ -227,7 +230,7 @@ parameters = {
 #             **parameters
 #         )(y)
         
-#         y = keras_resnet.layers.BatchNormalization(
+#         y = keras_resnet.layers.ResNetBatchNormalization(
 #             axis=axis,
 #             epsilon=1e-5,
 #             freeze=freeze_bn,
@@ -244,7 +247,7 @@ parameters = {
 #                 **parameters
 #             )(x)
 
-#             shortcut = keras_resnet.layers.BatchNormalization(
+#             shortcut = keras_resnet.layers.ResNetBatchNormalization(
 #                 axis=axis,
 #                 epsilon=1e-5,
 #                 freeze=freeze_bn,
@@ -324,7 +327,7 @@ def bottleneck_1d(
             **parameters
         )(x)
 
-        y = keras_resnet.layers.BatchNormalization(
+        y = keras_resnet.layers.ResNetBatchNormalization(
             axis=axis,
             epsilon=1e-5,
             freeze=freeze_bn,
@@ -349,7 +352,7 @@ def bottleneck_1d(
             **parameters
         )(y)
 
-        y = keras_resnet.layers.BatchNormalization(
+        y = keras_resnet.layers.ResNetBatchNormalization(
             axis=axis,
             epsilon=1e-5,
             freeze=freeze_bn,
@@ -369,7 +372,7 @@ def bottleneck_1d(
             **parameters
         )(y)
 
-        y = keras_resnet.layers.BatchNormalization(
+        y = keras_resnet.layers.ResNetBatchNormalization(
             axis=axis,
             epsilon=1e-5,
             freeze=freeze_bn,
@@ -386,7 +389,7 @@ def bottleneck_1d(
                 **parameters
             )(x)
 
-            shortcut = keras_resnet.layers.BatchNormalization(
+            shortcut = keras_resnet.layers.ResNetBatchNormalization(
                 axis=axis,
                 epsilon=1e-5,
                 freeze=freeze_bn,

@@ -7,11 +7,11 @@ keras_resnet.blocks
 This module implements a number of popular residual blocks.
 """
 
-# from ._1d import (
-#     Basic1D,
-#     # basic_1d,
-#     bottleneck_1d
-# )
+from ._1d import (
+    Basic1D,
+    # basic_1d,
+    bottleneck_1d
+)
 
 from ._2d import (
     basic_2d,

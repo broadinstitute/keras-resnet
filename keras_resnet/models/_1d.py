@@ -83,16 +83,17 @@ class ResNet1D(keras.Model):
 
         self.zeropadding1d = keras.layers.ZeroPadding1D(padding=3, name="padding_conv1")
         self.conv1d = keras.layers.Conv1D(64, 7, strides=2, use_bias=False, name="conv1")
-        self.batchnormalization = keras_resnet.layers.BatchNormalization(axis=self.axis, epsilon=1e-5, freeze=self.freeze_bn, name="bn_conv1")
+        self.batchnormalization = keras_resnet.layers.ResNetBatchNormalization(axis=self.axis, epsilon=1e-5, freeze=self.freeze_bn, name="bn_conv1")
         self.activation = keras.layers.Activation("relu", name="conv1_relu")
         self.maxpooling1d = keras.layers.MaxPooling1D(3, strides=2, padding="same", name="pool1")
         self.globalaveragepooling1d = keras.layers.GlobalAveragePooling1D(name="pool5")
         self.dense = keras.layers.Dense(self.classes, activation="softmax", name="fc1000")
 
-        features = 64
 
-        self.blocklist = []
 
+        self.block1 = keras_resnet.blocks.Basic1D(64, 0, 0, numerical_name=(0 > 0 and self.numerical_names[0]), freeze_bn=self.freeze_bn)
+        # features = 64
+        # self.blocklist = []
         # for stage_id, iterations in enumerate(self.blocks):
         #     for block_id in range(iterations):
         #         curr_block = block(features,
@@ -111,6 +112,8 @@ class ResNet1D(keras.Model):
         x = self.activation(x)
         x = self.maxpooling1d(x)
 
+        x = self.block1(x)
+        
         # for block in self.blocklist:
         #     x = block(x)
 
@@ -157,7 +160,7 @@ class ResNet1D18(ResNet1D):
 
         super(ResNet1D18, self).__init__(
             blocks,
-            block=None,
+            keras_resnet.blocks.Basic1D,
             include_top=include_top,
             classes=classes,
             freeze_bn=freeze_bn,
