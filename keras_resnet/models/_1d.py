@@ -107,7 +107,7 @@ class ResNet1D(keras.Model):
             features *= 2
         
 
-    def call(self, inputs):
+    def call(self, inputs, training=False):
         x = self.zeropadding1d(inputs)
         x = self.conv1d(x)
         x = self.batchnormalization(x)
