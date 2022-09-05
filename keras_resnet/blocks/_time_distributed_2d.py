@@ -74,7 +74,11 @@ def time_distributed_basic_2d(
 
         y = tensorflow.keras.layers.TimeDistributed(tensorflow.keras.layers.Conv2D(filters, kernel_size, strides=stride, use_bias=False, **parameters), name="res{}{}_branch2a".format(stage_char, block_char))(y)
 
+<<<<<<< HEAD
         y = tensorflow.keras.layers.TimeDistributed(keras_resnet.layers.BatchNormalization(axis=axis, epsilon=1e-5, freeze=freeze_bn), name="bn{}{}_branch2a".format(stage_char, block_char))(y)
+=======
+        y = keras.layers.TimeDistributed(keras_resnet.layers.ResNetBatchNormalization(axis=axis, epsilon=1e-5, freeze=freeze_bn), name="bn{}{}_branch2a".format(stage_char, block_char))(y)
+>>>>>>> original_regularization
 
         y = tensorflow.keras.layers.TimeDistributed(tensorflow.keras.layers.Activation("relu"), name="res{}{}_branch2a_relu".format(stage_char, block_char))(y)
 
@@ -82,12 +86,20 @@ def time_distributed_basic_2d(
 
         y = tensorflow.keras.layers.TimeDistributed(tensorflow.keras.layers.Conv2D(filters, kernel_size, use_bias=False, **parameters), name="res{}{}_branch2b".format(stage_char, block_char))(y)
 
+<<<<<<< HEAD
         y = tensorflow.keras.layers.TimeDistributed(keras_resnet.layers.BatchNormalization(axis=axis, epsilon=1e-5, freeze=freeze_bn), name="bn{}{}_branch2b".format(stage_char, block_char))(y)
+=======
+        y = keras.layers.TimeDistributed(keras_resnet.layers.ResNetBatchNormalization(axis=axis, epsilon=1e-5, freeze=freeze_bn), name="bn{}{}_branch2b".format(stage_char, block_char))(y)
+>>>>>>> original_regularization
 
         if block == 0:
             shortcut = tensorflow.keras.layers.TimeDistributed(tensorflow.keras.layers.Conv2D(filters, (1, 1), strides=stride, use_bias=False, **parameters), name="res{}{}_branch1".format(stage_char, block_char))(x)
 
+<<<<<<< HEAD
             shortcut = tensorflow.keras.layers.TimeDistributed(keras_resnet.layers.BatchNormalization(axis=axis, epsilon=1e-5, freeze=freeze_bn), name="bn{}{}_branch1".format(stage_char, block_char))(shortcut)
+=======
+            shortcut = keras.layers.TimeDistributed(keras_resnet.layers.ResNetBatchNormalization(axis=axis, epsilon=1e-5, freeze=freeze_bn), name="bn{}{}_branch1".format(stage_char, block_char))(shortcut)
+>>>>>>> original_regularization
         else:
             shortcut = x
 
@@ -155,7 +167,11 @@ def time_distributed_bottleneck_2d(
     def f(x):
         y = tensorflow.keras.layers.TimeDistributed(tensorflow.keras.layers.Conv2D(filters, (1, 1), strides=stride, use_bias=False, **parameters), name="res{}{}_branch2a".format(stage_char, block_char))(x)
 
+<<<<<<< HEAD
         y = tensorflow.keras.layers.TimeDistributed(keras_resnet.layers.BatchNormalization(axis=axis, epsilon=1e-5, freeze=freeze_bn), name="bn{}{}_branch2a".format(stage_char, block_char))(y)
+=======
+        y = keras.layers.TimeDistributed(keras_resnet.layers.ResNetBatchNormalization(axis=axis, epsilon=1e-5, freeze=freeze_bn), name="bn{}{}_branch2a".format(stage_char, block_char))(y)
+>>>>>>> original_regularization
 
         y = tensorflow.keras.layers.TimeDistributed(tensorflow.keras.layers.Activation("relu"), name="res{}{}_branch2a_relu".format(stage_char, block_char))(y)
 
@@ -163,13 +179,21 @@ def time_distributed_bottleneck_2d(
 
         y = tensorflow.keras.layers.TimeDistributed(tensorflow.keras.layers.Conv2D(filters, kernel_size, use_bias=False, **parameters), name="res{}{}_branch2b".format(stage_char, block_char))(y)
 
+<<<<<<< HEAD
         y = tensorflow.keras.layers.TimeDistributed(keras_resnet.layers.BatchNormalization(axis=axis, epsilon=1e-5, freeze=freeze_bn), name="bn{}{}_branch2b".format(stage_char, block_char))(y)
+=======
+        y = keras.layers.TimeDistributed(keras_resnet.layers.ResNetBatchNormalization(axis=axis, epsilon=1e-5, freeze=freeze_bn), name="bn{}{}_branch2b".format(stage_char, block_char))(y)
+>>>>>>> original_regularization
 
         y = tensorflow.keras.layers.TimeDistributed(tensorflow.keras.layers.Activation("relu"), name="res{}{}_branch2b_relu".format(stage_char, block_char))(y)
 
         y = tensorflow.keras.layers.TimeDistributed(tensorflow.keras.layers.Conv2D(filters * 4, (1, 1), use_bias=False, **parameters), name="res{}{}_branch2c".format(stage_char, block_char))(y)
 
+<<<<<<< HEAD
         y = tensorflow.keras.layers.TimeDistributed(keras_resnet.layers.BatchNormalization(axis=axis, epsilon=1e-5, freeze=freeze_bn), name="bn{}{}_branch2c".format(stage_char, block_char))(y)
+=======
+        y = keras.layers.TimeDistributed(keras_resnet.layers.ResNetBatchNormalization(axis=axis, epsilon=1e-5, freeze=freeze_bn), name="bn{}{}_branch2c".format(stage_char, block_char))(y)
+>>>>>>> original_regularization
 
         if block == 0:
             shortcut = tensorflow.keras.layers.TimeDistributed(tensorflow.keras.layers.Conv2D(filters * 4, (1, 1), strides=stride, use_bias=False, **parameters), name="res{}{}_branch1".format(stage_char, block_char))(x)
