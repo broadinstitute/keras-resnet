@@ -251,22 +251,21 @@ class Bottleneck1D(keras.layers.Layer):
             name="bn{}{}_branch2c".format(self.stage_char, self.block_char)
         )
 
-        if self.block == 0 and self.stage > 0: #Dotted line connections in ResNet paper
-            self.conv1dd = keras.layers.Conv1D(
-                self.filters * 4,
-                1,
-                strides=self.stride,
-                use_bias=False,
-                name="res{}{}_branch1".format(self.stage_char, self.block_char),
-                **parameters
-            )
+        self.conv1dd = keras.layers.Conv1D(
+            self.filters * 4,
+            1,
+            strides=self.stride,
+            use_bias=False,
+            name="res{}{}_branch1".format(self.stage_char, self.block_char),
+            **parameters
+        )
 
-            self.batchnormalizationd = keras_resnet.layers.ResNetBatchNormalization(
-                axis=self.axis,
-                epsilon=1e-5,
-                freeze=self.freeze_bn,
-                name="bn{}{}_branch1".format(self.stage_char, self.block_char)
-            )
+        self.batchnormalizationd = keras_resnet.layers.ResNetBatchNormalization(
+            axis=self.axis,
+            epsilon=1e-5,
+            freeze=self.freeze_bn,
+            name="bn{}{}_branch1".format(self.stage_char, self.block_char)
+        )
 
         self.add = keras.layers.Add(
             name="res{}{}".format(self.stage_char, self.block_char)
@@ -288,12 +287,12 @@ class Bottleneck1D(keras.layers.Layer):
         y = self.conv1dc(y)
         y = self.batchnormalizationc(y)
 
-        if self.block == 0 and self.stage > 0: #Dotted line connections in ResNet paper
+        if self.block == 0: #Dotted line connections in ResNet paper
             shortcut = self.conv1dd(inputs)
             shortcut = self.batchnormalizationd(shortcut)
         else: #Solid line connections in ResNet paper
             shortcut = inputs
-
+        
         y = self.add([y, shortcut])
         y = self.activationc(y)
 
