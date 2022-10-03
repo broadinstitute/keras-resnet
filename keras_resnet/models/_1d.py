@@ -202,7 +202,7 @@ class ResNet1D34(ResNet1D):
 
         >>> model.compile("adam", "categorical_crossentropy", ["accuracy"])
     """
-    def __init__(self, blocks=None, include_top=True, classes=1000, freeze_bn=False, *args, **kwargs):
+    def __init__(self, blocks=None, include_top=True, classes=1000, freeze_bn=False, **kwargs):
         if blocks is None:
             blocks = [3, 4, 6, 3]
 
@@ -212,7 +212,6 @@ class ResNet1D34(ResNet1D):
             include_top=include_top,
             classes=classes,
             freeze_bn=freeze_bn,
-            *args,
             **kwargs
         )
 
