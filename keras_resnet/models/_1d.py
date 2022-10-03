@@ -216,7 +216,7 @@ class ResNet1D34(ResNet1D):
         )
 
     def call(self, inputs):
-        super(ResNet1D34, self).call(inputs)
+        return super(ResNet1D34, self).call(inputs)
 
 class ResNet1D50(ResNet1D):
     """
@@ -246,7 +246,7 @@ class ResNet1D50(ResNet1D):
 
         >>> model.compile("adam", "categorical_crossentropy", ["accuracy"])
     """
-    def __init__(self, blocks=None, include_top=True, classes=1000, freeze_bn=False, *args, **kwargs):
+    def __init__(self, blocks=None, include_top=True, classes=1000, freeze_bn=False, **kwargs):
         if blocks is None:
             blocks = [3, 4, 6, 3]
 
@@ -259,12 +259,11 @@ class ResNet1D50(ResNet1D):
             include_top=include_top,
             classes=classes,
             freeze_bn=freeze_bn,
-            *args,
             **kwargs
         )
 
     def call(self, inputs):
-        super(ResNet1D50, self).call(inputs)
+        return super(ResNet1D50, self).call(inputs)
 
 class ResNet1D101(ResNet1D):
     """
@@ -294,7 +293,7 @@ class ResNet1D101(ResNet1D):
 
         >>> model.compile("adam", "categorical_crossentropy", ["accuracy"])
     """
-    def __init__(self, blocks=None, include_top=True, classes=1000, freeze_bn=False, *args, **kwargs):
+    def __init__(self, blocks=None, include_top=True, classes=1000, freeze_bn=False, **kwargs):
         if blocks is None:
             blocks = [3, 4, 23, 3]
 
@@ -307,12 +306,11 @@ class ResNet1D101(ResNet1D):
             include_top=include_top,
             classes=classes,
             freeze_bn=freeze_bn,
-            *args,
             **kwargs
         )
 
     def call(self, inputs):
-        super(ResNet1D101, self).call(inputs)
+        return super(ResNet1D101, self).call(inputs)
 class ResNet1D152(ResNet1D):
     """
     Constructs a `keras.models.Model` according to the ResNet152 specifications.
@@ -341,7 +339,7 @@ class ResNet1D152(ResNet1D):
 
         >>> model.compile("adam", "categorical_crossentropy", ["accuracy"])
     """
-    def __init__(self, blocks=None, include_top=True, classes=1000, freeze_bn=False, *args, **kwargs):
+    def __init__(self, blocks=None, include_top=True, classes=1000, freeze_bn=False, **kwargs):
         if blocks is None:
             blocks = [3, 8, 36, 3]
 
@@ -354,12 +352,11 @@ class ResNet1D152(ResNet1D):
             include_top=include_top,
             classes=classes,
             freeze_bn=freeze_bn,
-            *args,
             **kwargs
         )
 
     def call(self, inputs):
-        super(ResNet1D152, self).call(inputs)
+        return super(ResNet1D152, self).call(inputs)
 class ResNet1D200(ResNet1D):
     """
     Constructs a `keras.models.Model` according to the ResNet200 specifications.
@@ -388,7 +385,7 @@ class ResNet1D200(ResNet1D):
 
         >>> model.compile("adam", "categorical_crossentropy", ["accuracy"])
     """
-    def __init__(self, blocks=None, include_top=True, classes=1000, freeze_bn=False, *args, **kwargs):
+    def __init__(self, blocks=None, include_top=True, classes=1000, freeze_bn=False, **kwargs):
         if blocks is None:
             blocks = [3, 24, 36, 3]
 
@@ -401,9 +398,8 @@ class ResNet1D200(ResNet1D):
             include_top=include_top,
             classes=classes,
             freeze_bn=freeze_bn,
-            *args,
             **kwargs
         )
 
     def call(self, inputs):
-        super(ResNet1D200, self).call(inputs)
+        return super(ResNet1D200, self).call(inputs)
