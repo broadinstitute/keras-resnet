@@ -1,1 +1,1 @@
-from ._batch_normalization import ResNetBatchNormalization
+from ._batch_normalization import BatchNormalization

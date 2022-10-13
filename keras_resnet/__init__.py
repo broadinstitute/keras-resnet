@@ -1,5 +1,5 @@
 from . import layers
 
 custom_objects = {
-    'BatchNormalization': layers.ResNetBatchNormalization,
+    'BatchNormalization': layers.BatchNormalization,
 }

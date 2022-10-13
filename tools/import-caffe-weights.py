@@ -54,11 +54,7 @@ if __name__ == "__main__":
             l.set_weights([convert_conv_weights(weights.get(l.name).get("0"))])
         elif isinstance(l, tensorflow.keras.layers.Dense):
             l.set_weights(convert_dense_weights(weights.get(l.name).get("0"), weights.get(l.name).get("1")))
-<<<<<<< HEAD
         elif isinstance(l, tensorflow.keras.layers.BatchNormalization):
-=======
-        elif isinstance(l, keras.layers.ResNetBatchNormalization):
->>>>>>> original_regularization
             scale_name = l.name.replace("bn", "scale")
             bn_weights = weights.get(l.name)
             scale_weights = weights.get(scale_name)
