@@ -83,7 +83,7 @@ class ResNet1D(keras.Model):
 
         self.zeropadding1d = keras.layers.ZeroPadding1D(padding=3, name="padding_conv1")
         self.conv1d = keras.layers.Conv1D(64, 7, strides=2, use_bias=False, name="conv1")
-        self.batchnormalization = keras_resnet.layers.ResNetBatchNormalization(axis=self.axis, epsilon=1e-5, freeze=self.freeze_bn, name="bn_conv1")
+        self.batchnormalization = keras_resnet.layers.BatchNormalization(axis=self.axis, epsilon=1e-5, freeze=self.freeze_bn, name="bn_conv1")
         self.activation = keras.layers.Activation("relu", name="conv1_relu")
         self.maxpooling1d = keras.layers.MaxPooling1D(3, strides=2, padding="same", name="pool1")
         self.globalaveragepooling1d = keras.layers.GlobalAveragePooling1D(name="pool5")

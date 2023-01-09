@@ -74,7 +74,7 @@ class Basic1D(keras.layers.Layer):
             name="res{}{}_branch2a".format(self.stage_char, self.block_char),
             **parameters
         )
-        self.batchnormalizationa = keras_resnet.layers.ResNetBatchNormalization(
+        self.batchnormalizationa = keras_resnet.layers.BatchNormalization(
             axis=self.axis,
             epsilon=1e-5,
             freeze=self.freeze_bn,
@@ -95,7 +95,7 @@ class Basic1D(keras.layers.Layer):
             name="res{}{}_branch2b".format(self.stage_char, self.block_char),
             **parameters
         )
-        self.batchnormalizationb = keras_resnet.layers.ResNetBatchNormalization(
+        self.batchnormalizationb = keras_resnet.layers.BatchNormalization(
             axis=self.axis,
             epsilon=1e-5,
             freeze=self.freeze_bn,
@@ -110,7 +110,7 @@ class Basic1D(keras.layers.Layer):
                     name="res{}{}_branch1".format(self.stage_char, self.block_char),
                     **parameters
                 )
-            self.batchnormalizationc = keras_resnet.layers.ResNetBatchNormalization(
+            self.batchnormalizationc = keras_resnet.layers.BatchNormalization(
                     axis=self.axis,
                     epsilon=1e-5,
                     freeze=self.freeze_bn,
@@ -199,7 +199,7 @@ class Bottleneck1D(keras.layers.Layer):
             **parameters
         )
 
-        self.batchnormalizationa = keras_resnet.layers.ResNetBatchNormalization(
+        self.batchnormalizationa = keras_resnet.layers.BatchNormalization(
             axis=self.axis,
             epsilon=1e-5,
             freeze=self.freeze_bn,
@@ -224,7 +224,7 @@ class Bottleneck1D(keras.layers.Layer):
             **parameters
         )
 
-        self.batchnormalizationb = keras_resnet.layers.ResNetBatchNormalization(
+        self.batchnormalizationb = keras_resnet.layers.BatchNormalization(
             axis=self.axis,
             epsilon=1e-5,
             freeze=self.freeze_bn,
@@ -244,7 +244,7 @@ class Bottleneck1D(keras.layers.Layer):
             **parameters
         )
 
-        self.batchnormalizationc = keras_resnet.layers.ResNetBatchNormalization(
+        self.batchnormalizationc = keras_resnet.layers.BatchNormalization(
             axis=self.axis,
             epsilon=1e-5,
             freeze=self.freeze_bn,
@@ -260,7 +260,7 @@ class Bottleneck1D(keras.layers.Layer):
             **parameters
         )
 
-        self.batchnormalizationd = keras_resnet.layers.ResNetBatchNormalization(
+        self.batchnormalizationd = keras_resnet.layers.BatchNormalization(
             axis=self.axis,
             epsilon=1e-5,
             freeze=self.freeze_bn,
