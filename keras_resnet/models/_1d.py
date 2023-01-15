@@ -65,7 +65,7 @@ class ResNet1D(keras.Model):
         *args,
         **kwargs
     ):
-        super(ResNet1D, self).__init__(name=name, **kwargs)
+        super(ResNet1D, self).__init__(name=name, *args, **kwargs)
         self.blocks = blocks
         self.block = block
         self.include_top = include_top
@@ -158,7 +158,7 @@ class ResNet1D18(ResNet1D):
 
         >>> model.compile("adam", "categorical_crossentropy", ["accuracy"])
     """
-    def __init__(self, blocks=None, include_top=True, classes=1000, freeze_bn=False, **kwargs):
+    def __init__(self, blocks=None, include_top=True, classes=1000, freeze_bn=False, *args, **kwargs):
         if blocks is None:
             blocks = [2, 2, 2, 2]
 
@@ -168,6 +168,7 @@ class ResNet1D18(ResNet1D):
             include_top=include_top,
             classes=classes,
             freeze_bn=freeze_bn,
+            *args,
             **kwargs
         )
 

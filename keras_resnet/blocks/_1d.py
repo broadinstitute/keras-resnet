@@ -101,7 +101,7 @@ class Basic1D(keras.layers.Layer):
             freeze=self.freeze_bn,
             name="bn{}{}_branch2b".format(self.stage_char, self.block_char)
         )
-        if self.block == 0 and self.stage > 0: #Dotted line connections in ResNet paper
+        if self.block == 0: #Dotted line connections in ResNet paper
             self.conv1dc = keras.layers.Conv1D(
                     self.filters,
                     1,
@@ -125,16 +125,16 @@ class Basic1D(keras.layers.Layer):
         )
 
     def call(self, inputs):
-        y = self.zeropadding1da(inputs)
-        y = self.conv1da(y)
-        y = self.batchnormalizationa(y)
-        y = self.activationa(y)
-        y = self.zeropadding1db(y)
-        y = self.conv1db(y)
-        y = self.batchnormalizationb(y)
+        y = self.zeropadding1da(inputs) #padding2a_branch2a
+        y = self.conv1da(y) #res2a_branch2a
+        y = self.batchnormalizationa(y) #bn2a_branch2a
+        y = self.activationa(y) #res2a_branch2a_relu
+        y = self.zeropadding1db(y) #padding2a_branch2b
+        y = self.conv1db(y) #res2a_branch2b
+        y = self.batchnormalizationb(y) #bn2a_branch2b
 
-        if self.block == 0 and self.stage > 0: #Dotted line connections in ResNet paper
-            shortcut = self.conv1dc(inputs)
+        if self.block == 0: #Dotted line connections in ResNet paper
+            shortcut = self.conv1dc(inputs) #!!!res2a_branch1
             shortcut = self.batchnormalizationc(shortcut)
         else: #Solid line connections in ResNet paper
             shortcut = inputs
