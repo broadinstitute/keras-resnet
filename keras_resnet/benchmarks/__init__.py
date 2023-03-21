@@ -1,8 +1,8 @@
 import os.path
 
 import click
-import keras
-import keras.preprocessing.image
+import tensorflow.keras
+import tensorflow.keras.preprocessing.image
 import numpy
 import pkg_resources
 import sklearn.model_selection
@@ -12,9 +12,9 @@ import keras_resnet.metrics
 import keras_resnet.models
 
 _benchmarks = {
-    "CIFAR-10": keras.datasets.cifar10,
-    "CIFAR-100": keras.datasets.cifar100,
-    "MNIST": keras.datasets.mnist
+    "CIFAR-10": tensorflow.keras.datasets.cifar10,
+    "CIFAR-100": tensorflow.keras.datasets.cifar100,
+    "MNIST": tensorflow.keras.datasets.mnist
 }
 
 
@@ -65,7 +65,7 @@ def __main__(benchmark, device, name):
 
     session = tensorflow.Session(config=configuration)
 
-    keras.backend.set_session(session)
+    tensorflow.keras.backend.set_session(session)
 
     (training_x, training_y), _ = _benchmarks[benchmark].load_data()
 
@@ -74,14 +74,14 @@ def __main__(benchmark, device, name):
     if benchmark is "MNIST":
         training_x = numpy.expand_dims(training_x, -1)
 
-    training_y = keras.utils.np_utils.to_categorical(training_y)
+    training_y = tensorflow.keras.utils.np_utils.to_categorical(training_y)
 
     training_x, validation_x, training_y, validation_y = sklearn.model_selection.train_test_split(
         training_x,
         training_y
     )
 
-    generator = keras.preprocessing.image.ImageDataGenerator(
+    generator = tensorflow.keras.preprocessing.image.ImageDataGenerator(
         horizontal_flip=True
     )
 
@@ -93,7 +93,7 @@ def __main__(benchmark, device, name):
         batch_size=256
     )
 
-    validation_data = keras.preprocessing.image.ImageDataGenerator()
+    validation_data = tensorflow.keras.preprocessing.image.ImageDataGenerator()
 
     validation_data.fit(validation_x)
 
@@ -105,7 +105,7 @@ def __main__(benchmark, device, name):
 
     shape, classes = training_x.shape[1:], training_y.shape[-1]
 
-    x = keras.layers.Input(shape)
+    x = tensorflow.keras.layers.Input(shape)
 
     model = _names[name](inputs=x, classes=classes)
 
@@ -120,13 +120,13 @@ def __main__(benchmark, device, name):
 
     pathname = pkg_resources.resource_filename("keras_resnet", pathname)
 
-    model_checkpoint = keras.callbacks.ModelCheckpoint(pathname)
+    model_checkpoint = tensorflow.keras.callbacks.ModelCheckpoint(pathname)
 
     pathname = os.path.join("data", "logs", benchmark, "{}.csv".format(name))
 
     pathname = pkg_resources.resource_filename("keras_resnet", pathname)
 
-    csv_logger = keras.callbacks.CSVLogger(pathname)
+    csv_logger = tensorflow.keras.callbacks.CSVLogger(pathname)
 
     callbacks = [
         csv_logger,
